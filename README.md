@@ -5,9 +5,10 @@ A simple browser interface for DMing tabletop RPG games (specifically D&D 5th Ed
 https://kcaf.github.io/VirtualDMScreen/
 
 ##Usage
-All information, other than images, is saved locally via localStorage.  
-Browser support for this tool varies. I've tested extensively in Chrome and Firefox. If you're on a PC, you're probably using one of these anyway. If not, use at your own risk.  
-There is an extra file called `map.html`. You can open this file in another browser window and click `Combat > Settings > Stream Map View` on your main window to begin streaming the battlemap in real time.
+- This is by no means a finished product. Please keep that in mind.
+- All information, other than images, is saved locally via localStorage.  
+- Browser support for this tool varies. I've tested extensively in Chrome and Firefox. If you're on a PC, you're probably using one of these anyway. If not, use at your own risk.  
+- There is an extra file called `map.html`. You can open this file in another browser window and click `Combat > Settings > Stream Map View` on your main window to begin streaming the battlemap in real time.
 
 ##Preview
 ![alt text](http://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
