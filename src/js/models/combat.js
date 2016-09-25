@@ -115,10 +115,17 @@ var CombatantModel = function(){
 	});
 
 	_this.PickToken = function(data, event) {
-		var result = prompt("Token URL", "");
+		var result = prompt("Token URL", ""),
+			combatvm = WORKSPACE.ViewModels.CombatViewModel;
 		if(result){
 			_this.Token(result);
-			WORKSPACE.ViewModels.CombatViewModel.LoadTokens();
+			$.each(combatvm.CustomIcons(), function(z, x) {
+				if(x.name && x.name == _this.Name()){
+					combatvm.CustomIcons.remove(x);
+				}
+			});
+			combatvm.CustomIcons.push({ name: _this.Name(), token: _this.Token() });
+			combatvm.LoadTokens();
 		}
 	};
 
@@ -403,11 +410,11 @@ var CombatViewModel = function() {
 					$.each(_this.CustomIcons(), function(z, x) {
 						if(x.name == v.Name()){
 							found = true;
+							_this.CustomIcons.remove(x);
 						}
 					});
-					if(!found) {
-						_this.CustomIcons.push({ name: v.Name(), token: v.Token() });
-					}
+					
+					_this.CustomIcons.push({ name: v.Name(), token: v.Token() });
 				}
 			}
 
