@@ -292,7 +292,7 @@ var WORKSPACE = {
 		});
 
 		WORKSPACE.ResizeGridOrig = "";
-		WORKSPACE.ResizeGrid = function(){
+		WORKSPACE.ResizeGrid = function(invalidateSize){
 			//var selector = $("#GridTab"),
 			var	parent = $(".combatviewmodel-inc"),
 				tabs = $(".combatviewmodel-inc > .ui-tabs-nav"),
@@ -301,23 +301,25 @@ var WORKSPACE = {
 			$("#grid-map").css("height", height + "px");
 			$("#grid-canvas").attr("height", height + 1);
 			$("#grid-canvas").attr("width", width + 6);
-			if(WORKSPACE.GridMap){
-				WORKSPACE.ViewModels.CombatViewModel.GridCenter(WORKSPACE.GridMap.getCenter());
+			//WORKSPACE.Helpers.SwapMap(WORKSPACE.ViewModels.CombatViewModel.ActiveMap());
+			if(WORKSPACE.GridMap && invalidateSize){
+				WORKSPACE.GridMap.invalidateSize();
+				//WORKSPACE.ViewModels.CombatViewModel.GridCenter(WORKSPACE.GridMap.getCenter());
 			}
 		};
 
 		WORKSPACE.ResizeGrid();
 		$(".combatviewmodel-inc").on( "dialogresize", function( event, ui ) {
-			WORKSPACE.ResizeGrid();
+			WORKSPACE.ResizeGrid(true);
 		}).on( "dialogextendbeforeMaximize", function( event ) {
 			var selector = $("#GridTab"),
 				parent = selector.parent();
 			WORKSPACE.ResizeGridOrig = parent.height() + parent.offset().top - selector.offset().top + "px";
 		}).on( "dialogextendmaximize", function( event ) { 
-			WORKSPACE.ResizeGrid();
+			WORKSPACE.ResizeGrid(true);
 		}).on( "dialogextendrestore", function( event ) { 
 			$("#grid-map").css("height", WORKSPACE.ResizeGridOrig);
-			WORKSPACE.ResizeGrid();
+			WORKSPACE.ResizeGrid(true);
 		});
 
 		WORKSPACE.SpellViewVM = new SpellModel();
