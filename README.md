@@ -54,3 +54,6 @@ There is an extra file called `map.html`. You can open this file in another brow
 - [TODO] Add touch events for mobile play
 - [TODO] Set up github static hosting
 - [TODO] Allow users to import their own data files
+- [TODO] Cleanup messy code
+- [TODO] [Possibly remove KnockoutJS](https://www.youtube.com/watch?v=MH7KYmGnj40)
+- [TODO] Extend browser support
