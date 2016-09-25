@@ -1,5 +1,5 @@
 # VirtualDMScreen
-A simple browser interface for DMing RPG games (specifically D&D 5th Edition)
+A simple browser interface for DMing tabletop RPG games (specifically D&D 5th Edition)
 
 ##Preview
 ![alt text](http://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
