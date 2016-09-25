@@ -6,6 +6,7 @@ https://kcaf.github.io/VirtualDMScreen/
 
 ##Usage
 - This is by no means a finished product. Please keep that in mind.
+- The data files are incomplete for legal reasons. One day I'll get around to incorporating the full 5e SRD.
 - All information, other than images, is saved locally via localStorage.  
 - Browser support for this tool varies. I've tested extensively in Chrome and Firefox. If you're on a PC, you're probably using one of these anyway. If not, use at your own risk.  
 - There is an extra file called `map.html`. You can open this file in another browser window and click `Combat > Settings > Stream Map View` on your main window to begin streaming the battlemap in real time.
