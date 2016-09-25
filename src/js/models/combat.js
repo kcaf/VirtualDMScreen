@@ -1,6 +1,6 @@
 var CombatantModel = function(){
 	var _this = this;
-	_this.Id = ko.observable().extend({ trackChange: true });
+	_this.Id = ko.observable(null).extend({ trackChange: true });
 	_this.ModelType = ko.observable().extend({ trackChange: true });
 	_this.Size = ko.observable().extend({ trackChange: true });
 	_this.Name = ko.observable().extend({ trackChange: true });
@@ -183,6 +183,7 @@ var CombatantModel = function(){
 			_this.Level(data.Level);
 			_this.Size("M");
 		} else if (data.ModelType == "NPC") {
+			_this.Id(data.Id);
 			_this.Size(data.Size);
 			_this.CR(data.CR);
 			var init = data.Initiative || WORKSPACE.Helpers.Roll( 1,20 ) + parseInt( data.DEXMOD );
@@ -223,7 +224,6 @@ var CombatantModel = function(){
 		_this.PositionLeft(data.PositionLeft || 0);
 		_this.ZIndex(data.ZIndex || 0);
 		_this.MaxHP(data.MaxHP || null);
-		_this.Id(data.Id || null);
 		_this.ModelType(data.ModelType);
 		_this.Name(data.Name || "");
 		_this.AC(data.AC);
