@@ -52,10 +52,14 @@ https://kcaf.github.io/VirtualDMScreen/
 - Group spells into Spellbooks for reference
 - Keep track of spell slots used for each book
 
+##Customizing
+- Have your own data files? Press `F12` to open the developer console and simply redeclare the arrays there  
+Names for each data array: `MAGIC`, `MONSTERS`, `SPELLS`
+
 ##Misc
 - [TODO] Add touch events for mobile play
 - [TODO] Set up github static hosting
-- [TODO] Allow users to import their own data files
+- [TODO] Create a clean way to import custom data files
 - [TODO] Cleanup messy code
 - [TODO] Write better CSS. Ugh.
 - [TODO] [Possibly remove KnockoutJS](https://www.youtube.com/watch?v=MH7KYmGnj40)
