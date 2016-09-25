@@ -1,0 +1,8 @@
+<script type="text/html" id="ko_simpleGrid_pageLinks">
+	<div class="ko-grid-pageLinks noselect">
+	    <span>Page:</span>
+	    <i class="fa fa-chevron-left" data-bind="click: function(){ if(!$root.isMin()) $root.currentPageIndex($root.currentPageIndex()-1) }"></i>
+	    <span data-bind="text: $root.currentPageIndex() + 1"></span>
+		<i class="fa fa-chevron-right" data-bind="click: function(){ if(!$root.isMax()) $root.currentPageIndex($root.currentPageIndex()+1) }"></i>
+	</div>
+</script>

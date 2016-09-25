@@ -1,0 +1,60 @@
+<div class="lootviewmodel-inc">
+	<ul class="noselect">
+		<li><a href="#Generate" data-bind="click: SetActiveTab.bind($data, 0)">Generate</a></li>
+		<li><a href="#LootSearch" data-bind="click: SetActiveTab.bind($data, 1)">Search</a></li>
+		<li><a href="#GenSettings" data-bind="click: SetActiveTab.bind($data, 2)">Settings</a></li>
+	</ul>
+	<div id="Generate">
+		<form data-bind="submit: Generate">
+			<div class="filters grid">
+				<table class="loot-generate ko-grid">
+					<thead>
+						<tr>
+							<th>Amount</th>
+							<th>CR</th>
+							<th>Type</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<select data-bind="options: AmountList, value: Amount"></select>
+							</td>
+							<td>
+								<select data-bind="options: CRList, value: CR"></select>
+							</td>
+							<td>
+								<select name="type" data-bind="options: Type, value: SelectedType"> </select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<select name="rarity" class="loot-rarity" data-bind="options: Rarity, selectedOptions: SelectedRarity" multiple="true"></select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button class="ui-button ui-corner-all ui-widget" type="submit" data-bind="">Roll</button>
+			</div>
+			<div class="grid" data-bind="simpleGrid: GenerateGrid, visible: GenerateList().length > 0"></div>
+		</form>
+	</div>
+	<div id="LootSearch">
+		<div class="filters loot">
+			<div class="name">
+				<label for="search">Name</label>
+				<input class="search" name="search" data-bind="textInput: Search" />
+			</div>
+			<div class="rarity">
+				<label for="rarity">Rarity</label>
+				<select name="rarity" class="rarity" data-bind="options: SearchRarity, value: SelectedSearchRarity"></select>
+			</div>
+		</div>
+		<div class="grid" data-bind="simpleGrid: SearchGrid, visible: SearchList().length > 0"></div>
+	</div>
+	<div id="GenSettings">
+		<div class="filters">
+			Loot Generation Settings
+		</div>
+	</div>
+</div>

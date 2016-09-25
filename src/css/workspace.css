@@ -1,0 +1,1230 @@
+@import 'https://fonts.googleapis.com/css?family=Titillium+Web';
+html {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	padding: 15px;
+	margin: 0;
+	background-color: #5F758E;
+	font-family: 'Titillium Web', sans-serif;
+	min-width: 520px;
+	background: #5d5d5d;
+	/*
+	background: rgb(69,72,77);
+	background: -moz-linear-gradient(top, rgba(69,72,77,1) 0%, rgba(0,0,0,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
+	background: linear-gradient(to bottom, rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 );*/
+}
+
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.ui-dialog .ui-dialog-content {
+	overflow: initial;
+	padding: 6px;
+}
+
+.ko-grid-pageLinks i {
+	cursor: pointer;
+}
+
+div.gameviewmodel-inc i {
+	padding: 0 .4em;
+	cursor: pointer;
+}
+
+div.portlet-content,
+.ko-grid-pageLinks a,
+.portlet-toggle {
+	transition: all 0.2s ease;
+}
+
+div.window {
+	line-height: 2em;
+}
+
+div#includes {
+	display: none;
+}
+
+div#settings {
+	position: fixed;
+	bottom: 10px;
+	width: auto;
+	left: 15px;
+	right: 15px;
+}
+
+div#Spellbook .filters i,
+div#NPCGroupsTab .filters i {
+	padding: 0 0.4em;
+	cursor: pointer;
+}
+
+div#SpellSearch .filters.search,
+div#LootSearch .filters.loot,
+div#NPCSearch .filters.npcs {
+	display: flex;
+}
+
+div#NPCSearch div.name {
+	width: 50%;
+}
+
+div#NPCSearch div.cr {
+	width: 20%;
+}
+
+div#NPCSearch div.type {
+	width: 30%;
+}
+
+div#NPCSearch th.add {
+	width: 1px;
+}
+
+div#SpellSearch div.name {
+	width: 50%;
+}
+
+div#SpellSearch div.class {
+	width: 30%;
+}
+
+div#SpellSearch div.level {
+	width: 20%;
+}
+
+div#LootSearch div.name {
+	width: 65%;
+}
+
+div#LootSearch div.rarity {
+	width: 35%;
+}
+
+div#GameViewModel {
+	display: table-cell;
+}
+
+.filters {
+	padding-top: .5em;
+	padding-bottom: .34em;
+	border-bottom: 1px solid lightgrey;
+	margin-bottom: .4em;
+}
+
+div.spell-slots div.slot {
+	border-right: 1px solid #e0e0e0;
+	height: 100px;
+	width: 70px;
+	display: inline-block;
+	text-align: center;
+	vertical-align: top;
+	padding-bottom: 0;
+	padding-top: 5px;
+}
+
+div.spell-slots div.slot:first-child {
+	border-left: 1px solid #e0e0e0;
+}
+
+div.spell-slots div.slot span {
+	display: block;
+}
+
+.trash {
+	margin-left: 30px;
+	margin-top: .4em;
+}
+
+.spell-slots {
+	width: 100%;
+	padding-top: 0;
+	margin-top: -8px;
+	padding-bottom: 0;
+	margin-bottom: 0;
+	display: flex;
+	border-bottom: 0;
+}
+
+.spell-slots div.buttons {
+	width: 70px;
+	padding-top: 0.8em;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.spell-slots ul {
+	border-top: 1px solid #e0e0e0;
+	vertical-align: inherit;
+	display: inline-block;
+	text-align: center;
+	padding: 0 10px;
+	margin: 0;
+	padding-top: 3px;
+}
+
+.spell-slots li {
+	display: flex;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.spell-slots li input {
+	padding: 0;
+	margin: 2px;
+}
+
+div#SpellSearch input,
+div#SpellSearch select,
+div#LootSearch input,
+div#LootSearch select.rarity,
+div#NPCSearch input,
+div#NPCSearch select {
+	height: 33px;
+	line-height: 33px;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.4em;
+}
+
+div#SpellSearch label,
+div#LootSearch label,
+div#NPCSearch label {
+	padding-left: 0.3em;
+}
+
+div#overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: grey;
+	z-index: 99999;
+}
+
+select.spell-select,
+select.group-select {
+	padding: 0.3em !important;
+}
+
+div#Spellbooks select.spell-select,
+div#NPCGroups select.npc-select {
+	width: 100%;
+	padding: 0.3em;
+}
+
+.spells.grid table tr td:first-child,
+.spells.grid table tr th:first-child {
+	width: 3em;
+	text-align: center;
+}
+
+div#SpellView .content {}
+
+.spell-desc br {
+	display: block;
+	margin: 2em 0;
+	line-height: 2em;
+}
+
+.spell-desc li {
+	padding: 0.2em;
+}
+
+input.spellbook-title,
+input.game-title,
+input.group-title {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.3em;
+}
+
+table.npcs.ko-grid th:last-child {
+	width: 50px;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+.spellbook-view tr th {
+	vertical-align: top;
+	text-align: center !important;
+	width: 100px;
+}
+
+.spellbook-view tr td {
+	vertical-align: top;
+}
+
+.spellbook-view tr td ul {
+	margin: 0;
+	padding: 0;
+}
+
+.spellbook-view tr td ul li {
+	padding-right: 3em;
+	list-style: none;
+	position: relative;
+}
+
+table.npc-view td.npc-name {
+	padding-right: 30px;
+}
+
+table.npc-view td.npc-name {
+	position: relative;
+}
+
+.spellbook-view tr td ul li i {
+	position: absolute;
+	right: 0.3em;
+	top: 50%;
+	margin-top: -8px;
+	cursor: pointer;
+}
+
+table.npc-view i.npc-remove {
+	position: absolute;
+	right: .5em;
+	top: 50%;
+	margin-top: -8px;
+	cursor: pointer;
+}
+
+.spellbook-settings {
+	float: right;
+	padding: 0.4em 0;
+}
+
+.spell-link,
+.item-link,
+.npc-link {
+	cursor: pointer;
+}
+
+.spell-link:hover,
+.item-link:hover,
+.npc-link:hover {
+	text-decoration: underline;
+}
+
+button.red {
+	background-color: #dc0e0e;
+	color: #fff;
+}
+
+div#SpellView p {
+	margin: 0.7em 0;
+}
+
+div#ItemView .description {
+	height: auto;
+	max-height: 400px;
+	max-width: 600px;
+	overflow-y: auto;
+	overflow-wrap: normal;
+	overflow-x: hidden;
+}
+
+.ui-button.extra-margins {
+	margin: 0.6em 0;
+}
+
+.grid table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.grid table th,
+.grid table td {
+	border: 1px solid #ddd;
+	padding: 6px;
+}
+
+.grid table.npcs td {
+	padding: 1px 4px;
+}
+
+.grid table.npcs td:first-child {
+	padding: 1px 0;
+}
+
+.grid table th {
+	vertical-align: middle;
+	text-align: left;
+	background-color: #499bf9;
+	color: #fff;
+	padding: 6px;
+}
+
+.grid table tr:nth-child(odd) {
+	background: #ececec;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.ko-grid {
+	margin-bottom: 0.4em;
+}
+
+.ko-grid-pageLinks {
+	padding-bottom: 5px;
+}
+
+.ko-grid-pageLinks a {
+	text-decoration: none;
+	padding: .2em .5em;
+}
+
+.ko-grid-pageLinks a.selected {
+	background-color: #499bf9;
+	color: #fff;
+}
+
+table.players,
+table.loot-generate {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: .2em;
+}
+
+table.loot-generate tr {
+	background-color: #ececec;
+}
+
+table.players input,
+table.combat input {
+	background: none;
+	width: 100%;
+}
+
+table.npc-view input.amount {
+	width: 100%;
+	text-align: center;
+}
+
+table.npc-view th.amount {
+	width: 80px;
+}
+
+table.npc-view th.cr {
+	width: 50px;
+	text-align: center;
+}
+
+table.npc-view td.cr {
+	text-align: center;
+}
+
+table.npc-view td.difficulty {
+	text-align: center;
+}
+
+table.npc-view th.difficulty {
+	text-align: right;
+	padding-right: 1em;
+}
+
+table.combat tr.dead,
+div.grid-token.dead {
+	opacity: 0.4;
+}
+
+table.combat tr.npc-row,
+div.grid-token.npc-row {
+	background: #fde0e0;
+}
+
+table.combat tr.player-row,
+div.grid-token.player-row {
+	background: #e0fde2;
+}
+
+table.combat tr.unknown-row {
+	background: #fff;
+}
+
+.similar-npcs {
+	position: absolute;
+	bottom: -55px;
+	left: 17px;
+	box-sizing: border-box;
+	padding: .3em;
+	border: 0;
+	background: 0;
+	text-overflow: ellipsis;
+}
+
+input.roll-string,
+span.roll-result {
+	box-sizing: border-box;
+	padding: .4em;
+	font-family: monospace;
+	vertical-align: middle;
+	text-align: right;
+	height: 33px;
+}
+
+input.roll-string {
+	width: 144px;
+	font-size: 20px;
+}
+
+button.roll-button {
+	width: 52px;
+	box-sizing: border-box;
+	margin-left: 5px;
+	padding: 6px 0;
+	font-weight: bold;
+}
+
+button.roll-button:hover,
+button.roll-button:focus {
+	font-weight: bold;
+}
+
+span.roll-result {
+	width: 100%;
+	font-size: 17px;
+	border: 1px solid rgba(0, 127, 255, 0.62);
+	display: block;
+	line-height: 28px;
+	margin-top: 3px;
+	padding: 0 10px;
+}
+
+select.roll-select {
+	font-size: 16px;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.3em;
+	text-overflow: ellipsis;
+	height: 33px;
+	background: lightgrey;
+	margin-top: 10px;
+}
+
+table.players input,
+table.combat input,
+table.npc-view input {
+	box-sizing: border-box;
+	padding: 0.3em;
+	border: none;
+	background: none;
+	text-overflow: ellipsis;
+}
+
+div.gameviewmodel-inc select {
+	box-sizing: border-box;
+	padding: 0.3em;
+	text-overflow: ellipsis;
+}
+
+.loot-name i {
+	text-align: right;
+	width: auto;
+	float: right;
+	margin: auto 0;
+	cursor: pointer;
+}
+
+.ko-grid-pageLinks {
+	float: left;
+	width: 50%;
+	box-sizing: border-box;
+}
+
+.ko-grid-rightbutton {
+	float: right;
+	text-align: right;
+	width: 50%;
+	box-sizing: border-box;
+}
+
+input.player-name {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.3em;
+	border: none;
+	background: none;
+	text-overflow: ellipsis;
+}
+
+th.player-del,
+th.combat-del {
+	width: 20px;
+}
+
+td.player-del,
+td.combat-del {
+	text-align: center;
+}
+
+img.combat-token {
+	width: 35px;
+	height: 35px;
+}
+
+i.player-del,
+i.combat-del,
+i.combat-hp,
+i.npc-view {
+	cursor: pointer;
+}
+
+i.npc-view {
+	margin: auto 0;
+}
+
+i:hover {
+	color: #007fff;
+}
+
+select option {
+	padding: 0.2em;
+}
+
+.ui-slider {
+	z-index: 9999;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.lootviewmodel-inc .amount {
+	width: 60px;
+	text-align: center;
+}
+
+table.loot-generate input,
+table.loot-generate select {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.3em;
+	/*border: none;
+	background: none;*/
+	text-overflow: ellipsis;
+}
+
+table.loot-generate .chosen-container-multi .chosen-choices {
+	border: none;
+	background: none;
+}
+
+
+/*
+table.loot-generate{
+	width: 100%;
+}
+
+table.loot-generate input,
+table.loot-generate select{
+	box-sizing: border-box;
+	width:100%;
+	text-align:center;
+}
+
+table.loot-generate label.loot-rarity-label{
+	font-weight: bold;
+}*/
+
+.column {
+	float: left;
+	padding-bottom: 100px;
+}
+
+.portlet {
+	margin: 0 1em 1em 0;
+	background-color: #fff;
+}
+
+.portlet-header {
+	padding: 0.2em 0.3em;
+	position: relative;
+	background-color: #9e9e9e;
+	cursor: move;
+	border-radius: 0px;
+}
+
+.portlet-header p {
+	padding: 0px;
+	margin: 0px;
+	opacity: 0.9;
+	text-transform: uppercase;
+	color: #fff;
+	font-weight: 900;
+}
+
+.portlet-toggle {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	margin-top: -8px;
+	z-index: 99;
+	cursor: pointer;
+	background-color: aliceblue;
+}
+
+.portlet-content {
+	padding: 0.4em;
+	line-height: 2em;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+.portlet-placeholder {
+	border: 2px dashed #ececec;
+	margin: 0 1em 1em 0;
+	height: 50px;
+}
+
+.ui-widget-header {
+	border: none;
+	background: none;
+}
+
+.ui-widget .ui-widget {
+	font-size: 16px;
+}
+
+.ui-tabs {
+	border: none !important;
+	margin: 0;
+	position: relative;
+	padding: 0;
+}
+
+.ui-tabs-nav {
+	margin: 0 -0.4em !important;
+	border-radius: 0px;
+	border-bottom: 1px solid lightgrey !important;
+}
+
+.ui-tabs .ui-tabs-panel {
+	padding: initial;
+}
+
+div.loading {
+	float: right;
+	width: 20px;
+	height: 20px;
+	display: none;
+	margin-top: -21px;
+	margin-right: 25px;
+	background-size: 100%;
+	background-image: url(assets/loading.gif);
+}
+
+.ui-dialog .ui-dialog-titlebar-buttonpane>a {
+	float: right;
+}
+
+.ui-dialog .ui-dialog-titlebar-restore {
+	width: 19px;
+	height: 18px;
+}
+
+.ui-dialog .ui-dialog-titlebar-restore span {
+	display: block;
+	margin: 1px;
+}
+
+.ui-dialog .ui-dialog-titlebar-restore:hover,
+.ui-dialog .ui-dialog-titlebar-restore:focus {
+	padding: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar::selection {
+	background-color: transparent;
+}
+
+.ui-dialog .ui-dialog-titlebar-collapse {
+	width: 19px;
+	height: 18px;
+}
+
+.ui-dialog .ui-dialog-titlebar-collapse span {
+	display: block;
+	margin: 1px;
+}
+
+.ui-dialog .ui-dialog-titlebar-collapse:hover,
+.ui-dialog .ui-dialog-titlebar-collapse:focus {
+	padding: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar-maximize {
+	width: 19px;
+	height: 18px;
+}
+
+.ui-dialog .ui-dialog-titlebar-maximize span {
+	display: block;
+	margin: 1px;
+}
+
+.ui-dialog .ui-dialog-titlebar-maximize:hover,
+.ui-dialog .ui-dialog-titlebar-maximize:focus {
+	padding: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar-minimize {
+	width: 19px;
+	height: 18px;
+}
+
+.ui-dialog .ui-dialog-titlebar-minimize span {
+	display: block;
+	margin: 1px;
+}
+
+.ui-dialog .ui-dialog-titlebar-minimize:hover,
+.ui-dialog .ui-dialog-titlebar-minimize:focus {
+	padding: 0;
+}
+
+div#NPCView {
+	display: flex;
+}
+
+div#NPCView .actions-list {
+	max-height: 260px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+div#NPCView svg {
+	fill: #922610;
+	stroke: #922610;
+	margin-top: 0.6em;
+	margin-bottom: 0.35em;
+}
+
+div#NPCView .npc-view {
+	width: 310px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+div#NPCView .npc-view.right {
+	margin-left: auto;
+	width: 400px;
+}
+
+div#NPCView .gradient {
+	background: linear-gradient(10deg, #A73335, rgba(0, 0, 0, 0));
+	height: 5px;
+	margin: 7px 0px;
+}
+
+div#NPCView .name {
+	font-size: 225%;
+	font-family: Georgia, serif;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: #A73335;
+}
+
+div#NPCView .description span {
+	display: block;
+	/*font-style:italic;*/
+}
+
+div#NPCView .bold {
+	font-weight: bold;
+}
+
+div#NPCView .red {
+	color: #A73335;
+}
+
+div#NPCView table {
+	width: 100%;
+	border: 0px;
+	border-collapse: collapse;
+	color: #A73335;
+}
+
+div#NPCView th,
+div#NPCView td {
+	width: 50px;
+	text-align: center;
+}
+
+div#NPCView .actions {
+	font-size: 175%;
+	font-variant: small-caps;
+	/*margin:17px 0px 0px 0px;*/
+}
+
+div#NPCView .hr {
+	background: #A73335;
+	height: 2px;
+}
+
+div#NPCView .attack {
+	margin: 5px 0px;
+}
+
+div#NPCView .attackname {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.ui-dialog {
+	padding: 0;
+}
+
+.view-title .ui-dialog-title {
+	font-size: 150%;
+	font-family: Georgia, serif;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: #a73335;
+}
+
+table.combat-difficulty {
+	float: right;
+	margin-right: 8px;
+}
+
+div#ItemView p.item-desc {
+	font-family: Arial, Helvetica, sans-serif;
+	margin-top: 0;
+	font-size: 90%;
+}
+
+.ui-dialog .ui-dialog-title {
+	text-overflow: initial;
+}
+
+.ui-dialog-content {
+	min-height: initial !important;
+}
+
+div#grid-map {
+	position: relative;
+	width: 100%;
+	/*height: 100%;*/
+	height: 60vh;
+	background-size: 15px 15px;
+	transition: transform 0.13s ease-in;
+	/*display: inline-block;*/
+	transform-origin: 0 0;
+}
+
+div#grid-lines {
+	z-index: 4;
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-size: 50px 50px;
+	/*display: inline-block;*/
+	transform-origin: 0 0;
+}
+
+div#grid-lines.show {
+	background-image: linear-gradient(to right, rgba(153,153,153,0.8) 1px, transparent 1px), linear-gradient(to bottom, rgba(153,153,153,0.8) 1px, transparent 1px);
+}
+
+div#grid-lines.alt-color.show {
+	background-image: linear-gradient(to right, rgba(0,0,0,0.7) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.7) 1px, transparent 1px);
+}
+
+div.gridviewmodel-inc.ui-dialog-normal {
+	width: 450px !important;
+	height: 450px !important;
+}
+
+div.gridviewmodel-inc {
+	overflow: scroll !important;
+	padding: 0px !important;
+}
+
+div.grid-token {
+	cursor: default;
+	position: absolute;
+	border-radius: 50%;
+	border: 1px solid black;
+}
+
+div.grid-token span {
+	text-align: center;
+	display: block;
+	/*border: 1px solid #666;*/
+	border: none;
+}
+
+div.grid-token.size-T,
+div.grid-token.size-S,
+div.grid-token.size-M,
+div.grid-token.size-undefined {
+	width: 14px;
+	height: 14px;
+}
+
+div.unknown-row {
+	background: #fff;
+}
+
+div.grid-token.size-T span,
+div.grid-token.size-S span,
+div.grid-token.size-M span,
+div.grid-token.size-undefined span {
+	font-size: 16px;
+	/*line-height: 14px;*/
+	height: 14px;
+}
+
+div.grid-token.size-L {
+	width: 29px;
+	height: 29px;
+}
+
+div.grid-token.size-L span {
+	font-size: 25px;
+	/*line-height: 29px;*/
+	height: 29px;
+}
+
+div.grid-token.size-H {
+	width: 44px;
+	height: 44px;
+}
+
+div.grid-token.size-H span {
+	font-size: 40px;
+	/*line-height: 44px;*/
+	height: 44px;
+}
+
+div.grid-token.size-G,
+div.grid-token.size-C {
+	width: 89px;
+	height: 89px;
+}
+
+div.grid-token.size-G span,
+div.grid-token.size-C span {
+	font-size: 86px;
+	/*line-height: 89px;*/
+	height: 89px;
+}
+
+div.grid-container {
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 100%;
+	position: relative;
+	margin-top: 6px;
+}
+
+canvas#grid-canvas {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 99;
+}
+
+span.spell-link {
+	line-height: 32px;
+	padding-left: 5px;
+}
+
+div.spells.grid table td {
+	padding: 1px 0;
+}
+
+div#dialog-extend-fixed-container span.ui-dialog-title {
+	cursor: default;
+}
+
+table.players th.player-ac, 
+table.players th.player-passive, 
+table.players th.player-level {
+	width: 30px;
+	text-align: center;
+}
+
+table.players input.player-ac,
+table.players input.player-passive,
+table.players input.player-level {
+	text-align: center;
+}
+
+div.rollviewmodel-inc {
+	font-size: 0;
+}
+
+table.combat th.combat-levelcr, 
+table.combat th.combat-ac, 
+table.combat th.combat-initiative {
+	text-align: center;
+	width: 45px;
+}
+table.combat th.combat-hp {
+	width: 100px;
+}
+
+table.combat input {
+	width: 100%;
+}
+
+table.combat input.combat-levelcr,
+table.combat input.combat-ac,
+table.combat input.combat-initiative {
+	text-align: center;
+}
+
+table.combat input.combat-name.npc {
+	padding-right: 22px;
+}
+
+table.combat i.npc-view {
+	position: absolute;
+	top: 50%;
+	right: 7px;
+	margin-top: -8px;
+}
+
+table.combat td.combat-name {
+	position: relative;
+}
+
+#GridTab{
+	/*height: 100%;*/
+}
+
+div.combatviewmodel-inc{
+	overflow: hidden !important;
+}
+
+div#grid-mapslides {
+	font-size: 0px;
+	text-align: center;
+}
+
+div#grid-mapslides div.grid-map-thumb {
+	display: inline-block;
+	padding: 1px;
+	position: relative;
+	box-sizing: border-box;
+	width: 150px;
+	height: 100px;
+}
+
+div#grid-mapslides div.grid-map-thumb img {
+	height: 100%;
+	box-sizing: border-box;
+	width: 100%;
+	cursor: pointer;
+}
+
+div#grid-mapslides div.grid-map-thumb i.fa.fa-times {
+	font-size: 16px;
+	position: absolute;
+	color: #fff;
+	top: 1px;
+	right: 1px;
+	text-shadow: 0 0 13px #000;
+	padding: 3px;
+	cursor: pointer;
+}
+
+div#grid-mapslides div.grid-map-thumb i.fa.fa-times.show {
+	display: initial;
+}
+
+div#grid-mapslides div.grid-map-thumb i.fa.fa-times:hover {
+	color: #007fff;
+}
+
+div.leaflet-popup-pane {
+	z-index: 5;
+	opacity: 0.7;
+}
+
+div.leaflet-popup-content-wrapper {
+	text-align: center;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div.leaflet-popup-tip-container {
+	display: none;
+}
+
+div.leaflet-popup-content {
+	margin: 1px 19px;
+	line-height: 1.4;
+}
+
+div.leaflet-popup-content-wrapper, div.leaflet-popup-tip {
+	background: #000;
+	color: #fff;
+}
+
+img.leaflet-marker-icon.outline {
+	-webkit-filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.4))
+		drop-shadow(-1px -1px 0 rgba(255,255,255,0.4));
+	filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.4)) 
+		drop-shadow(-1px -1px 0 rgba(255,255,255,0.4));
+}
+
+img.leaflet-marker-icon.outline.Player {
+	-webkit-filter: drop-shadow(1px 1px 0 rgba(0,255,0,0.4))
+		drop-shadow(-1px -1px 0 rgba(0,255,0,0.4));
+	filter: drop-shadow(1px 1px 0 rgba(0,255,0,0.4)) 
+		drop-shadow(-1px -1px 0 rgba(0,255,0,0.4));
+}
+
+img.leaflet-marker-icon.outline.NPC {
+	-webkit-filter: drop-shadow(1px 1px 0 rgba(255,0,0,0.4))
+		drop-shadow(-1px -1px 0 rgba(255,0,0,0.4));
+	filter: drop-shadow(1px 1px 0 rgba(255,0,0,0.4)) 
+		drop-shadow(-1px -1px 0 rgba(255,0,0,0.4));
+}
+
+img.leaflet-marker-icon.dead {
+	-webkit-filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
+    filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
+    opacity: 0.65;
+}
+
+svg.defs-only {
+	position: absolute;
+	height: 0; width: 0;
+	overflow: none;
+	left: -100%;
+}

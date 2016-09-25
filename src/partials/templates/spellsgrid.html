@@ -1,0 +1,20 @@
+<script type="text/html" id="ko_spellsgrid_template">
+	<table class="ko-grid" cellspacing="0">
+	<thead>
+		<tr>
+		   <th data-bind="text: columns[1].headerText"></th>
+		   <th data-bind="text: columns[2].headerText"></th>
+		</tr>
+		</thead>
+		<tbody data-bind="foreach: itemsOnCurrentPage">
+			<tr>
+				<td data-bind="text: $data.Level || 'Cantrip'"></td>
+				<td>
+					<span class="spell-link" data-bind="text: $data.Name, click: WORKSPACE.Helpers.ViewSpell.bind($data, $data.Id)"></span>
+					<button class="float-right ui-button ui-corner-all ui-widget" 
+						data-bind="click: WORKSPACE.Helpers.AddSpell">+</button>
+				</td>
+			</tr>
+		</tbody>
+  </table>
+</script>

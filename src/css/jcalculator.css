@@ -1,0 +1,144 @@
+.jcalculator_wrap {
+    position: relative;
+}
+
+.jcalculator {
+    font-family: Helvetica Neue, Helvetica, Arial, Verdana, sans-serif;
+    width: 200px;
+    display: none;
+    position: absolute;
+    left: 0;
+    text-align: center;
+    top: 33px;
+}
+
+.jcalculator span {
+    cursor: pointer;
+    float: left;
+    display: block;
+    color: #ffffff;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.jcalculator span:active {
+    line-height: 52px;
+}
+
+.jcalculator .op {
+    background: #191919;
+    font-size: 20px;
+}
+
+
+/* ======================== */
+/* Light Theme ============ */
+/* ======================== */
+
+.jcalculator.light {
+    background: #ffffff;
+    border-top: 1px solid #F1F1F1;
+    border-right: 1px solid #F1F1F1;
+}
+
+.jcalculator.light span {
+    background: #ffffff;
+    color: #6d6d6d;
+    border-bottom: 1px solid #F1F1F1;
+    border-left: 1px solid #F1F1F1;
+}
+
+.jcalculator.light .op {
+    color: #2b83d2;
+}
+
+.jcalculator.light .eq {
+    background: #DF994B;
+    color: #fff;
+}
+
+
+/* ======================== */
+/* Dark Theme ============= */
+/* ======================== */
+
+.jalculator.dark {
+    background: #1a1a1a;
+    border-right: 1px solid #000000;
+    border-top: 1px solid #000000;
+}
+
+.jcalculator.dark span {
+    color: #777777;
+    background: #1a1a1a;
+    border-left: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    box-shadow: inset -1px -1px 0px #272727;
+}
+
+.jcalculator.dark .op {
+    background: #131313;
+    font-size: 14px;
+}
+
+.jcalculator.dark .eq {
+    background: #e30028;
+    color: #ffffff;
+    border-bottom: 0;
+    box-shadow: none;
+}
+
+
+/* ======================== */
+/* Material Theme ========= */
+/* ======================== */
+
+.jcalculator.material {
+    background: #3b3b3b;
+}
+
+.jcalculator.material span {
+    border: 0;
+    font-weight: lighter;
+    font-weight: 14px;
+    position: relative;
+    font-size: 16px;
+}
+
+.jcalculator.material span .ripple {
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    left: 0;
+    top: 0;
+    background: rgba(255, 255, 255, .2);
+    border-radius: 50%;
+    transform: scale(0);
+}
+
+.jcalculator.material span .ripple.animate {
+    animation: ripple 0.5s linear;
+}
+
+.jcalculator.material .eq {
+    font-weight: normal;
+    color: #fff;
+    background: #499bf9;
+    font-size: 17px;
+}
+
+.jcalculator.material .op {
+    background: #333;
+    font-size: 20px;
+}
+
+@keyframes ripple {
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}

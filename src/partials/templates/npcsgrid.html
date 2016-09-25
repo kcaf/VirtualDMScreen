@@ -1,0 +1,29 @@
+<script type="text/html" id="ko_npcsgrid_template">
+	<table class="npcs ko-grid" cellspacing="0">
+    <thead>
+        <tr>
+			<th class="add"></th>
+			<th data-bind="text: columns[1].headerText"></th>
+			<th data-bind="text: columns[2].headerText"></th>
+			<th class="text-center" data-bind="text: columns[3].headerText"></th>
+        </tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: itemsOnCurrentPage -->
+			<tr>
+				<td>
+					<button class="ui-button ui-corner-all ui-widget" 
+		            	data-bind="click: function(data, event) { WORKSPACE.Helpers.AddNPC(data, event) }">+</button>
+		            <!--<span data-bind="text: $data.Name"></td>-->
+	            </td>
+				<td>
+					<span class="npc-link" data-bind="text: $data.Name, 
+						click: WORKSPACE.Helpers.ViewNPC.bind($data, $data.Id)"></span>
+				</td>
+				<td data-bind="text: $data.Type"></td>
+				<td class="text-center" data-bind="text: $data.CR"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+  </table>
+</script>
