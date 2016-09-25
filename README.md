@@ -13,6 +13,7 @@ A simple browser interface for DMing tabletop RPG games (specifically D&D 5th Ed
 - Right click and drag to view distance
 - Double click a NPC to view stat block
 - Open a second browser window to "map.html" to share only the battlemap on your second monitor or screen-sharing software
+- [TODO] Store map and token images locally for offline play
 
 ##Dice
 - Automatically calculate dice roll sets "3d10 + 3d6 + 12"
