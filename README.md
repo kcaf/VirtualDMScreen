@@ -1,5 +1,5 @@
 # VirtualDMScreen
-A simple browser interface for DMing tabletop RPG games (specifically D&D 5th Edition)
+A simple browser interface for running tabletop RPG games (specifically 5e)
 
 ##Demo
 https://kcaf.github.io/VirtualDMScreen/
@@ -9,10 +9,10 @@ https://kcaf.github.io/VirtualDMScreen/
 - The data files are incomplete for legal reasons. One day I'll get around to incorporating the full 5e SRD.
 - All information, other than images, is saved locally via localStorage.  
 - Browser support for this tool varies. I've tested extensively in Chrome and Firefox. If you're on a PC, you're probably using one of these anyway. If not, use at your own risk.  
-- There is an extra file called `map.html`. You can open this file in another browser window and on your primary window click `Combat` > `Settings` > `Map Viewer` to begin streaming the battlemap in real time.
+- There is an extra file called `map.html`. You can open this file in another browser window and on your primary window click `Combat` > `Settings` > `Stream` to begin streaming the battlemap in real time.
 
 ##Preview
-![alt text](http://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
+![alt text](https://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
 
 ##Combat
 - Calculate HP on the fly with + or -
@@ -22,7 +22,9 @@ https://kcaf.github.io/VirtualDMScreen/
 - Simply battlemap panning and zoom
 - Right click and drag to view distance
 - Double click a NPC to view stat block
-- Open a second browser window to "map.html" to share only the battlemap on your second monitor or screen-sharing software
+- Open a second browser window to `map.html` and check `Stream` in the settings to start streaming the battle map to a second monitor or screen-sharing software
+- Turn a combatant invisible and they won't show up on the Stream
+- Cast your players into darkness with one click (expanding on this in the future)
 - [TODO] Store map and token images locally for offline play
 
 ##Dice
@@ -55,13 +57,18 @@ https://kcaf.github.io/VirtualDMScreen/
 
 ##Customizing
 - Have your own data files? Press `F12` to open the developer console and simply redeclare the arrays there  
-Names for each data array: `MAGIC`, `MONSTERS`, `SPELLS`
+Names for each data array are: `MAGIC`, `MONSTERS`, `SPELLS`
 
 ##Misc
 - [TODO] Add touch events for mobile play
 - [TODO] Set up github static hosting
 - [TODO] Create a clean way to import custom data files
-- [TODO] Cleanup messy code
+- [TODO] Clean up messy code
 - [TODO] Write better CSS. Ugh.
 - [TODO] [Possibly remove KnockoutJS](https://www.youtube.com/watch?v=MH7KYmGnj40)
 - [TODO] Extend browser support
+
+##Licensing
+- VirtualDMScreen is published under the [MIT license](https://opensource.org/licenses/MIT)
+- Some content used as part of the [Open Gaming License (OGL)](http://dnd.wizards.com/articles/features/systems-reference-document-srd)
+- Mapping made possible by [LeafletJS](http://leafletjs.com) <-- flippin amazing
