@@ -9,7 +9,7 @@ https://kcaf.github.io/VirtualDMScreen/
 - The data files are incomplete for legal reasons. One day I'll get around to incorporating the full 5e SRD.
 - All information, other than images, is saved locally via localStorage.  
 - Browser support for this tool varies. I've tested extensively in Chrome and Firefox. If you're on a PC, you're probably using one of these anyway. If not, use at your own risk.  
-- There is an extra file called `map.html`. You can open this file in another browser window and on your primary window click `Combat` > `Settings` > `Map Viewer` to begin streaming the battlemap in real time.
+- There is an extra file called `map.html`. You can open this file in another browser window and on your primary window click `Combat` > `Settings` > `Stream` to begin streaming the battlemap in real time.
 
 ##Preview
 ![alt text](https://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
@@ -22,8 +22,8 @@ https://kcaf.github.io/VirtualDMScreen/
 - Simply battlemap panning and zoom
 - Right click and drag to view distance
 - Double click a NPC to view stat block
-- Open a second browser window to `map.html` and check `Map Viewer` in the settings to start streaming the battle map to a second monitor or screen-sharing software
-- Turn a combatant invisible and they won't show up on the Map Viewer stream
+- Open a second browser window to `map.html` and check `Stream` in the settings to start streaming the battle map to a second monitor or screen-sharing software
+- Turn a combatant invisible and they won't show up on the Stream
 - Cast your players into darkness with one click (expanding on this in the future)
 - [TODO] Store map and token images locally for offline play
 
