@@ -4,7 +4,6 @@ MapViewer = function(){
 	_this.FindLatestTimer = null;
 	_this.IsBuilding = false;
 	_this.Hash = null;
-	_this.LightsInterval = null;
 	_this.MapSelector = "#CombatViewModel";
 
 	_this.FindLatest = function() {
@@ -25,11 +24,6 @@ MapViewer = function(){
 					_this.ViewModel.Load(combatObj);
 					WORKSPACE.GridMap.setZoom(combatObj.GridZoom || 1);
 					WORKSPACE.GridMap.panTo(combatObj.GridCenter || [0,0]);
-
-					if(WORKSPACE.ViewModels.CombatViewModel.ShowDarkness())
-						_this.LightsInterval = setInterval( WORKSPACE.Helpers.DrawLights, 50 );
-					else
-						clearInterval(_this.LightsInterval);
 				}
 			} catch(e) {
 				console.log(e);

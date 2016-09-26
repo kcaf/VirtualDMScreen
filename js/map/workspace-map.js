@@ -1,5 +1,4 @@
 var WORKSPACE = {
-	VIEW: 1,
 	DEBUG: false,
 	ViewModels: {},
 	GridLayers: [],
@@ -27,47 +26,6 @@ var WORKSPACE = {
 };
 
 WORKSPACE.Helpers = {
-
-	DrawLights: function() {
-		if(!WORKSPACE.ViewModels.CombatViewModel.ShowDarkness()) return;
-
-		var canvas = $("#grid-light"),
-			ctx = canvas[0].getContext('2d'),
-			ambientLight = 0.00,
-			intensity = 1,
-			radius = 600 * WORKSPACE.ViewModels.CombatViewModel.TokenScale(),
-			diameter = radius*2,
-			amb = 'rgba(0,0,0,' + (1-ambientLight) + ')',
-			mapSize = WORKSPACE.GridMap.getSize();
-
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		canvas.css("top", -diameter + "px");
-		canvas.css("left", -diameter + "px");
-		canvas.attr("width", mapSize.x + diameter*2 + "px");
-		canvas.attr("height", mapSize.y + diameter*2 + "px");
-
-		$(".leaflet-marker-icon").each(function(i, v) {
-			var ele = $(v);
-
-			if(!ele.hasClass("player")) return;
-
-			var	offset = ele.offset(),
-				offsetLeft = offset.left + ele.width()/2 + diameter,
-				offsetTop = offset.top + ele.height()/2 + diameter,
-				gradient = ctx.createRadialGradient(offsetLeft, offsetTop, 0, offsetLeft, offsetTop, radius);
-
-			gradient.addColorStop(1, 'rgba(0,0,0,' + (1-intensity) + ')');
-			/*gradient.addColorStop(0.6, 'rgba(0,0,0,0.1)');*/
-			gradient.addColorStop(0.4, 'rgba(0,0,0,0.4)');
-			gradient.addColorStop(0, amb);
-			ctx.fillStyle = gradient;
-			ctx.fillRect(offsetLeft-radius, offsetTop-radius, offsetLeft+radius, offsetTop+radius);
-		});
-
-		ctx.fillStyle = amb;
-		ctx.globalCompositeOperation = 'xor';
-		ctx.fillRect(0, 0, mapSize.x + diameter*2, mapSize.y + diameter*2);
-	},
 
 	DisableDistance: function( event ) {
 		if (event.which > 1) {
@@ -292,7 +250,6 @@ WORKSPACE.Shim = function() {
 		gridlines.css("transform", imglayer[0].style.transform);
 		gridlines.css("width", imglayer.width());
 		gridlines.css("height", imglayer.height());
-		WORKSPACE.Helpers.DrawLights();
 	});
 
 	WORKSPACE.GridMap.on("mousedown", function(event) {

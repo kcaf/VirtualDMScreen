@@ -21,7 +21,6 @@
 					<tr>
 						<th class="combat-token"></th>
 						<th class="combat-name">Name</th>
-						<th class="combat-visible">Invis</th>
 						<th class="combat-levelcr">Level/CR</th>
 						<th class="combat-ac">AC</th>
 						<th class="combat-initiative">Initiative</th>
@@ -31,16 +30,12 @@
 				</thead>
 				<tbody data-bind="foreach: OrderedCombatantList">
 					<tr data-bind="attr: {class: RowClass}">
-						<td class="combat-token"><img class="combat-token" data-bind="attr: {src: Token}, click: PickToken" /></td>
+						<td><img class="combat-token" data-bind="attr: {src: Token}, click: PickToken" /></td>
 						<td class="combat-name">
 							<i class="noselect npc-view fa fa-external-link" 
 								data-bind="visible: ModelType() == 'NPC', 
 									click: WORKSPACE.Helpers.ViewNPC.bind($data, $data.Id())"></i>
 							<input class="combat-name required" data-bind="css: {npc: ModelType() == 'NPC'}, value: Name" />
-						</td>
-						<td class="combat-visible">
-							<input type="checkbox" class="combat-visible" 
-								data-bind="checked: Invisible" title="Invisible"/>
 						</td>
 						<td><input class="combat-levelcr" data-bind="textInput: LevelAndCR" /></td>
 						<td><input class="combat-ac" data-bind="textInput: ACBasic, attr: {title: AC}" /></td>
@@ -74,21 +69,18 @@
 			                0.50 0 0 0 0.00 
 			                0    0 0 1 0" />
 			</filter>
-			<filter id="InvisibleToken" color-interpolation-filters="sRGB"
-				  x="0" y="0" height="100%" width="100%">
-				<feColorMatrix type="matrix"
-			        values="0.50 0 0 0 0.00 
-			                0.50 0 0 0 0.00  
-			                0.50 0 0 0 0.90 
-			                0    0 0 1 0" />
-			</filter>
 		</svg>
-		<div class="grid-container noselect">
+		<div class="grid-container noselect"><!-- data-bind="style: {backgroundImage: GridBackground}">-->
 			<div id="grid-map">
 			</div>
 			<div id="grid-lines" data-bind="css: {'show': ShowGridLines, 'alt-color': AltGridColor}"></div>
+			<!-- data-bind="css: {'grid-lines': ShowGridLines, 'alt-color': AltGridColor}, foreach: CombatantList()">
+				<div data-bind="attr: {class: TokenClass, title: Name}, 
+					style: {zIndex: ZIndex, left: PositionLeft, top: PositionTop}, 
+					event: {mousemove: MouseMove, mousedown: MouseDown, mouseup: MouseUp, dblclick: ViewCombatant}">
+				</div>
+			</div>-->
 			<canvas id="grid-canvas"></canvas>
-			<canvas id="grid-light" style="display: none"></canvas>
 		</div>
 	</div>
 	<div id="GridSettingsTab">
@@ -109,10 +101,6 @@
 				<label for="grid-color">Alt Color</label>
 				<input type="checkbox" name="grid-color" data-bind="checked: AltGridColor" />
 			</div>
-			<div class="gridsettings-darkness">
-				<label for="grid-darkness">Show Darkness</label>
-				<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
-			</div>
 			<div class="gridsettings-scale">
 				<label>Scale:</label> <span data-bind="text: TokenScale"></span>
 				<div id="token-scale"></div>
@@ -125,19 +113,18 @@
 				<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
 			</div>
 		</div>
-		<div id="grid-mapslides">
-			<div class="page-prev" data-bind="click: MapPrev">
-				<i class="fa fa-chevron-left"></i>
-			</div>
-			<div class="map-page" data-bind="foreach: MapSlidesPage">
-				<div class="grid-map-thumb">
-					<div class="img" data-bind="attr: {'data-src': Source}, style: {'background-image': 'url(' + Source + ')'}, click: $parent.LoadMap">
-						<i class="remove-map fa fa-times" data-bind="click: $parent.RemoveMap"></i>
-					</div>
-				</div>
-			</div>
-			<div class="page-next" data-bind="click: MapNext">
-				<i class="fa fa-chevron-right"></i>
+		<!--<div id="grid-mapslides"
+			<ul id="map-slide-list" data-bind="foreach: MapSlides">
+				<li class="map-slide lslide">
+					<a href="javascript:void(0)"><img data-bind="attr: {src: Source}, click: $parent.LoadMap" /></a>
+					<i class="remove-map fa fa-times" data-bind="click: $parent.RemoveMap"></i>
+				</li>
+			</ul>
+		</div>-->
+		<div id="grid-mapslides" data-bind="foreach: MapSlides">
+			<div class="grid-map-thumb">
+				<img data-bind="attr: {src: Source}, click: $parent.LoadMap" />
+				<i class="remove-map fa fa-times" data-bind="click: $parent.RemoveMap"></i>
 			</div>
 		</div>
 	</div>
