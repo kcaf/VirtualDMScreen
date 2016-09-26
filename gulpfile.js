@@ -19,7 +19,7 @@ var indexTransform = function (filepath, file) {
 };
 
 gulp.task('default', ['clean'], function(){
-	runSequence('copy', 'build', 'clean-js', 'index', 'map', 'open');
+	runSequence('copy', 'build', 'clean-js', 'index', 'map', 'clean-map-js', 'open');
 });
 
 gulp.task('open', function(){
@@ -42,7 +42,18 @@ gulp.task('clean', function () {
 });
 
 gulp.task('clean-js', function () {
-  return gulp.src(['./build/js/*.js','!./build/js/*.min.js'], { read: false })
+  return gulp.src([
+  		'./build/js/*.js',
+  		'!./build/js/*.min.js'
+	], { read: false })
+    .pipe(clean({ force: true }));
+});
+
+gulp.task('clean-map-js', function () {
+  return gulp.src([
+  		'./build/js/map/*.js',
+  		'!./build/js/map/*.min.js'
+	], { read: false })
     .pipe(clean({ force: true }));
 });
 
