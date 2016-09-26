@@ -2,5 +2,3 @@
 .sublime-gulp.cache
 *.sublime-workspace
 node_modules/
-build/js/data.min.js
-src/data/
