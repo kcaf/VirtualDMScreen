@@ -40,7 +40,7 @@ WORKSPACE.Helpers = {
 			amb = 'rgba(0,0,0,' + (1-ambientLight) + ')',
 			mapSize = WORKSPACE.GridMap.getSize();
 
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
 		canvas.css("top", -diameter + "px");
 		canvas.css("left", -diameter + "px");
 		canvas.attr("width", mapSize.x + diameter*2 + "px");

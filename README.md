@@ -22,7 +22,9 @@ https://kcaf.github.io/VirtualDMScreen/
 - Simply battlemap panning and zoom
 - Right click and drag to view distance
 - Double click a NPC to view stat block
-- Open a second browser window to "map.html" to share only the battlemap on your second monitor or screen-sharing software
+- Open a second browser window to `map.html` and check `Map Viewer` in the settings to start streaming the battle map to a second monitor or screen-sharing software
+- Turn a combatant invisible and they won't show up on the Map Viewer stream
+- Cast your players into darkness with one click (expanding on this in the future)
 - [TODO] Store map and token images locally for offline play
 
 ##Dice

@@ -82,37 +82,53 @@
 		</div>
 	</div>
 	<div id="GridSettingsTab">
-		<div class="filters">
-			<div class="gridsettings-add">
-				<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd" />
-				<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map</button>
-			</div>
-			<div class="gridsettings-outline">
-				<label for="grid-outline">Token Outline</label>
-				<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
-			</div>
-			<div class="gridsettings-lines">
-				<label for="grid-lines">Show Grid</label>
-				<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
-			</div>
-			<div class="gridsettings-color">
-				<label for="grid-color">Alt Color</label>
-				<input type="checkbox" name="grid-color" data-bind="checked: AltGridColor" />
-			</div>
-			<div class="gridsettings-darkness">
-				<label for="grid-darkness">Show Darkness</label>
-				<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
-			</div>
-			<div class="gridsettings-scale">
-				<label>Scale:</label> <span data-bind="text: TokenScale"></span>
-				<div id="token-scale"></div>
-			</div>
-			<div class="gridsettings-scale">
-				<label for="grid-transmit">Stream Map View (map.html)</label>
-				<input type="checkbox" name="grid-transmit" data-bind="checked: TransmitMap" />
-			</div>
+		<div class="filters grid">
+			<table class="gridsettings ko-grid" cellspacing="0">
+			    <thead>
+			        <tr>
+						<th>Outline</th>
+						<th>Grid</th>
+						<th>Alt.Color</th>
+						<th>Darkness</th>
+						<th>Stream</th>
+			        </tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
+			            </td>
+			            <td>
+							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
+			            </td>
+			            <td>
+							<input type="checkbox" name="grid-color" data-bind="checked: AltGridColor" />
+			            </td>
+			            <td>
+							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
+			            </td>
+			            <td>
+							<input type="checkbox" name="grid-transmit" data-bind="checked: TransmitMap" />
+			            </td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr style="height: 10px;"></tr>
+					<tr>
+						<th>Scale</th>
+						<td colspan="3">
+							<div id="token-scale"></div>
+						</td>
+						<td class="token-scale" data-bind="text: TokenScale() + 'x'"></td>
+					</tr>
+				</tfoot>
+			</table>
 			<div class="gridsettings-buttons">
-				<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
+				<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Token Positions</button>
+			</div>
+			<div class="gridsettings-add">
+				<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd">
+				<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map URL</button>
 			</div>
 		</div>
 		<div id="grid-mapslides">

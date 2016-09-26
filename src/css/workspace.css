@@ -1313,3 +1313,29 @@ div#grid-mapslides .map-page {
 	padding: 0 40px;
 	height: 204px;
 }
+
+div.gridsettings-add input {
+    height: 33px;
+    line-height: 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: .4em;
+}
+
+div.gridsettings-add button {
+    line-height: 16px;
+}
+
+table.gridsettings input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+div#token-scale {
+    font-size: 18px;
+}
+
+table.gridsettings td.token-scale {
+    font-weight: bold;
+    padding-left: 13px;
+}
