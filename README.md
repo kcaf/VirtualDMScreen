@@ -1,5 +1,5 @@
 # VirtualDMScreen
-A simple browser interface for DMing tabletop RPG games (specifically D&D 5th Edition)
+A simple browser interface for running tabletop RPG games (specifically 5e)
 
 ##Demo
 https://kcaf.github.io/VirtualDMScreen/
@@ -12,7 +12,7 @@ https://kcaf.github.io/VirtualDMScreen/
 - There is an extra file called `map.html`. You can open this file in another browser window and on your primary window click `Combat` > `Settings` > `Map Viewer` to begin streaming the battlemap in real time.
 
 ##Preview
-![alt text](http://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
+![alt text](https://i.imgur.com/9leuIOF.jpg "VirtualDMScreen")
 
 ##Combat
 - Calculate HP on the fly with + or -
@@ -55,13 +55,18 @@ https://kcaf.github.io/VirtualDMScreen/
 
 ##Customizing
 - Have your own data files? Press `F12` to open the developer console and simply redeclare the arrays there  
-Names for each data array: `MAGIC`, `MONSTERS`, `SPELLS`
+Names for each data array are: `MAGIC`, `MONSTERS`, `SPELLS`
 
 ##Misc
 - [TODO] Add touch events for mobile play
 - [TODO] Set up github static hosting
 - [TODO] Create a clean way to import custom data files
-- [TODO] Cleanup messy code
+- [TODO] Clean up messy code
 - [TODO] Write better CSS. Ugh.
 - [TODO] [Possibly remove KnockoutJS](https://www.youtube.com/watch?v=MH7KYmGnj40)
 - [TODO] Extend browser support
+
+##Licensing
+- VirtualDMScreen is published under the [MIT license](https://opensource.org/licenses/MIT)
+- Some content used as part of the [Open Gaming License (OGL)](http://dnd.wizards.com/articles/features/systems-reference-document-srd)
+- Mapping made possible by [LeafletJS](http://leafletjs.com) <-- flippin amazing

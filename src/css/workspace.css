@@ -1045,7 +1045,8 @@ div.grid-container {
 	margin-top: 6px;
 }
 
-canvas#grid-canvas {
+canvas#grid-canvas,
+canvas#grid-light {
 	pointer-events: none;
 	position: absolute;
 	top: 0;
@@ -1105,6 +1106,17 @@ table.combat input.combat-initiative {
 
 table.combat input.combat-name.npc {
 	padding-right: 22px;
+}
+
+table.combat td.combat-token,
+table.combat td.combat-visible {
+	text-align: center;
+	width: 10px;
+}
+
+table.combat input.combat-visible {
+    width: 20px;
+    height: 20px;
 }
 
 table.combat i.npc-view {
@@ -1216,6 +1228,12 @@ img.leaflet-marker-icon.outline.NPC {
 		drop-shadow(-1px -1px 0 rgba(255,0,0,0.4));
 }
 
+img.leaflet-marker-icon.invisible {
+	-webkit-filter: url(#InvisibleToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
+    filter: url(#InvisibleToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
+    opacity: 0.65;
+}
+
 img.leaflet-marker-icon.dead {
 	-webkit-filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
     filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
@@ -1227,4 +1245,71 @@ svg.defs-only {
 	height: 0; width: 0;
 	overflow: none;
 	left: -100%;
+}
+
+div#grid-mapslides {
+    background-color: #000;
+    position: relative;
+}
+
+div#grid-mapslides div.grid-map-thumb {
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    width: 25%;
+    background: none;
+    height: 102px;
+    padding: 1px;
+}
+
+div#grid-mapslides .img {
+	opacity: 0.8;
+    width: 100%;
+    height: 100%;
+    background-image: none;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+div#grid-mapslides .img:hover {
+    opacity: 1;
+}
+
+div#grid-mapslides .page-prev, 
+div#grid-mapslides .page-next {
+    color: #fff;
+    z-index: 10;
+    height: 100%;
+    width: 40px;
+    background: 0;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+}
+
+div#grid-mapslides .page-prev:hover, 
+div#grid-mapslides .page-next:hover {
+	color: #007fff;
+}
+
+div#grid-mapslides .page-prev i, 
+div#grid-mapslides .page-next i {
+    font-size: 27px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+div#grid-mapslides .page-prev {
+    left: 0;
+}
+
+div#grid-mapslides .page-next {
+    right: 0;
+}
+
+div#grid-mapslides .map-page {
+	padding: 0 40px;
+	height: 204px;
 }

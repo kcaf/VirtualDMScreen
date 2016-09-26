@@ -1,5 +1,5 @@
 var WORKSPACE = {
-	
+	VIEW: 0,
 	DEBUG: false,
 	Clicked: false,
 	PanelList: [],
@@ -292,32 +292,41 @@ var WORKSPACE = {
 		});
 
 		WORKSPACE.ResizeGridOrig = "";
+
 		WORKSPACE.ResizeGrid = function(invalidateSize){
-			//var selector = $("#GridTab"),
 			var	parent = $(".combatviewmodel-inc"),
 				tabs = $(".combatviewmodel-inc > .ui-tabs-nav"),
 				height = parent.height() - tabs.height() - 12,
 				width = parent.width();
+
 			$("#grid-map").css("height", height + "px");
 			$("#grid-canvas").attr("height", height + 1);
 			$("#grid-canvas").attr("width", width + 6);
-			//WORKSPACE.Helpers.SwapMap(WORKSPACE.ViewModels.CombatViewModel.ActiveMap());
+
 			if(WORKSPACE.GridMap && invalidateSize){
 				WORKSPACE.GridMap.invalidateSize();
-				//WORKSPACE.ViewModels.CombatViewModel.GridCenter(WORKSPACE.GridMap.getCenter());
 			}
 		};
 
 		WORKSPACE.ResizeGrid();
-		$(".combatviewmodel-inc").on( "dialogresize", function( event, ui ) {
+		var combatvminc = $(".combatviewmodel-inc");
+
+		combatvminc.on( "dialogresize", function( event, ui ) {
 			WORKSPACE.ResizeGrid(true);
-		}).on( "dialogextendbeforeMaximize", function( event ) {
+		});
+
+		combatvminc.on( "dialogextendbeforeMaximize", function( event ) {
 			var selector = $("#GridTab"),
 				parent = selector.parent();
 			WORKSPACE.ResizeGridOrig = parent.height() + parent.offset().top - selector.offset().top + "px";
-		}).on( "dialogextendmaximize", function( event ) { 
+		});
+
+		combatvminc.on( "dialogextendmaximize", function( event ) { 
 			WORKSPACE.ResizeGrid(true);
-		}).on( "dialogextendrestore", function( event ) { 
+
+		});
+
+		combatvminc.on( "dialogextendrestore", function( event ) { 
 			$("#grid-map").css("height", WORKSPACE.ResizeGridOrig);
 			WORKSPACE.ResizeGrid(true);
 		});
@@ -403,15 +412,24 @@ var WORKSPACE = {
 			maxZoom: 7,
 			attributionControl: false
 		});
-		WORKSPACE.GridMap.on("contextmenu", function(event) {
+
+		WORKSPACE.GridMap.on( "contextmenu", function(event) {
 			// Do nothing
 		});
-		WORKSPACE.GridMap.on("mousemove", function(event) {
+
+		WORKSPACE.GridMap.on( "mousemove", function(event) {
 			WORKSPACE.Helpers.DrawDistance(event.originalEvent);
+			WORKSPACE.GridMap.invalidateSize();
 		});
-		WORKSPACE.GridMap.on("mouseup", function(event) {
+
+		WORKSPACE.GridMap.on( "mouseup", function(event) {
 			WORKSPACE.Helpers.DisableDistance(event.originalEvent);
 		});
+
+		/*WORKSPACE.GridMap.on( "viewreset", function(event) {
+			WORKSPACE.GridMap.invalidateSize();
+		});*/
+
 		$(document).on("mouseup", function(event) {
 			WORKSPACE.Helpers.DisableDistance(event);
 		});
@@ -701,20 +719,24 @@ WORKSPACE.Helpers = {
 	SwapMap: function(url) {
 		WORKSPACE.CurrentGridImage = url;
 		var img = new Image();
+
 		img.onload = function(){
 			var height = img.height,
 				width = img.width,
 				ratio = width/height;
 
-			//$("#grid-map").height(height + "px").width(width + "px");
 			var bounds = [[0,0], [100,100*ratio]];
+
 			if(WORKSPACE.GridImageOverlay)
 				WORKSPACE.GridMap.removeLayer(WORKSPACE.GridImageOverlay);
+
 			WORKSPACE.GridImageOverlay = new L.imageOverlay(img.src, bounds);
 			WORKSPACE.GridImageOverlay.addTo(WORKSPACE.GridMap);
 			WORKSPACE.GridMap.fitBounds(bounds);
 		};
 		img.src = url;
+
+		WORKSPACE.GridMap.invalidateSize();
 	},
 
 	TextFix: function(el) {
@@ -803,94 +825,6 @@ var Panel = function(title, contents, position, style) {
 };
 
 $(function() {
-	// combine classes
-	/*
-	var uniqueSpells = [];
-	console.log(SPELLS);
-	for(i=0; i<SPELLS.length; i++){
-		var dupe = false;
-		for(v=0; v<uniqueSpells.length; v++){
-			if(uniqueSpells[v].Name == SPELLS[i].Name){
-				uniqueSpells[v].Class += ", " + SPELLS[i].Class;
-				dupe = true;
-			}
-		}
-		if(!SPELLS[i].Name || SPELLS[i].Name == "")
-			dupe = true;
-		if(!dupe)
-			uniqueSpells.push(SPELLS[i]);
-	}
-	console.log(JSON.stringify(uniqueSpells));
-	*/
-
-	/*
-	"name": "Adamantine Plate Armor",
-	  "type": "HA",
-	  "weight": "65",
-	  "ac": "18",
-	  "strength": "15",
-	  "stealth": "YES",
-	  "text": [
-		 "Rarity: Uncommon",
-		 "This suit of armor is reinforced with adamantine, one of the hardest substances in existence. While you're wearing it, any critical hit against you becomes a normal hit.",
-		 null,
-		 "Source: Dungeon Master's Guide, page 150"
-	  ]*/
-
-	  // organize items
-	  /*
-	var newarr = [];
-	for (z=0; z<MAGIC.length; z++) {
-		var obj = {};
-		$.each(MAGIC[z], function(i, v) {
-			if(i == "text"){
-				obj.text = [];
-				var attune = false;
-				for(x=0; x<v.length; x++){
-					//console.log(v[x].indexOf("Rarity:"), v[x]);
-					//console.log(v[x]);
-					if(v[x] !== null && v[x].indexOf("Rarity:") !== -1){
-						obj.rarity = v[x].substring( v[x].indexOf("Rarity:") + 8 );
-					} else if(v[x] !== null && v[x].indexOf("Source:") !== -1){ 
-						obj.source = v[x].substring( v[x].indexOf("Source:") + 8 );
-					} else if(v[x] !== null && v[x].indexOf("Requires Attunement") !== -1){ 
-						obj.attune = "Yes";
-						attune = true;
-					} else {
-						obj.text.push( v[x] );
-					}
-				}
-				if(!attune)
-					obj.attune = "";
-			}else{
-				obj[i] = v;
-			}
-		});
-		newarr.push(obj);
-	}
-	console.log(JSON.stringify(newarr));
-	return;
-	*/
-
-	/*
-	// add descriptions, cr
-	$.each(MONSTERS, function(i, v) {
-		$.each(MONSTERS_DETAILED, function(z, x) {
-			if(v.name.toLowerCase() == x.Name.toLowerCase() && 
-				x.XP !== null && x.XP !== undefined && x.XP !== "" &&
-				v.cr == x.CR) {
-				MONSTERS[i].xp = x.XP;
-			}
-		});
-	});
-
-	$.each(MONSTERS, function(i, v) {
-		if(!v.xp)
-			console.log(v);
-	});
-	//console.log(JSON.stringify(MONSTERS));
-	return;
-	*/
 	
 	// fix bad things
 	//WORKSPACE.Clear();
@@ -900,14 +834,14 @@ $(function() {
 
 	String.prototype.hashCode = function(){
 		var hash = 0;
-		if (this.length == 0) return hash;
+		if (this.length === 0) return hash;
 		for (i = 0; i < this.length; i++) {
 			char = this.charCodeAt(i);
 			hash = ((hash<<5)-hash)+char;
-			hash = hash & hash; // Convert to 32bit integer
+			hash = hash & hash;
 		}
 		return hash;
-	}
+	};
 
 	String.prototype.levenstein = function(string) {
 		var a = this, b = string + "", m = [], i, j, min = Math.min;
@@ -955,7 +889,6 @@ $(function() {
 			target.subscribe(function (newValue) {
 				var res = (newValue != target.originalValue);
 				if (res) { 
-					//WORKSPACE.Helpers.Debounce(WORKSPACE.Save, 1500, true);
 					CombatThrottle();
 					SaveThrottle();
 				}

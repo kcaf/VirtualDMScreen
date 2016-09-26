@@ -18,6 +18,7 @@ var CombatantModel = function(){
 	_this.LatLng = ko.observable().extend({ trackChange: true });
 	_this.Token = ko.observable(null).extend({ trackChange: true });
 	_this.Angle = ko.observable(0).extend({ trackChange: true });
+	_this.Invisible = ko.observable(false).extend({ trackChange: true });
 	_this.CurrentLink = null;
 	_this.ClickY = null;
 	_this.ClickX = null;
@@ -29,6 +30,10 @@ var CombatantModel = function(){
 				WORKSPACE.ViewModels.CombatViewModel.LoadTokens();
 			}
 		});
+	});
+
+	_this.Invisible.subscribe(function(newValue) {
+		WORKSPACE.ViewModels.CombatViewModel.LoadTokens();
 	});
 
 	_this.PickToken = function(data, event) {
@@ -52,60 +57,15 @@ var CombatantModel = function(){
 		}
 	};
 
-	_this.Distance = function (point1, point2) {
-		var xs = 0;
-		var ys = 0;
-
-		xs = point2.x - point1.x;
-		xs = xs * xs;
-
-		ys = point2.y - point1.y;
-		ys = ys * ys;
-
-		return Math.sqrt( xs + ys );
+	_this.TokenClasses = function(outline) {
+		return (_this.ModelType() ? _this.ModelType().toLowerCase() + " " : "unknown ") +
+			(outline ? "outline " + _this.ModelType() + " " : "") + 
+			(_this.Invisible() ? "invisible " : "") + 
+			(_this.IsDead() ? "dead " : "");
 	};
 
-	_this.MouseMove = function(data, event) {
-		if(WORKSPACE.Clicked)
-			_this.DragScroll(event);
-	};
-
-	_this.MouseDown = function(data, event) {
-		WORKSPACE.Clicked = true;
-		_this.ClickY = event.pageY;
-		_this.ClickX = event.pageX;
-
-		var from = $(event.currentTarget),
-			fromLeft = parseInt(from.css("left").slice(0,-2)),
-			fromTop = parseInt(from.css("top").slice(0,-2));
-
-		_this.CurrentLink = {
-			left: fromLeft,
-			top: fromTop
-		};
-	};
-
-	_this.MouseUp = function(data, event) {
-		var canvas = $("#grid-canvas")[0],
-			ctx = canvas.getContext("2d");
-
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		_this.CurrentLink = null;
-		WORKSPACE.Clicked = false;
-	};
-
-	_this.DragScroll = function(event) {
-		var target = $(event.currentTarget),
-			position = target.position();
-		_this.PositionLeft(position.left + "px");
-		_this.PositionTop(position.top + "px");
-		_this.ZIndex(target.css("z-index"));
-		_this.Connect(event);
-	};
-
-	_this.TokenClass = ko.pureComputed(function() {
-		var dead = _this.HP() <= 0 ? " dead" : "";
-		return "grid-token " + (_this.ModelType() ? _this.ModelType().toLowerCase() : "unknown") + "-row" + dead + " size-" + _this.Size();
+	_this.IsDead = ko.pureComputed(function() {
+		return _this.HP() <= 0;
 	});
 
 	_this.Style = ko.pureComputed(function() {
@@ -113,7 +73,7 @@ var CombatantModel = function(){
 	});
 
 	_this.RowClass = ko.pureComputed(function() {
-		var dead = _this.HP() <= 0 ? " dead" : "";
+		var dead = _this.IsDead() ? " dead" : "";
 		return (_this.ModelType() ? _this.ModelType().toLowerCase() : "unknown") + "-row" + dead + " size-" + _this.Size();
 	});
 
@@ -171,7 +131,7 @@ var CombatantModel = function(){
 				total+= parseFloat(matches.shift());
 			}
 			if (!_this.MaxHP()) _this.MaxHP(_this.HP());
-			_this.HP(total);
+			_this.HP(newValue === "" ? newValue : total);
 		},
 		owner: _this
 	});
@@ -182,9 +142,11 @@ var CombatantModel = function(){
 			_this.HP(data.HP);
 			_this.Level(data.Level);
 			_this.Size("M");
+			_this.Invisible(data.Invisible);
 		} else if (data.ModelType == "NPC") {
 			_this.Id(data.Id);
 			_this.Size(data.Size);
+			_this.Invisible(data.Invisible !== false);
 			_this.CR(data.CR);
 			var init = data.Initiative || WORKSPACE.Helpers.Roll( 1,20 ) + parseInt( data.DEXMOD );
 			_this.Initiative( init >= 0 ? init : 0 );
@@ -194,19 +156,13 @@ var CombatantModel = function(){
 				hp = 0;
 
 			if (typeof hpArr == "object" && hpArr.length > 1) {
-				//console.log(hpArr, typeof hpArr);
 				hpArr = hpArr[1].split(")");
-				//console.log(hpArr);
 				rollArr = hpArr[0].match(/\d+d\d+/g);
-				//console.log(rollArr);
 				rollSplit = rollArr[0].split("d");
-				//console.log(rollSplit);
 				for(i=0; i<rollSplit[0]; i++){
 					hp += parseInt(WORKSPACE.Helpers.Roll( 1,rollSplit[1]) );
-					//console.log(hp);
 				}
 				hp += parseInt(hpArr[0].slice(rollArr[0].length)) || 0;
-				//console.log(hp);
 			} else {
 				hp = parseInt(hpArr[0]);
 			}
@@ -218,6 +174,7 @@ var CombatantModel = function(){
 				_this.HP(data.HP || hp);
 		} else {
 			_this.Size("M");
+			_this.Invisible(data.Invisible !== false);
 		}
 
 		_this.PositionTop(data.PositionTop || 0);
@@ -261,22 +218,9 @@ var CombatViewModel = function() {
 	_this.TransmitMap = ko.observable(false).extend({ trackChange: true });
 	_this.GridCenter = ko.observable([0,0]).extend({ trackChange: true });
 	_this.GridZoom = ko.observable(1).extend({ trackChange: true });
-
-	/*_this.Interval = setInterval(function() {
-		if(WORKSPACE.IsLoaded) {
-			$(_this.Selector).find(".grid-token").each(function() {
-				if(!$(this).hasClass("ui-draggable")){
-					$(this).draggable({ 
-						grid: [ 15, 15 ],
-						containment: "#grid-map",
-						stack: ".grid-token",
-						scale: true,
-						scroll: false
-					});
-				}
-			});
-		}
-	}, 500);*/
+	_this.ShowDarkness = ko.observable(false).extend({ trackChange: true });
+	_this.PageSize = ko.observable(8);
+	_this.PageIndex = ko.observable(0);
 
 	_this.CombatantList.subscribe(function(newValue) {
 		_this.LoadTokens();
@@ -292,6 +236,34 @@ var CombatViewModel = function() {
 		}
 	});
 
+	_this.MapSlidesPage = ko.pureComputed(function() {
+		var result = [],
+			startIndex = _this.PageSize() * _this.PageIndex();
+		return _this.MapSlides().slice(startIndex, startIndex + _this.PageSize());
+	});
+
+	_this.PageMax = ko.pureComputed(function () {
+		return Math.ceil(_this.MapSlides().length / _this.PageSize()) - 1;
+	});
+			
+	_this.isPageMin = ko.pureComputed(function(){
+		return _this.PageIndex() <= 0;
+	});
+			
+	_this.isPageMax = ko.pureComputed(function(){
+		return _this.PageIndex() >= _this.PageMax();
+	});
+
+	_this.MapPrev = function(){
+		if(!_this.isPageMin())
+			_this.PageIndex(_this.PageIndex()-1);
+	};
+
+	_this.MapNext = function(){
+		if(!_this.isPageMax())
+			_this.PageIndex(_this.PageIndex()+1);
+	};
+
 	_this.LoadTokens = function(reset) {
 		$.each(WORKSPACE.GridLayers, function(i, v) {
 			WORKSPACE.GridMap.removeLayer(v);
@@ -302,24 +274,21 @@ var CombatViewModel = function() {
 		$("#grid-lines").css("background-size", boxSize);
 
 		$.each(_this.CombatantList(), function(i, v) {
+
+			if(v.Invisible() && WORKSPACE.VIEW && !v.IsDead()) return;
+
 			var token = null;
 			if(v.Name() && v.Name() !== "") {
 				$.each(_this.CustomIcons(), function(z, x) {
 					if(x.name == v.Name()) {
-						//if(v.Token())
-						//	x.token = v.Token();
 						token = x.token;
-						//v.Token(token);
 					}
 				});
 			}
 
 			if(token === null) {
 				if(v.Token() === null) {
-					if(v.ModelType() == "Player")
-						token = "http://i.imgur.com/BF7DY3I.png";
-					else 
-						token = "http://i.imgur.com/dgZ2jjL.png";
+					token = (v.ModelType() == "Player") ? "https://i.imgur.com/BF7DY3I.png" : "https://i.imgur.com/dgZ2jjL.png";
 					v.Token(token);
 				} else {
 					token = v.Token();
@@ -335,7 +304,7 @@ var CombatViewModel = function() {
 				}
 			}
 
-			var classes = (v.HP() <= 0 ? "dead " : "") + (_this.ShowOutlines() ? "outline " + v.ModelType() : "");
+			var classes = v.TokenClasses(_this.ShowOutlines());
 			var size = WORKSPACE.TokenSize[v.Size()] * _this.TokenScale(),
 				icon = new L.icon({
 				iconUrl: token,
@@ -343,8 +312,7 @@ var CombatViewModel = function() {
 				className: classes
 			});
 
-			v.LatLng( !v.LatLng() || reset ? L.latLng(50,50) : v.LatLng() );
-			//v.LatLng( !v.LatLng() || reset ? WORKSPACE.GridMap.getCenter() : v.LatLng() );
+			v.LatLng( !v.LatLng() || reset ? L.latLng( 50,50 ) : v.LatLng() );
 
 			var marker = new L.marker(v.LatLng(), {
 				draggable: "true",
@@ -399,30 +367,6 @@ var CombatViewModel = function() {
 
 			WORKSPACE.GridLayers.push(marker);
 			marker.addTo(WORKSPACE.GridMap);
-
-			//WORKSPACE.GridMap.addLayer(marker);
-
-			/*var origin = null;
-			marker.on("dragstart", function(event) {
-				var marker = event.target;
-				origin = marker.getLatLng();
-			});*/
-			/*marker.on("drag", function(event){
-				var step = 50,
-					marker = event.target,
-					latDiff = marker.getLatLng().lat - origin.lat,
-					lngDiff = marker.getLatLng().lng - origin.lng,
-					latMove = Math.abs(latDiff) >= step,
-					lngMove = Math.abs(lngDiff) >= step,
-					latDelta = 0,
-					lngDelta = 0;
-
-				if( latMove ) latDelta += step * (latDiff > 0 ? 1 : -1);
-				if( lngMove ) lngDelta += step * (lngDiff > 0 ? 1 : -1);
-
-				marker.setLatLng( L.latLng( origin.lat + latDelta, origin.lng + lngDelta ) );
-				origin = marker.getLatLng();
-			});*/
 		});
 	};
 
@@ -446,9 +390,7 @@ var CombatViewModel = function() {
 	});
 
 	_this.LoadMap = function(data, event) {
-		_this.ActiveMap(event.currentTarget.src);
-		//WORKSPACE.Helpers.SwapMap(event.currentTarget.src);
-		//_this.GridBackground( "url(" + event.currentTarget.src + ")" );
+		_this.ActiveMap($(event.currentTarget).data("src"));
 	};
 
 	_this.OrderedCombatantList = ko.pureComputed(function(){
@@ -579,6 +521,7 @@ var CombatViewModel = function() {
 		_this.ShowOutlines(data.ShowOutlines || false);
 		_this.ShowGridLines(data.ShowGridLines || false);
 		_this.AltGridColor(data.AltGridColor || false);
+		_this.ShowDarkness(data.ShowDarkness || false);
 		_this.ActiveMap(data.ActiveMap || "");
 		_this.CustomIcons(data.CustomIcons || []);
 		_this.TokenScale(data.TokenScale || 1);

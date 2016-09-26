@@ -1,6 +1,7 @@
 html, body{
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 div.grid-container {
@@ -40,4 +41,12 @@ div#grid-map{
   width: 100%;
   height: 100%;
   background-image: radial-gradient(circle, rgba(0,0,0,0) 300px, #000 0%);
+}
+
+.leaflet-container{
+  background: #000;
+}
+
+div#grid-map{
+  overflow:hidden;
 }
