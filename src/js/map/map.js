@@ -26,14 +26,7 @@ MapViewer = function(){
 					WORKSPACE.GridMap.setZoom(combatObj.GridZoom || 1);
 					WORKSPACE.GridMap.panTo(combatObj.GridCenter || [0,0]);
 
-					if(WORKSPACE.ViewModels.CombatViewModel.ShowDarkness()) {
-						_this.LightsInterval = setInterval( WORKSPACE.Helpers.DrawLights, 50 );
-					}
-					else{
-						clearInterval(_this.LightsInterval);
-						var canvas = $("#grid-light"),
-							ctx = canvas[0].getContext("2d");
-
+					if(!WORKSPACE.ViewModels.CombatViewModel.ShowDarkness()) {
 						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
 					}
 				}

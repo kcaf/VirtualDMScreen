@@ -60,8 +60,7 @@ https://kcaf.github.io/VirtualDMScreen/
 Names for each data array are: `MAGIC`, `MONSTERS`, `SPELLS`
 
 ##Misc
-- [TODO] Add touch events for mobile play
-- [TODO] Set up github static hosting
+- [TODO] Improve mobile experience
 - [TODO] Create a clean way to import custom data files
 - [TODO] Clean up messy code
 - [TODO] Write better CSS. Ugh.

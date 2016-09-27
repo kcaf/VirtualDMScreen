@@ -85,8 +85,11 @@ var CombatantModel = function(){
 	});
 
 	_this.XP = ko.pureComputed(function() {
-		if(!_this.CR()) return 0;
-		return WORKSPACE.XPPerCR[_this.CR()];
+		var cr = parseInt(_this.CR());
+		if(cr >= 0)
+			return WORKSPACE.XPPerCR[_this.CR()];
+		else
+			return 0;
 	});
 
 	_this.ACBasic = ko.pureComputed({
@@ -107,12 +110,16 @@ var CombatantModel = function(){
 
 	_this.LevelAndCR = ko.pureComputed({
 		read: function() {
-			if(_this.Level()) return _this.Level();
-			if(_this.CR()) return _this.CR();
+			var val;
+			if(_this.ModelType() == "Player") val = _this.Level(); else
+			if(_this.ModelType() == "NPC") val = _this.CR(); else 
+			val = _this.CR();
+			return val;
 		},
 		write: function(newValue) {
-			if(_this.Level()) _this.Level(newValue);
-			if(_this.CR()) _this.CR(newValue);
+			if(_this.ModelType() == "Player") _this.Level(newValue); else
+			if(_this.ModelType() == "NPC") _this.CR(newValue); else 
+			_this.CR(newValue);
 		}
 	});
 
@@ -138,7 +145,7 @@ var CombatantModel = function(){
 	
 	_this.Load = function(data){
 		if (data.ModelType == "Player") {
-			_this.Initiative(data.Initiative);
+			if(!WORKSPACE.VIEW) _this.Initiative(data.Initiative);
 			_this.HP(data.HP);
 			_this.Level(data.Level);
 			_this.Size("M");
@@ -148,32 +155,39 @@ var CombatantModel = function(){
 			_this.Size(data.Size);
 			_this.Invisible(data.Invisible !== false);
 			_this.CR(data.CR);
-			var init = data.Initiative || WORKSPACE.Helpers.Roll( 1,20 ) + parseInt( data.DEXMOD );
-			_this.Initiative( init >= 0 ? init : 0 );
-
-			var hpArr = ("" + data.HP).split("("),
-				rollArr = [],
-				hp = 0;
-
-			if (typeof hpArr == "object" && hpArr.length > 1) {
-				hpArr = hpArr[1].split(")");
-				rollArr = hpArr[0].match(/\d+d\d+/g);
-				rollSplit = rollArr[0].split("d");
-				for(i=0; i<rollSplit[0]; i++){
-					hp += parseInt(WORKSPACE.Helpers.Roll( 1,rollSplit[1]) );
-				}
-				hp += parseInt(hpArr[0].slice(rollArr[0].length)) || 0;
-			} else {
-				hp = parseInt(hpArr[0]);
+			if(!WORKSPACE.VIEW) {
+				var init = data.Initiative || WORKSPACE.Helpers.Roll( 1,20 ) + parseInt( data.DEXMOD );
+				_this.Initiative( init >= 0 ? init : 0 );
 			}
 
-			var dataHPSplit = ("" + data.HP).split("d");
-			if(typeof dataHPSplit == "object" && dataHPSplit.length > 1) 
-				_this.HP(hp);
-			else
-				_this.HP(data.HP || hp);
+			if(!WORKSPACE.VIEW) {
+				var hpArr = ("" + data.HP).split("("),
+					rollArr = [],
+					hp = 0;
+
+				if (typeof hpArr == "object" && hpArr.length > 1) {
+					hpArr = hpArr[1].split(")");
+					rollArr = hpArr[0].match(/\d+d\d+/g);
+					rollSplit = rollArr[0].split("d");
+					for(i=0; i<rollSplit[0]; i++){
+						hp += parseInt(WORKSPACE.Helpers.Roll( 1,rollSplit[1]) );
+					}
+					hp += parseInt(hpArr[0].slice(rollArr[0].length)) || 0;
+				} else {
+					hp = parseInt(hpArr[0]);
+				}
+
+				var dataHPSplit = ("" + data.HP).split("d");
+				if(typeof dataHPSplit == "object" && dataHPSplit.length > 1) 
+					_this.HP(hp);
+				else
+					_this.HP(data.HP || hp);
+			} else {
+				_this.HP(data.HP);
+			}
 		} else {
 			_this.Size("M");
+			_this.CR(data.CR);
 			_this.Invisible(data.Invisible !== false);
 		}
 
@@ -214,13 +228,43 @@ var CombatViewModel = function() {
 	_this.ActiveMap = ko.observable("").extend({ trackChange: true });
 	_this.ShowOutlines = ko.observable(false).extend({ trackChange: true });
 	_this.CustomIcons = ko.observableArray().extend({ trackChange: true });
-	_this.TokenScale = ko.observable(1).extend({ throttle: 200, trackChange: true });
+	_this.TokenScale = ko.observable(1).extend({ throttle: 100, trackChange: true });
 	_this.TransmitMap = ko.observable(false).extend({ trackChange: true });
 	_this.GridCenter = ko.observable([0,0]).extend({ trackChange: true });
 	_this.GridZoom = ko.observable(1).extend({ trackChange: true });
 	_this.ShowDarkness = ko.observable(false).extend({ trackChange: true });
 	_this.PageSize = ko.observable(8);
 	_this.PageIndex = ko.observable(0);
+
+	_this.CompressModel = function() {
+		var combatant,
+			combat = {
+			ShowGridLines: _this.ShowGridLines(),
+			AltGridColor: _this.AltGridColor(),
+			ActiveMap: _this.ActiveMap(),
+			ShowOutlines: _this.ShowOutlines(),
+			TokenScale: _this.TokenScale(),
+			GridCenter: _this.GridCenter(),
+			GridZoom: _this.GridZoom(),
+			ShowDarkness: _this.ShowDarkness(),
+			CombatantList: []
+		};
+		$.each(_this.CombatantList(), function(i, v) {
+			combatant = {
+				Id: v.Id(),
+				ModelType: v.ModelType(),
+				Size: v.Size(),
+				Name: v.ModelType() == "Player" ? v.Name() : "",
+				HP: v.HP(),
+				LatLng: v.LatLng(),
+				Token: v.Token(),
+				Angle: v.Angle(),
+				Invisible: v.Invisible()
+			};
+			combat.CombatantList.push(combatant);
+		});
+		return JSON.stringify(combat);
+	};
 
 	_this.CombatantList.subscribe(function(newValue) {
 		_this.LoadTokens();
@@ -315,20 +359,22 @@ var CombatViewModel = function() {
 			v.LatLng( !v.LatLng() || reset ? L.latLng( 50,50 ) : v.LatLng() );
 
 			var marker = new L.marker(v.LatLng(), {
-				draggable: "true",
+				draggable: !WORKSPACE.VIEW,
 				icon: icon,
-				title: v.Name(),
-				alt: v.Name(),
+				title: !WORKSPACE.VIEW ? v.Name() : '',
+				alt: !WORKSPACE.VIEW ? v.Name() : '',
 				iconAngle: v.Angle()
 			});
 
-			marker.bindPopup(v.Name(), {
-				closeButton: false,
-				offset: L.point(0, 38 * _this.TokenScale()),
-				closeOnClick: false,
-				opacity: 0.7,
-				autoPan: false
-			});
+			if(!WORKSPACE.VIEW) {
+				marker.bindPopup(v.Name(), {
+					closeButton: false,
+					offset: L.point(0, 50 * _this.TokenScale()),
+					closeOnClick: false,
+					opacity: 0.7,
+					autoPan: false
+				});
+			}
 
 			marker.on("dragend", function(event) {
 				var marker = event.target;
@@ -414,10 +460,9 @@ var CombatViewModel = function() {
 			npcs = [];
 
 		$.each(_this.CombatantList(), function(i, v) {
-			if(v.ModelType() == "NPC")
-				npcs.push(v);
-			else if(v.ModelType() == "Player")
-				players.push(v);
+			if(v.ModelType() == "NPC") npcs.push(v); else 
+			if(v.ModelType() == "Player") players.push(v); else
+			if(parseInt(v.CR()) >= 0) npcs.push(v);
 		});
 
 		if (players.length) {
@@ -511,13 +556,17 @@ var CombatViewModel = function() {
 	};
 	
 	_this.Load = function(data) {
-		_this.ActiveTab(data.ActiveTab || 0);
-		_this.Position({
-			Left: data.Position.Left || 0,
-			Top: data.Position.Top || 0
-		});
+		if (!WORKSPACE.VIEW) {
+			_this.ActiveTab(data.ActiveTab || 0);
+			_this.Position({
+				Left: data.Position.Left || 0,
+				Top: data.Position.Top || 0
+			});
+			_this.MapSlides(data.MapSlides || []);
+			_this.IsMinimized(data.IsMinimized);
 
-		_this.IsMinimized(data.IsMinimized);
+		}
+		
 		_this.ShowOutlines(data.ShowOutlines || false);
 		_this.ShowGridLines(data.ShowGridLines || false);
 		_this.AltGridColor(data.AltGridColor || false);
@@ -538,7 +587,5 @@ var CombatViewModel = function() {
 			
 			_this.CombatantList(tmpList);
 		}
-
-		_this.MapSlides(data.MapSlides || []);
 	};
 };

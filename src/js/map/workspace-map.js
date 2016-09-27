@@ -57,8 +57,8 @@ WORKSPACE.Helpers = {
 				gradient = ctx.createRadialGradient(offsetLeft, offsetTop, 0, offsetLeft, offsetTop, radius);
 
 			gradient.addColorStop(1, 'rgba(0,0,0,' + (1-intensity) + ')');
-			/*gradient.addColorStop(0.6, 'rgba(0,0,0,0.1)');*/
-			gradient.addColorStop(0.4, 'rgba(0,0,0,0.4)');
+			//gradient.addColorStop(0.6, 'rgba(0,0,0,0.1)');
+			//gradient.addColorStop(0.4, 'rgba(0,0,0,0.4)');
 			gradient.addColorStop(0, amb);
 			ctx.fillStyle = gradient;
 			ctx.fillRect(offsetLeft-radius, offsetTop-radius, offsetLeft+radius, offsetTop+radius);
@@ -269,15 +269,17 @@ WORKSPACE.Shim = function() {
 		zoomControl: false
 	});
 
-	WORKSPACE.GridMap.on("contextmenu", function(event) {
+	var map = WORKSPACE.GridMap;
+
+	map.on("contextmenu", function(event) {
 			// Do nothing
 	});
 
-	WORKSPACE.GridMap.on("mousemove", function(event) {
+	map.on("mousemove", function(event) {
 		WORKSPACE.Helpers.DrawDistance(event.originalEvent);
 	});
 
-	WORKSPACE.GridMap.on("mouseup", function(event) {
+	map.on("mouseup", function(event) {
 		WORKSPACE.Helpers.DisableDistance(event.originalEvent);
 	});
 
@@ -285,7 +287,7 @@ WORKSPACE.Shim = function() {
 		WORKSPACE.Helpers.DisableDistance(event);
 	});
 
-	WORKSPACE.GridMap.on("move", function(event) {
+	map.on("move", function(event) {
 		var gridlines = $("#grid-lines"),
 			imglayer = $(".leaflet-image-layer");
 		if(!imglayer[0]) return;
@@ -295,7 +297,7 @@ WORKSPACE.Shim = function() {
 		WORKSPACE.Helpers.DrawLights();
 	});
 
-	WORKSPACE.GridMap.on("mousedown", function(event) {
+	map.on("mousedown", function(event) {
 		var e = event.originalEvent,
 			from = WORKSPACE.DistanceFrom;
 		e.stopPropagation();
@@ -305,6 +307,22 @@ WORKSPACE.Shim = function() {
 			WORKSPACE.ShowDistance = true;
 		}
 	});
+
+	map.on("load", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("viewreset", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("moveend", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("zoomend", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("zoomlevelschange", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("zoomlevelschange", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("layeradd", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	map.on("dragend", function(event) { WORKSPACE.Helpers.DrawLights(); });
 
 	$("#grid-lines").appendTo($(".leaflet-map-pane"));
 };

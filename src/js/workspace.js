@@ -611,7 +611,7 @@ WORKSPACE.Helpers = {
 
 	SaveCombatVM: function() {
 		if(WORKSPACE.ViewModels.CombatViewModel.TransmitMap()) {
-			var json = ko.toJSON(WORKSPACE.ViewModels.CombatViewModel),
+			var json = WORKSPACE.ViewModels.CombatViewModel.CompressModel(),
 				hash = json.hashCode();
 			if(WORKSPACE.LastGridHash != hash) {
 				localStorage.setItem("MAPVIEW-Hash", hash);
