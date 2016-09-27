@@ -602,7 +602,7 @@ var WORKSPACE = {
 	
 	Clear: function() {
 		if (WORKSPACE.SupportsStorage()) {
-			localStorage.removeItem("WORKSPACE");
+			localStorage.clear();
 		}
 	}
 };

@@ -26,8 +26,10 @@ MapViewer = function(){
 					WORKSPACE.GridMap.setZoom(combatObj.GridZoom || 1);
 					WORKSPACE.GridMap.panTo(combatObj.GridCenter || [0,0]);
 
-					if(!WORKSPACE.ViewModels.CombatViewModel.ShowDarkness()) {
-						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+					if(!combatObj.ShowDarkness) {
+						var canvas = $("#grid-light")[0],
+							ctx = canvas.getContext('2d');
+						ctx.clearRect(0, 0, canvas.width, canvas.height);
 					}
 				}
 			} catch(e) {

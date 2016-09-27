@@ -338,7 +338,7 @@ var CombatViewModel = function() {
 					token = v.Token();
 					var found = false;
 					$.each(_this.CustomIcons(), function(z, x) {
-						if(x.name == v.Name()){
+						if(x && x.name == v.Name()){
 							found = true;
 							_this.CustomIcons.remove(x);
 						}
@@ -572,6 +572,10 @@ var CombatViewModel = function() {
 		_this.AltGridColor(data.AltGridColor || false);
 		_this.ShowDarkness(data.ShowDarkness || false);
 		_this.ActiveMap(data.ActiveMap || "");
+		$.each(data.CustomIcons, function(i, v) {
+			if(!v.name || v.name === "")
+				data.CustomIcons.slice(i, 1);
+		});
 		_this.CustomIcons(data.CustomIcons || []);
 		_this.TokenScale(data.TokenScale || 1);
 		_this.GridCenter(data.GridCenter || [0,0]);
