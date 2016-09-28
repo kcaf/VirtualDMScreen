@@ -207,3 +207,16 @@ var LootViewModel = function() {
 		WORKSPACE.SaveViewModel.Run();
 	});*/
 };
+
+LootViewModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.AmountList;
+    delete copy.SearchRarity;
+    delete copy.RarityChance;
+    delete copy.CRList;
+    delete copy.GenerateList;
+    delete copy.SearchList;
+    delete copy.SearchGrid;
+    delete copy.GenerateGrid;
+    return copy;
+};

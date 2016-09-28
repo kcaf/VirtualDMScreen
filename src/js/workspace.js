@@ -554,7 +554,14 @@ var WORKSPACE = {
 		} else {
 			$.each(VMArray.ViewModels, function(i, v){
 				if(WORKSPACE.DEBUG) console.log("> > " + v.Key);
-				WORKSPACE.ViewModels[v.Key].Load(v.ViewModel);
+				try {
+					var newFormat = JSON.parse(v.ViewModel);
+					if(newFormat)
+						WORKSPACE.ViewModels[v.Key].Load(newFormat);
+				} catch(e) {
+					// Legacy support
+					WORKSPACE.ViewModels[v.Key].Load(v.ViewModel);
+				}
 			});
 		}
 	},
@@ -588,7 +595,7 @@ var WORKSPACE = {
 				
 				var VMArr = [];
 				$.each(WORKSPACE.ViewModels, function(key, value) {
-					VMArr.push({Key: key, ViewModel: ko.toJS(value)});
+					VMArr.push({Key: key, ViewModel: ko.toJSON(value)});
 				});
 
 				localStorage.setItem(WORKSPACE.CurrentGame.Id(), JSON.stringify({

@@ -218,6 +218,10 @@ var NPCModel = function(){
 	};
 };
 
+NPCModel.prototype.toJSON = function() {
+    return { Id: ko.utils.unwrapObservable(this.Id) };
+};
+
 var GroupModel = function(title){
 	var _this = this;
 	_this.NPCs = ko.observableArray().extend({ trackChange: true });
@@ -321,6 +325,13 @@ var GroupModel = function(title){
 	_this.RemoveNPC = function(npc){
 		_this.NPCs.remove(npc);
 	};
+};
+
+GroupModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.Difficulty;
+    delete copy.NPCsByCR;
+    return copy;
 };
 
 var NPCsViewModel = function() {
@@ -470,4 +481,12 @@ var NPCsViewModel = function() {
 		});
 		_this.SearchList(tmpArr);
 	};
+};
+
+NPCsViewModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.SearchList;
+    delete copy.CRList;
+    delete copy.SearchGrid;
+    return copy;
 };

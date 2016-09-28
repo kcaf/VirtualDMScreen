@@ -44,6 +44,10 @@ var SpellModel = function(){
 	};
 };
 
+SpellModel.prototype.toJSON = function() {
+	return { Id: ko.utils.unwrapObservable(this.Id) };
+};
+
 var SpellbookModel = function(title){
 	var _this = this;
 	_this.Spells = ko.observableArray().extend({ trackChange: true });
@@ -126,6 +130,13 @@ var SpellbookModel = function(title){
 		_this.Spells();
 		WORKSPACE.SaveViewModel.Run();
 	});*/
+};
+
+SpellbookModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.SpellsByLevel;
+    delete copy.SpellSlots;
+    return copy;
 };
 
 var SpellsViewModel = function() {
@@ -256,4 +267,12 @@ var SpellsViewModel = function() {
 			}
 		}
 	});*/
+};
+
+SpellsViewModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.LevelList;
+    delete copy.SearchList;
+    delete copy.SearchGrid;
+    return copy;
 };

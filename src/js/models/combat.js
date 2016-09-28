@@ -12,17 +12,11 @@ var CombatantModel = function(){
 	_this.Level = ko.observable().extend({ trackChange: true });
 	_this.CR = ko.observable().extend({ trackChange: true });
 	_this.MaxHP = ko.observable().extend({ trackChange: true });
-	_this.PositionTop = ko.observable("").extend({ trackChange: true });
-	_this.PositionLeft = ko.observable("").extend({ trackChange: true });
-	_this.ZIndex = ko.observable(0).extend({ trackChange: true });
 	_this.LatLng = ko.observable().extend({ trackChange: true });
 	_this.Token = ko.observable(null).extend({ trackChange: true });
 	_this.Angle = ko.observable(0).extend({ trackChange: true });
 	_this.Invisible = ko.observable(false).extend({ trackChange: true });
 	_this.IsSelected = ko.observable(false).extend({ trackChange: true });
-	_this.CurrentLink = null;
-	_this.ClickY = null;
-	_this.ClickX = null;
 
 	_this.Name.subscribe(function(newValue) {
 		$.each(WORKSPACE.ViewModels.CombatViewModel.CustomIcons(), function(z, x) {
@@ -68,10 +62,6 @@ var CombatantModel = function(){
 
 	_this.IsDead = ko.pureComputed(function() {
 		return _this.HP() <= 0;
-	});
-
-	_this.Style = ko.pureComputed(function() {
-		return "left: " + _this.PositionLeft() + "; top: " + _this.PositionTop() + ";";
 	});
 
 	_this.RowClass = ko.pureComputed(function() {
@@ -196,9 +186,6 @@ var CombatantModel = function(){
 			_this.HP(data.HP);
 		}
 
-		_this.PositionTop(data.PositionTop || 0);
-		_this.PositionLeft(data.PositionLeft || 0);
-		_this.ZIndex(data.ZIndex || 0);
 		_this.MaxHP(data.MaxHP || null);
 		_this.ModelType(data.ModelType);
 		_this.Name(data.Name || "");
@@ -214,6 +201,18 @@ var CombatantModel = function(){
 	_this.AddEffect = function(){
 		
 	};
+};
+
+CombatantModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.CalculateHP;
+    delete copy.LevelAndCR;
+    delete copy.MaxHPText;
+    delete copy.ACBasic;
+    delete copy.XP;
+    delete copy.NameShort;
+    delete copy.RowClass;
+    return copy;
 };
 
 var CombatViewModel = function() {
@@ -427,7 +426,7 @@ var CombatViewModel = function() {
 				});
 
 			}
-			
+
 			marker.on("contextmenu", function(event) {
 				v.Angle((v.Angle() + 45) % 360);
 				marker.setIconAngle(v.Angle());
@@ -614,4 +613,15 @@ var CombatViewModel = function() {
 			_this.CombatantList(tmpList);
 		}
 	};
+};
+
+CombatViewModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.MapSlidesPage;
+    delete copy.PageMax;
+    delete copy.isPageMin;
+    delete copy.isPageMax;
+    delete copy.Difficulty;
+    delete copy.OrderedCombatantList;
+    return copy;
 };
