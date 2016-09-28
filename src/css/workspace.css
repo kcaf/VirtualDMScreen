@@ -134,7 +134,6 @@ div.spell-slots div.slot {
     text-align: center;
     vertical-align: top;
     padding-bottom: 0;
-    padding-top: 5px;
 }
 
 div.spell-slots div.slot:first-child {
@@ -153,7 +152,6 @@ div.spell-slots div.slot span {
 .spell-slots {
 	width: 100%;
 	padding-top: 0;
-	margin-top: -8px;
 	padding-bottom: 0;
 	margin-bottom: 0;
 	display: flex;
@@ -1111,7 +1109,6 @@ table.combat th.combat-ac {
 }
 
 table.combat th.combat-hp {
-	text-align: center;
 	width: 100px;
 }
 
