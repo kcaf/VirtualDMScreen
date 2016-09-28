@@ -39,8 +39,8 @@ var WORKSPACE = {
 		left: 0
 	},
 	DialogSize: {
-		PlayersViewModel: { Width: "26vw", Height: "auto" },
-		CombatViewModel: { Width: "30vw", Height: "auto" },
+		PlayersViewModel: { Width: "20vw", Height: "auto" },
+		CombatViewModel: { Width: "32vw", Height: "auto" },
 		RollViewModel: { Width: "215px", Height: "auto" },
 		GameViewModel: { Width: "15vw", Height: "auto" },
 		Default: { Width: "22vw", Height: "auto" }

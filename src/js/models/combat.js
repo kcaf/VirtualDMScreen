@@ -391,45 +391,46 @@ var CombatViewModel = function() {
 					opacity: 0.7,
 					autoPan: false
 				});
+
+				marker.on("click", function(event) {
+					_this.SelectRow(v);
+				});
+
+				marker.on("dragend", function(event) {
+					var marker = event.target;
+					v.LatLng(marker.getLatLng());
+				});
+
+				marker.on("drag", function(event) {
+					marker.setIconAngle(v.Angle());
+				});
+
+				marker.on("dblclick", function(event) {
+					var e = event.originalEvent;
+					e.stopPropagation();
+					WORKSPACE.Helpers.ViewNPC(v.Id(), e);
+				});
+
+				marker.on("mousedown", function(event) {
+					var e = event.originalEvent,
+						from = WORKSPACE.DistanceFrom;
+					e.stopPropagation();
+					if (e.which > 1) {
+						from.left = $(e.srcElement).offset().left + $(e.srcElement).width()/2;
+						from.top = $(e.srcElement).offset().top + $(e.srcElement).height()/2;
+						WORKSPACE.ShowDistance = true;
+					}
+				});
+
+				marker.on("mouseup", function(event) {
+					WORKSPACE.Helpers.DisableDistance(event.originalEvent);
+				});
+
 			}
 			
-			marker.on("click", function(event) {
-				_this.SelectRow(v);
-			});
-
-			marker.on("dragend", function(event) {
-				var marker = event.target;
-				v.LatLng(marker.getLatLng());
-			});
-
-			marker.on("drag", function(event) {
-				marker.setIconAngle(v.Angle());
-			});
-
-			marker.on("dblclick", function(event) {
-				var e = event.originalEvent;
-				e.stopPropagation();
-				WORKSPACE.Helpers.ViewNPC(v.Id(), e);
-			});
-
 			marker.on("contextmenu", function(event) {
 				v.Angle((v.Angle() + 45) % 360);
 				marker.setIconAngle(v.Angle());
-			});
-
-			marker.on("mousedown", function(event) {
-				var e = event.originalEvent,
-					from = WORKSPACE.DistanceFrom;
-				e.stopPropagation();
-				if (e.which > 1) {
-					from.left = $(e.srcElement).offset().left + $(e.srcElement).width()/2;
-					from.top = $(e.srcElement).offset().top + $(e.srcElement).height()/2;
-					WORKSPACE.ShowDistance = true;
-				}
-			});
-
-			marker.on("mouseup", function(event) {
-				WORKSPACE.Helpers.DisableDistance(event.originalEvent);
 			});
 
 			WORKSPACE.GridLayers.push(marker);

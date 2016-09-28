@@ -266,7 +266,13 @@ WORKSPACE.Shim = function() {
 		minZoom: 1,
 		maxZoom: 7,
 		attributionControl: false,
-		zoomControl: false
+		zoomControl: false,
+		scrollWheelZoom: false,
+		touchZoom: false,
+		doubleClickZoom: false,
+		boxZoom: false,
+		dragging: false
+
 	});
 
 	var map = WORKSPACE.GridMap;

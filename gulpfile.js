@@ -88,6 +88,7 @@ gulp.task('index', function () {
 	var sources = gulp.src([
 		'./build/js/jquery.min.js',
 		'./build/js/jquery-ui.min.js',
+		'./build/js/jquery-ui-touchpunch.min.js',
 		'./build/js/jquery-mwheel.min.js',
 		'./build/js/jquery-scrollto.min.js',
 		'./build/js/leaflet.min.js',

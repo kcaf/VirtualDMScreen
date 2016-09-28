@@ -13,6 +13,7 @@ body {
 	font-family: 'Titillium Web', sans-serif;
 	min-width: 520px;
 	background: #5d5d5d;
+    font-size: 0.75vw;
 	/*
 	background: rgb(69,72,77);
 	background: -moz-linear-gradient(top, rgba(69,72,77,1) 0%, rgba(0,0,0,1) 100%);
@@ -126,14 +127,14 @@ div#GameViewModel {
 }
 
 div.spell-slots div.slot {
-	border-right: 1px solid #e0e0e0;
-	height: 100px;
-	width: 70px;
-	display: inline-block;
-	text-align: center;
-	vertical-align: top;
-	padding-bottom: 0;
-	padding-top: 5px;
+    border-right: 1px solid #e0e0e0;
+    height: 6vw;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    padding-bottom: 0;
+    padding-top: 5px;
 }
 
 div.spell-slots div.slot:first-child {
@@ -171,7 +172,7 @@ div.spell-slots div.slot span {
 	vertical-align: inherit;
 	display: inline-block;
 	text-align: center;
-	padding: 0 10px;
+	padding: 0;
 	margin: 0;
 	padding-top: 3px;
 }
@@ -184,8 +185,10 @@ div.spell-slots div.slot span {
 }
 
 .spell-slots li input {
-	padding: 0;
-	margin: 2px;
+    padding: 0;
+    margin: 0.1em;
+    height: 1vw;
+    width: 1vw;
 }
 
 div#SpellSearch input,
@@ -194,11 +197,11 @@ div#LootSearch input,
 div#LootSearch select.rarity,
 div#NPCSearch input,
 div#NPCSearch select {
-	height: 33px;
-	line-height: 33px;
-	width: 100%;
-	box-sizing: border-box;
-	padding: 0.4em;
+    height: 2em;
+    line-height: 2em;
+    width: 100%;
+    box-sizing: border-box;
+    padding: .4em;
 }
 
 div#SpellSearch label,
@@ -265,7 +268,6 @@ table.npcs.ko-grid th:last-child {
 .spellbook-view tr th {
 	vertical-align: top;
 	text-align: center !important;
-	width: 100px;
 }
 
 .spellbook-view tr td {
@@ -278,9 +280,13 @@ table.npcs.ko-grid th:last-child {
 }
 
 .spellbook-view tr td ul li {
-	padding-right: 3em;
-	list-style: none;
-	position: relative;
+    height: 2em;
+    line-height: 2em;
+    padding: 0;
+    margin: 0;
+    padding-right: 3em;
+    list-style: none;
+    position: relative;
 }
 
 table.npc-view td.npc-name {
@@ -324,6 +330,11 @@ table.npc-view i.npc-remove {
 	text-decoration: underline;
 }
 
+span.npc-link {
+    line-height: 1.5em;
+    padding-left: .3em;
+}
+
 button.red {
 	background-color: #dc0e0e;
 	color: #fff;
@@ -353,8 +364,12 @@ div#ItemView .description {
 
 .grid table th,
 .grid table td {
-	border: 1px solid #ddd;
-	padding: 3px;
+    border: 1px solid #ddd;
+    padding: 0.2em;
+}
+
+table.loot td {
+    padding: 6px;
 }
 
 .grid table.npcs td {
@@ -484,12 +499,13 @@ span.roll-result {
 	font-family: monospace;
 	vertical-align: middle;
 	text-align: right;
-	height: 33px;
+    height: 2em;
+    line-height: 2em;
 }
 
 input.roll-string {
 	width: 144px;
-	font-size: 20px;
+	font-size: 1vw;
 }
 
 button.roll-button {
@@ -507,16 +523,15 @@ button.roll-button:focus {
 
 span.roll-result {
 	width: 100%;
-	font-size: 17px;
+	font-size: 0.8vw;
 	border: 1px solid rgba(0, 127, 255, 0.62);
 	display: block;
-	line-height: 28px;
 	margin-top: 3px;
 	padding: 0 10px;
 }
 
 select.roll-select {
-	font-size: 16px;
+	font-size: 0.7vw;
 	width: 100%;
 	box-sizing: border-box;
 	padding: 0.3em;
@@ -533,7 +548,7 @@ table.npc-view input {
 	padding: 0.3em;
 	border: none;
 	background: none;
-	text-overflow: ellipsis;
+	text-overflow: initial;
 }
 
 div.gameviewmodel-inc select {
@@ -707,7 +722,7 @@ table.loot-generate label.loot-rarity-label{
 }
 
 .ui-widget .ui-widget {
-	font-size: 16px;
+	font-size: 0.75vw;
 }
 
 .ui-tabs {
@@ -826,7 +841,7 @@ div#NPCView svg {
 div#NPCView .npc-view {
 	width: 310px;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 0.57vw;
 }
 
 div#NPCView .npc-view.right {
@@ -1055,12 +1070,12 @@ canvas#grid-light {
 }
 
 span.spell-link {
-	line-height: 32px;
-	padding-left: 5px;
+	padding-left: 0.5em;
 }
 
 div.spells.grid table td {
-	padding: 1px 0;
+    line-height: 2.2em;
+    padding: 0.2em 0;
 }
 
 div#dialog-extend-fixed-container span.ui-dialog-title {
@@ -1150,7 +1165,7 @@ div.combatviewmodel-inc{
 }
 
 div#grid-mapslides {
-	font-size: 0px;
+	font-size: 0;
 	text-align: center;
 }
 
@@ -1171,7 +1186,7 @@ div#grid-mapslides div.grid-map-thumb img {
 }
 
 div#grid-mapslides div.grid-map-thumb i.fa.fa-times {
-	font-size: 16px;
+	font-size: 0.8vw;
 	position: absolute;
 	color: #fff;
 	top: 1px;
@@ -1306,7 +1321,7 @@ div#grid-mapslides .page-next:hover {
 
 div#grid-mapslides .page-prev i, 
 div#grid-mapslides .page-next i {
-    font-size: 27px;
+    font-size: 1.7vw;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
@@ -1343,7 +1358,7 @@ table.gridsettings input[type="checkbox"] {
 }
 
 div#token-scale {
-    font-size: 18px;
+    font-size: 1vw;
 }
 
 table.gridsettings td.token-scale {
