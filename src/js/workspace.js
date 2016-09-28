@@ -881,18 +881,16 @@ $(function() {
 
 	ko.extenders.trackChange = function (target, track) {
 		if (track) {
-			target.isDirty = ko.observable(false);
 			target.originalValue = target();
 			target.setOriginalValue = function(startingValue) {
-				target.originalValue = startingValue; 
+				target.originalValue = startingValue;
 			};
 			target.subscribe(function (newValue) {
-				var res = (newValue != target.originalValue);
-				if (res) { 
+				if (newValue != target.originalValue) { 
 					CombatThrottle();
 					SaveThrottle();
+					target.setOriginalValue(newValue);
 				}
-				target.isDirty(res);
 			});
 		}
 		return target;

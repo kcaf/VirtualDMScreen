@@ -21,7 +21,7 @@
 					<tr>
 						<th class="combat-token"></th>
 						<th class="combat-name">Name</th>
-						<th class="combat-visible">Invis</th>
+						<th class="combat-visible">Hide</th>
 						<th class="combat-levelcr">Level/CR</th>
 						<th class="combat-ac">AC</th>
 						<th class="combat-initiative">Initiative</th>
@@ -30,7 +30,7 @@
 					</tr>
 				</thead>
 				<tbody data-bind="foreach: OrderedCombatantList">
-					<tr data-bind="attr: {class: RowClass}">
+					<tr data-bind="attr: {class: RowClass}, event: {mousedown: $parent.SelectRow}">
 						<td class="combat-token"><img class="combat-token" data-bind="attr: {src: Token}, click: PickToken" /></td>
 						<td class="combat-name">
 							<i class="noselect npc-view fa fa-external-link" 
@@ -40,7 +40,7 @@
 						</td>
 						<td class="combat-visible">
 							<input type="checkbox" class="combat-visible" 
-								data-bind="checked: Invisible" title="Invisible"/>
+								data-bind="checked: Invisible" title="Hidden"/>
 						</td>
 						<td><input class="combat-levelcr" data-bind="textInput: LevelAndCR" /></td>
 						<td><input class="combat-ac" data-bind="textInput: ACBasic, attr: {title: AC}" /></td>

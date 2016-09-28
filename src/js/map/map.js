@@ -4,14 +4,15 @@ MapViewer = function(){
 	_this.FindLatestTimer = null;
 	_this.IsBuilding = false;
 	_this.Hash = null;
+	_this.HashCompare = null;
 	_this.LightsInterval = null;
 	_this.MapSelector = "#CombatViewModel";
 
 	_this.FindLatest = function() {
-		var hash = localStorage.getItem("MAPVIEW-Hash");
-		if(hash !== null && _this.Hash != hash){
+		HashCompare = localStorage.getItem("MAPVIEW-Hash");
+		if(HashCompare !== null && _this.Hash != HashCompare){
 			//console.log("Update Found", hash);
-			_this.BuildMap(hash);
+			_this.BuildMap(HashCompare);
 		}
 	};
 

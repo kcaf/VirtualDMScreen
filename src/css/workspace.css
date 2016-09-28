@@ -354,7 +354,7 @@ div#ItemView .description {
 .grid table th,
 .grid table td {
 	border: 1px solid #ddd;
-	padding: 6px;
+	padding: 3px;
 }
 
 .grid table.npcs td {
@@ -1085,12 +1085,18 @@ div.rollviewmodel-inc {
 }
 
 table.combat th.combat-levelcr, 
-table.combat th.combat-ac, 
 table.combat th.combat-initiative {
 	text-align: center;
 	width: 45px;
 }
+
+table.combat th.combat-ac {
+	text-align: center;
+	width: 60px;
+}
+
 table.combat th.combat-hp {
+	text-align: center;
 	width: 100px;
 }
 
@@ -1105,8 +1111,13 @@ table.combat input.combat-initiative {
 }
 
 table.combat input.combat-name.npc {
-	padding-right: 22px;
+	margin-left: 22px;
 }
+
+table.combat input.combat-name {
+	width: initial;
+}
+
 
 table.combat td.combat-token,
 table.combat td.combat-visible {
@@ -1122,7 +1133,7 @@ table.combat input.combat-visible {
 table.combat i.npc-view {
 	position: absolute;
 	top: 50%;
-	right: 7px;
+	left: 7px;
 	margin-top: -8px;
 }
 
@@ -1338,4 +1349,34 @@ div#token-scale {
 table.gridsettings td.token-scale {
     font-weight: bold;
     padding-left: 13px;
+}
+
+table.combat tr.selected {
+	-webkit-filter: drop-shadow(0 0 5px #505050);
+    -moz-filter: drop-shadow(0 0 5px #505050);
+    -o-filter: drop-shadow(0 0 5px #505050);
+	filter: drop-shadow(0 0 5px #505050);
+}
+
+@-webkit-keyframes blink {
+    20% { opacity: 0.0; }
+}
+
+@-moz-keyframes blink {
+    20% { opacity: 0.0; }
+}
+
+@-o-keyframes blink {
+    20% { opacity: 0.0; }
+}
+
+@keyframes blink {
+    20% { opacity: 0.0; }
+}
+
+.blink {
+    -webkit-animation: blink 0.5s step-start 0s infinite;
+    -moz-animation: blink 0.5s step-start 0s infinite;
+    -o-animation: blink 0.5s step-start 0s infinite;
+    animation: blink 0.5s step-start 0s infinite;
 }

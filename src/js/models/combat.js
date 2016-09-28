@@ -19,6 +19,7 @@ var CombatantModel = function(){
 	_this.Token = ko.observable(null).extend({ trackChange: true });
 	_this.Angle = ko.observable(0).extend({ trackChange: true });
 	_this.Invisible = ko.observable(false).extend({ trackChange: true });
+	_this.IsSelected = ko.observable(false).extend({ trackChange: true });
 	_this.CurrentLink = null;
 	_this.ClickY = null;
 	_this.ClickX = null;
@@ -61,7 +62,8 @@ var CombatantModel = function(){
 		return (_this.ModelType() ? _this.ModelType().toLowerCase() + " " : "unknown ") +
 			(outline ? "outline " + _this.ModelType() + " " : "") + 
 			(_this.Invisible() ? "invisible " : "") + 
-			(_this.IsDead() ? "dead " : "");
+			(_this.IsDead() ? "dead " : "") + 
+			(_this.IsSelected() ? "blink " : "");
 	};
 
 	_this.IsDead = ko.pureComputed(function() {
@@ -73,8 +75,10 @@ var CombatantModel = function(){
 	});
 
 	_this.RowClass = ko.pureComputed(function() {
-		var dead = _this.IsDead() ? " dead" : "";
-		return (_this.ModelType() ? _this.ModelType().toLowerCase() : "unknown") + "-row" + dead + " size-" + _this.Size();
+		return (_this.ModelType() ? _this.ModelType().toLowerCase() : "unknown") + "-row " + 
+			(_this.IsDead() ? "dead " : "") + 
+			("size-" + _this.Size()) + " " +
+			(_this.IsSelected() ? "selected " : "");
 	});
 
 	_this.NameShort = ko.pureComputed(function() {
@@ -189,6 +193,7 @@ var CombatantModel = function(){
 			_this.Size("M");
 			_this.CR(data.CR);
 			_this.Invisible(data.Invisible !== false);
+			_this.HP(data.HP);
 		}
 
 		_this.PositionTop(data.PositionTop || 0);
@@ -203,6 +208,7 @@ var CombatantModel = function(){
 		_this.LatLng(data.LatLng || null);
 		_this.Token(data.Token || null);
 		_this.Angle(data.Angle || 0);
+		_this.IsSelected(data.IsSelected || false);
 	};
 
 	_this.AddEffect = function(){
@@ -255,7 +261,7 @@ var CombatViewModel = function() {
 				ModelType: v.ModelType(),
 				Size: v.Size(),
 				Name: v.ModelType() == "Player" ? v.Name() : "",
-				HP: v.HP(),
+				HP: v.IsDead() ? 0 : 1,
 				LatLng: v.LatLng(),
 				Token: v.Token(),
 				Angle: v.Angle(),
@@ -264,6 +270,17 @@ var CombatViewModel = function() {
 			combat.CombatantList.push(combatant);
 		});
 		return JSON.stringify(combat);
+	};
+
+	_this.SelectRow = function(data) {
+		if(!data.IsSelected()) {
+			$.each(_this.CombatantList(), function(i, v) {
+				v.IsSelected(false);
+			});
+			data.IsSelected(true);
+			_this.LoadTokens();
+		}
+		return true;
 	};
 
 	_this.CombatantList.subscribe(function(newValue) {
@@ -375,6 +392,10 @@ var CombatViewModel = function() {
 					autoPan: false
 				});
 			}
+			
+			marker.on("click", function(event) {
+				_this.SelectRow(v);
+			});
 
 			marker.on("dragend", function(event) {
 				var marker = event.target;
