@@ -101,6 +101,10 @@ gulp.task('index', function () {
 	]);
 	return gulp.src('./src/index.html')
   		.pipe(inject(sources, { ignorePath: 'build', addRootSlash: false }))
+  		.pipe(inject(gulp.src('./src/version.html'), {
+			starttag: '<!-- inject:version -->',
+			transform: function (filePath, file) { return file.contents.toString('utf8') }
+		}))
   		.pipe(inject(gulp.src('./src/partials/templates/*.html'), {
 			starttag: '<!-- inject:partials:templates -->',
 			transform: function (filePath, file) { return file.contents.toString('utf8') }

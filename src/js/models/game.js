@@ -41,7 +41,8 @@ var GameViewModel = function() {
 			if(WORKSPACE.DEBUG) console.log("Game Model Saving");
 			localStorage.setItem("WORKSPACE", JSON.stringify({
 				"CurrentGame": ko.toJS( _this.SelectedGame() ),
-				"GameList": ko.toJS( _this.GameList() )
+				"GameList": ko.toJS( _this.GameList() ),
+				"MapSlides": ko.toJS( WORKSPACE.ViewModels.CombatViewModel.MapSlides )
 			}));
 		}
 	};

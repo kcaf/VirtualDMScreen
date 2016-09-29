@@ -13,7 +13,7 @@ body {
 	font-family: 'Titillium Web', sans-serif;
 	min-width: 520px;
 	background: #5d5d5d;
-    font-size: 0.75vw;
+	font-size: 0.75vw;
 	/*
 	background: rgb(69,72,77);
 	background: -moz-linear-gradient(top, rgba(69,72,77,1) 0%, rgba(0,0,0,1) 100%);
@@ -127,13 +127,13 @@ div#GameViewModel {
 }
 
 div.spell-slots div.slot {
-    border-right: 1px solid #e0e0e0;
-    height: 6vw;
-    width: 100%;
-    display: inline-block;
-    text-align: center;
-    vertical-align: top;
-    padding-bottom: 0;
+	border-right: 1px solid #e0e0e0;
+	height: 6vw;
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	vertical-align: top;
+	padding-bottom: 0;
 }
 
 div.spell-slots div.slot:first-child {
@@ -183,10 +183,10 @@ div.spell-slots div.slot span {
 }
 
 .spell-slots li input {
-    padding: 0;
-    margin: 0.1em;
-    height: 1vw;
-    width: 1vw;
+	padding: 0;
+	margin: 0.1em;
+	height: 1vw;
+	width: 1vw;
 }
 
 div#SpellSearch input,
@@ -195,11 +195,11 @@ div#LootSearch input,
 div#LootSearch select.rarity,
 div#NPCSearch input,
 div#NPCSearch select {
-    height: 2em;
-    line-height: 2em;
-    width: 100%;
-    box-sizing: border-box;
-    padding: .4em;
+	height: 2em;
+	line-height: 2em;
+	width: 100%;
+	box-sizing: border-box;
+	padding: .4em;
 }
 
 div#SpellSearch label,
@@ -278,13 +278,13 @@ table.npcs.ko-grid th:last-child {
 }
 
 .spellbook-view tr td ul li {
-    height: 2em;
-    line-height: 2em;
-    padding: 0;
-    margin: 0;
-    padding-right: 3em;
-    list-style: none;
-    position: relative;
+	height: 2em;
+	line-height: 2em;
+	padding: 0;
+	margin: 0;
+	padding-right: 3em;
+	list-style: none;
+	position: relative;
 }
 
 table.npc-view td.npc-name {
@@ -295,20 +295,13 @@ table.npc-view td.npc-name {
 	position: relative;
 }
 
-.spellbook-view tr td ul li i {
-	position: absolute;
-	right: 0.3em;
-	top: 50%;
-	margin-top: -8px;
-	cursor: pointer;
-}
-
+.spellbook-view tr td ul li i,
 table.npc-view i.npc-remove {
-	position: absolute;
-	right: .5em;
-	top: 50%;
-	margin-top: -8px;
 	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 0.4em;
 }
 
 .spellbook-settings {
@@ -329,8 +322,8 @@ table.npc-view i.npc-remove {
 }
 
 span.npc-link {
-    line-height: 1.5em;
-    padding-left: .3em;
+	line-height: 1.5em;
+	padding-left: .3em;
 }
 
 button.red {
@@ -362,12 +355,12 @@ div#ItemView .description {
 
 .grid table th,
 .grid table td {
-    border: 1px solid #ddd;
-    padding: 0.2em;
+	border: 1px solid #ddd;
+	padding: 0.2em;
 }
 
 table.loot td {
-    padding: 6px;
+	padding: 6px;
 }
 
 .grid table.npcs td {
@@ -497,8 +490,8 @@ span.roll-result {
 	font-family: monospace;
 	vertical-align: middle;
 	text-align: right;
-    height: 2em;
-    line-height: 2em;
+	height: 2em;
+	line-height: 2em;
 }
 
 input.roll-string {
@@ -1072,8 +1065,8 @@ span.spell-link {
 }
 
 div.spells.grid table td {
-    line-height: 2.2em;
-    padding: 0.2em 0;
+	line-height: 2.2em;
+	padding: 0.2em 0;
 }
 
 div#dialog-extend-fixed-container span.ui-dialog-title {
@@ -1138,8 +1131,8 @@ table.combat td.combat-visible {
 }
 
 table.combat input.combat-visible {
-    width: 20px;
-    height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 table.combat i.npc-view {
@@ -1253,14 +1246,14 @@ img.leaflet-marker-icon.outline.NPC {
 
 img.leaflet-marker-icon.invisible {
 	-webkit-filter: url(#InvisibleToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
-    filter: url(#InvisibleToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
-    opacity: 0.65;
+	filter: url(#InvisibleToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
+	opacity: 0.65;
 }
 
 img.leaflet-marker-icon.dead {
 	-webkit-filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
-    filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
-    opacity: 0.65;
+	filter: url(#DeadToken) drop-shadow(1px 1px 0 rgba(0,0,0,1)) drop-shadow(-1px -1px 0 rgba(0,0,0,1)) !important;
+	opacity: 0.65;
 }
 
 svg.defs-only {
@@ -1271,44 +1264,44 @@ svg.defs-only {
 }
 
 div#grid-mapslides {
-    background-color: #000;
-    position: relative;
+	background-color: #000;
+	position: relative;
 }
 
 div#grid-mapslides div.grid-map-thumb {
-    display: inline-block;
-    position: relative;
-    box-sizing: border-box;
-    width: 25%;
-    background: none;
-    height: 102px;
-    padding: 1px;
+	display: inline-block;
+	position: relative;
+	box-sizing: border-box;
+	width: 25%;
+	background: none;
+	height: 102px;
+	padding: 1px;
 }
 
 div#grid-mapslides .img {
 	opacity: 0.8;
-    width: 100%;
-    height: 100%;
-    background-image: none;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
+	width: 100%;
+	height: 100%;
+	background-image: none;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
 }
 
 div#grid-mapslides .img:hover {
-    opacity: 1;
+	opacity: 1;
 }
 
 div#grid-mapslides .page-prev, 
 div#grid-mapslides .page-next {
-    color: #fff;
-    z-index: 10;
-    height: 100%;
-    width: 40px;
-    background: 0;
-    position: absolute;
-    cursor: pointer;
-    top: 0;
+	color: #fff;
+	z-index: 10;
+	height: 100%;
+	width: 40px;
+	background: 0;
+	position: absolute;
+	cursor: pointer;
+	top: 0;
 }
 
 div#grid-mapslides .page-prev:hover, 
@@ -1318,18 +1311,18 @@ div#grid-mapslides .page-next:hover {
 
 div#grid-mapslides .page-prev i, 
 div#grid-mapslides .page-next i {
-    font-size: 1.7vw;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+	font-size: 1.7vw;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 div#grid-mapslides .page-prev {
-    left: 0;
+	left: 0;
 }
 
 div#grid-mapslides .page-next {
-    right: 0;
+	right: 0;
 }
 
 div#grid-mapslides .map-page {
@@ -1338,57 +1331,62 @@ div#grid-mapslides .map-page {
 }
 
 div.gridsettings-add input {
-    height: 33px;
-    line-height: 16px;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: .4em;
+	height: 33px;
+	line-height: 16px;
+	max-width: 100%;
+	box-sizing: border-box;
+	padding: .4em;
 }
 
 div.gridsettings-add button {
-    line-height: 16px;
+	line-height: 16px;
 }
 
 table.gridsettings input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 div#token-scale {
-    font-size: 1vw;
+	font-size: 1vw;
 }
 
 table.gridsettings td.token-scale {
-    font-weight: bold;
-    padding-left: 13px;
+	font-weight: bold;
+	padding-left: 13px;
 }
 
 table.combat tr.selected {
 	-webkit-filter: drop-shadow(0 0 5px #505050);
-    -moz-filter: drop-shadow(0 0 5px #505050);
-    -o-filter: drop-shadow(0 0 5px #505050);
+	-moz-filter: drop-shadow(0 0 5px #505050);
+	-o-filter: drop-shadow(0 0 5px #505050);
 	filter: drop-shadow(0 0 5px #505050);
 }
 
 @-webkit-keyframes blink {
-    20% { opacity: 0.0; }
+	20% { opacity: 0.0; }
 }
 
 @-moz-keyframes blink {
-    20% { opacity: 0.0; }
+	20% { opacity: 0.0; }
 }
 
 @-o-keyframes blink {
-    20% { opacity: 0.0; }
+	20% { opacity: 0.0; }
 }
 
 @keyframes blink {
-    20% { opacity: 0.0; }
+	20% { opacity: 0.0; }
 }
 
 .blink {
-    -webkit-animation: blink 0.5s step-start 0s infinite;
-    -moz-animation: blink 0.5s step-start 0s infinite;
-    -o-animation: blink 0.5s step-start 0s infinite;
-    animation: blink 0.5s step-start 0s infinite;
+	-webkit-animation: blink 0.5s step-start 0s infinite;
+	-moz-animation: blink 0.5s step-start 0s infinite;
+	-o-animation: blink 0.5s step-start 0s infinite;
+	animation: blink 0.5s step-start 0s infinite;
+}
+span.version {
+	color: #909090;
+	float: right;
+	cursor: default;
 }

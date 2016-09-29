@@ -1,5 +1,5 @@
 # VirtualDMScreen
-A simple browser interface for running tabletop RPG games (specifically 5e)
+A simple browser interface for running D&D 5e games
 
 ##Demo
 https://kcaf.github.io/VirtualDMScreen/
@@ -68,6 +68,6 @@ Names for each data array are: `MAGIC`, `MONSTERS`, `SPELLS`
 - [TODO] Extend browser support
 
 ##Licensing
-- VirtualDMScreen is published under the [MIT license](https://opensource.org/licenses/MIT)
+- VirtualDMScreen is licensed under the [MIT license](https://opensource.org/licenses/MIT)
 - Some content used as part of the [Open Gaming License (OGL)](http://dnd.wizards.com/articles/features/systems-reference-document-srd)
 - Mapping made possible by [LeafletJS](http://leafletjs.com) <-- flippin amazing
