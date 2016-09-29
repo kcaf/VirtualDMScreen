@@ -579,6 +579,7 @@ var WORKSPACE = {
 					WORKSPACE.GameList = load.GameList;
 					WORKSPACE.MapSlides = load.MapSlides || [];
 					WORKSPACE.LoadViewModels(load.CurrentGame);
+					WORKSPACE.ViewModels.CombatViewModel.MapSlides( WORKSPACE.MapSlides.concat(WORKSPACE.ViewModels.CombatViewModel.MapSlides()) );
 				}
 			}else{
 				WORKSPACE.LoadDefaultData();

@@ -583,7 +583,7 @@ var CombatViewModel = function() {
 				Left: data.Position.Left || 0,
 				Top: data.Position.Top || 0
 			});
-			_this.MapSlides(WORKSPACE.MapSlides.concat(data.MapSlides || []));
+			_this.MapSlides(data.MapSlides || []);
 			_this.IsMinimized(data.IsMinimized);
 
 		}
