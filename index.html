@@ -2,15 +2,12 @@
 <head>
 <title>VirtualDMScreen</title>
 <meta charset="utf-8">
-<!-- inject:css -->
 <link rel="stylesheet" href="css/combined.css">
-<!-- endinject -->
 <body>
-<!-- inject:version -->
-<span class="version noselect">v0.1.1-alpha</span>
-<!-- endinject -->
+<span class="version noselect">
+v0.1.2-alpha
+</span>
 <div id="workspace">
-<!-- inject:partials:views -->
 <div class="combatviewmodel-inc"> 
 	<ul class="noselect">
 		<li><a href="#InitiativeTab" data-bind="click: SetActiveTab.bind($data, 0)">Initiative</a></li>
@@ -97,36 +94,34 @@
 	<div id="GridSettingsTab">
 		<div class="filters grid">
 			<table class="gridsettings ko-grid" cellspacing="0">
-			    <thead>
-			        <tr>
-						<th>Outline</th>
-						<th>Grid</th>
-						<th>Alt.Color</th>
-						<th>Darkness</th>
-						<th>Stream</th>
-			        </tr>
-				</thead>
 				<tbody>
 					<tr>
+						<th>Map</th>
+						<th>Token Outlines</th>
+						<th>Grid</th>
+						<th>Fog of War</th>
+						<th>Stream</th>
+			        </tr>
+					<tr>
+						<td>
+							<input id="grid-bgcolor" type="text" />
+						</td>
 						<td>
 							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-color" data-bind="checked: AltGridColor" />
+							<input id="grid-linecolor" type="text" />
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
+							<input id="grid-fogcolor" type="text" />
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-transmit" data-bind="checked: TransmitMap" />
 			            </td>
 					</tr>
-				</tbody>
-				<tfoot>
-					<tr style="height: 10px;"></tr>
+					<tr class="spacer"></tr>
 					<tr>
 						<th>Scale</th>
 						<td colspan="3">
@@ -134,7 +129,7 @@
 						</td>
 						<td class="token-scale" data-bind="text: TokenScale() + 'x'"></td>
 					</tr>
-				</tfoot>
+				</tbody>
 			</table>
 			<div class="gridsettings-buttons">
 				<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Token Positions</button>
@@ -249,7 +244,6 @@
 			<div class="cr">
 				<label for="cr">CR</label>
 				<select name="cr" class="cr" data-bind="options: CRList, value: CR"></select>
-				<!--<input name="cr" class="cr" class="text-center" data-bind="textInput: $root.CR" />-->
 			</div>
 		</div>
 		<div class="npc grid" data-bind="simpleGrid: SearchGrid, visible: SearchList().length > 0"> </div>
@@ -398,9 +392,7 @@
 		</div>
 	</div>
 </div>
-<!-- endinject -->
 </div>
-<!-- inject:partials:popups -->
 <div id="ItemView" title="Item View">
 	<article class="content">
 		<div class="description">
@@ -575,9 +567,7 @@
 		<p class="spell-desc" data-bind="html: Description"></p>
 	</article>
 </div>
-<!-- endinject -->
 <div id="overlay"></div>
-<!-- inject:partials:templates -->
 <script type="text/html" id="ko_lootgrid_template">
 	<table class="loot ko-grid" cellspacing="0">
 		<thead>
@@ -590,11 +580,6 @@
 	           	<th data-bind="text: columns[2].headerText"></th>
         	</tr>
 		</thead>
-		<!--<tbody data-bind="foreach: itemsOnCurrentPage">
-			<tr data-bind="foreach: $parent.columns">
-				<td data-bind="text: typeof rowText == 'function' ? rowText($parent) : $parent[rowText] "></td>
-			</tr>
-		</tbody>-->
 		<tbody data-bind="foreach: itemsOnCurrentPage">
 			<tr>
 				<td>
@@ -622,7 +607,6 @@
 				<td>
 					<button class="ui-button ui-corner-all ui-widget" 
 		            	data-bind="click: function(data, event) { WORKSPACE.Helpers.AddNPC(data, event) }">+</button>
-		            <!--<span data-bind="text: $data.Name"></td>-->
 	            </td>
 				<td>
 					<span class="npc-link" data-bind="text: $data.Name, 
@@ -677,8 +661,6 @@
 		</tbody>
   </table>
 </script>
-<!-- endinject -->
-<!-- inject:js -->
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/jquery-ui-touchpunch.min.js"></script>
@@ -693,7 +675,7 @@
 <script src="js/jquery-dialog-extend.min.js"></script>
 <script src="js/leaflet-marker-rotate.min.js"></script>
 <script src="js/models.min.js"></script>
+<script src="js/spectrum.min.js"></script>
 <script src="js/workspace.min.js"></script>
-<!-- endinject -->
 </body>
 </html>
