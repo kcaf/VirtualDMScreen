@@ -17,6 +17,8 @@ var WORKSPACE = {
 	IsLoaded: false,
 	ShowDistance: false,
 	CurrentGame: null,
+	DownX: 0,
+	DownY: 0,
 	ErasePoints: {},
 	GridState: 1,
 	GameList: [],
@@ -416,40 +418,60 @@ var WORKSPACE = {
 			attributionControl: false
 		});
 
-		WORKSPACE.AddErasePoint = function(e){
+		WORKSPACE.AddErasePoint = function(e, nodrag){
 			var canvas = $("#grid-fog"),
 				zoom = WORKSPACE.GridMap.getZoom();
 			WORKSPACE.ErasePoints[zoom] = WORKSPACE.ErasePoints[zoom] || { points: [] };
 			WORKSPACE.ErasePoints[zoom].points.push( {
 				x: e.pageX - canvas.offset().left,
 				y: e.pageY - canvas.offset().top,
-				dragging: true,
+				dragging: nodrag ? false : true,
 				size: WORKSPACE.ViewModels.CombatViewModel.EraseSize()
 			} );
-			WORKSPACE.Helpers.EraseCanvas();
-			WORKSPACE.CombatThrottle();
+			WORKSPACE.Helpers.DrawFog();
+			WORKSPACE.Helpers.SaveCombatVM();
 		};
-
-		WORKSPACE.AddErasePointThrottle = WORKSPACE.Helpers.Throttle( (function(event){
-		    WORKSPACE.AddErasePoint(event);
-		}), 100 );
 
 		WORKSPACE.GridMap.on( "contextmenu", function(event) {
 			// Do nothing
+		});
+		WORKSPACE.GridMap.on("mousedown", function(event) {
+			var e = event.originalEvent,
+				from = WORKSPACE.DistanceFrom;
+			e.stopPropagation();
+			if (e.button == 2) {
+				if(WORKSPACE.GridState) {
+					from.left = e.pageX;
+					from.top = e.pageY;
+					WORKSPACE.ShowDistance = true;
+				} else if(!WORKSPACE.GridState && WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
+					WORKSPACE.DownX = e.pageX;
+					WORKSPACE.DownY = e.pageY;
+					WORKSPACE.EraseClicked = true;
+					WORKSPACE.AddErasePoint(e, true);
+				}
+			}
 		});
 
 		WORKSPACE.GridMap.on( "mousemove", function(event) {
 			var e = event.originalEvent;
 			WORKSPACE.Helpers.DrawDistance(e);
 			if(!WORKSPACE.GridState && WORKSPACE.EraseClicked && WORKSPACE.ViewModels.CombatViewModel.ShowFog()){
-				WORKSPACE.AddErasePointThrottle(e);
+				var a = e.pageX - WORKSPACE.DownX,
+					b = e.pageY - WORKSPACE.DownY;
+					
+				if(Math.sqrt( a*a + b*b ) >= WORKSPACE.ViewModels.CombatViewModel.EraseSize()/2) {
+					WORKSPACE.AddErasePoint(e);
+					WORKSPACE.DownX = e.pageX;
+					WORKSPACE.DownY = e.pageY;
+				}
 			}
 			WORKSPACE.GridMap.invalidateSize();
 		});
 
-		WORKSPACE.GridMap.on( "mouseup", function(event) {
+		/*WORKSPACE.GridMap.on( "mouseup", function(event) {
 			WORKSPACE.Helpers.DisableDistance(event.originalEvent);
-		});
+		});*/
 
 		/*WORKSPACE.GridMap.on( "viewreset", function(event) {
 			WORKSPACE.GridMap.invalidateSize();
@@ -457,6 +479,9 @@ var WORKSPACE = {
 
 		$(document).on("mouseup", function(event) {
 			WORKSPACE.Helpers.DisableDistance(event);
+			if(!WORKSPACE.GridState && WORKSPACE.EraseClicked && WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
+				WORKSPACE.AddErasePoint(event);
+			}
 			WORKSPACE.EraseClicked = false;
 		});
 
@@ -480,7 +505,7 @@ var WORKSPACE = {
 			canvas.attr("width", imglayer.width());
 			canvas.attr("height", imglayer.height());
 
-			WORKSPACE.Helpers.EraseCanvas();
+			WORKSPACE.Helpers.DrawFog();
 		};
 
 		WORKSPACE.GridMap.on("move", function(event) {
@@ -497,7 +522,7 @@ var WORKSPACE = {
 			canvas.attr("width", imglayer.width());
 			canvas.attr("height", imglayer.height());
 
-			WORKSPACE.Helpers.EraseCanvas();
+			WORKSPACE.Helpers.DrawFog();
 		});
 
 		WORKSPACE.GridMap.on("zoomstart", function(event) {
@@ -516,34 +541,6 @@ var WORKSPACE = {
 
 		WORKSPACE.GridMap.on("moveend", function(event) {
 			WORKSPACE.ViewModels.CombatViewModel.GridCenter(WORKSPACE.GridMap.getCenter());
-		});
-
-		WORKSPACE.GridMap.on("mousedown", function(event) {
-			var e = event.originalEvent,
-				from = WORKSPACE.DistanceFrom;
-			e.stopPropagation();
-			if (e.button == 2) {
-				if(WORKSPACE.GridState) {
-					from.left = e.pageX;
-					from.top = e.pageY;
-					WORKSPACE.ShowDistance = true;
-				} else if(!WORKSPACE.GridState && WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
-					WORKSPACE.EraseClicked = true;
-					var e = event.originalEvent,
-						canvas = $("#grid-fog"),
-						zoom = WORKSPACE.GridMap.getZoom();
-
-					WORKSPACE.ErasePoints[zoom] = WORKSPACE.ErasePoints[zoom] || { points: [] };
-					WORKSPACE.ErasePoints[zoom].points.push( {
-						x: e.pageX - canvas.offset().left,
-						y: e.pageY - canvas.offset().top,
-						dragging: false,
-						size: WORKSPACE.ViewModels.CombatViewModel.EraseSize()
-					} );
-					WORKSPACE.Helpers.EraseCanvas();
-					WORKSPACE.CombatThrottle();
-				}
-			}
 		});
 
 		$("#grid-lines").appendTo($(".leaflet-map-pane"));
@@ -813,7 +810,7 @@ var WORKSPACE = {
 
 WORKSPACE.Helpers = {
 
-	EraseCanvas: function() {
+	DrawFog: function() {
 		if(WORKSPACE.ViewModels.CombatViewModel && 
 			WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
 			var	canvas = $("#grid-fog")[0],
@@ -1085,7 +1082,7 @@ $(function() {
 	//WORKSPACE.Clear();
 
 	var SaveThrottle = WORKSPACE.Helpers.Throttle( WORKSPACE.Save, 400 );
-	WORKSPACE.CombatThrottle = WORKSPACE.Helpers.Throttle( WORKSPACE.Helpers.SaveCombatVM, 100 );
+	var CombatThrottle = WORKSPACE.Helpers.Throttle( WORKSPACE.Helpers.SaveCombatVM, 100 );
 
 	String.prototype.hashCode = function(){
 		var hash = 0;
@@ -1142,7 +1139,7 @@ $(function() {
 			};
 			target.subscribe(function (newValue) {
 				if (newValue != target.originalValue) { 
-					WORKSPACE.CombatThrottle();
+					CombatThrottle();
 					SaveThrottle();
 					target.setOriginalValue(newValue);
 				}

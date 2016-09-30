@@ -29,7 +29,7 @@ var WORKSPACE = {
 
 WORKSPACE.Helpers = {
 
-	EraseCanvas: function() {
+	DrawFog: function() {
 		if(WORKSPACE.ViewModels.CombatViewModel && 
 			WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
 			var canvas = $("#grid-fog")[0],
@@ -352,7 +352,7 @@ WORKSPACE.Shim = function() {
 		canvas.attr("width", imglayer.width());
 		canvas.attr("height", imglayer.height());
 
-		WORKSPACE.Helpers.EraseCanvas();
+		WORKSPACE.Helpers.DrawFog();
 	});
 
 	map.on("mousedown", function(event) {
@@ -410,7 +410,7 @@ WORKSPACE.Shim = function() {
 		canvas.attr("width", imglayer.width());
 		canvas.attr("height", imglayer.height());
 
-		WORKSPACE.Helpers.EraseCanvas();
+		WORKSPACE.Helpers.DrawFog();
 	};
 
 	WORKSPACE.DrawFog();

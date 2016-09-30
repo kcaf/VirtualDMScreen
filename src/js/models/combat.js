@@ -233,7 +233,7 @@ var CombatViewModel = function() {
 	_this.ActiveMap = ko.observable("").extend({ trackChange: true });
 	_this.ShowOutlines = ko.observable(false).extend({ trackChange: true });
 	_this.CustomIcons = ko.observableArray().extend({ trackChange: true });
-	_this.TokenScale = ko.observable(1).extend({ throttle: 100, trackChange: true });
+	_this.TokenScale = ko.observable(1).extend({ trackChange: true });
 	_this.TransmitMap = ko.observable(false).extend({ trackChange: true });
 	_this.GridCenter = ko.observable([0,0]).extend({ trackChange: true });
 	_this.GridZoom = ko.observable(1).extend({ trackChange: true });
@@ -285,7 +285,8 @@ var CombatViewModel = function() {
 
 	_this.ClearFog = function() {
 		WORKSPACE.ErasePoints = {};
-		WORKSPACE.CombatThrottle();
+		WORKSPACE.Helpers.DrawFog();
+		WORKSPACE.Helpers.SaveCombatVM();
 	};
 
 	_this.SetPlayerZoom = function() {
@@ -630,7 +631,7 @@ var CombatViewModel = function() {
 	});
 
 	_this.FogColor.subscribe(function(newValue) {
-		WORKSPACE.Helpers.EraseCanvas();
+		WORKSPACE.Helpers.DrawFog();
 	});
 
 	_this.ShowFog.subscribe(function(newValue) {
@@ -638,7 +639,7 @@ var CombatViewModel = function() {
 			ctx = canvas.getContext('2d');
 
     	ctx.clearRect(0, 0, canvas.width, canvas.height);
-		WORKSPACE.Helpers.EraseCanvas();
+		WORKSPACE.Helpers.DrawFog();
 	});
 	
 	_this.Load = function(data) {
