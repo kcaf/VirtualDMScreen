@@ -466,11 +466,13 @@ var CombatViewModel = function() {
 
 	_this.AddMap = function(data, event) {
 		_this.MapSlides.push({ Source: _this.MapToAdd() });
+		WORKSPACE.ViewModels.GameViewModel.Save();
 		_this.MapToAdd("");
 	};
 
 	_this.RemoveMap = function(map) {
 		_this.MapSlides.remove(map);
+		WORKSPACE.ViewModels.GameViewModel.Save();
 	};
 
 	_this.ActiveMap.subscribe(function(newValue){

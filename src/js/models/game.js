@@ -42,7 +42,7 @@ var GameViewModel = function() {
 			localStorage.setItem("WORKSPACE", JSON.stringify({
 				"CurrentGame": ko.toJS( _this.SelectedGame() ),
 				"GameList": ko.toJS( _this.GameList() ),
-				"MapSlides": ko.toJS( WORKSPACE.ViewModels.CombatViewModel.MapSlides )
+				"MapSlides": ko.toJS( WORKSPACE.ViewModels.CombatViewModel.MapSlides() )
 			}));
 		}
 	};

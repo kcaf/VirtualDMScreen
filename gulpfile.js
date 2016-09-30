@@ -93,7 +93,6 @@ gulp.task('index', function () {
 		'./build/js/jquery-scrollto.min.js',
 		'./build/js/leaflet.min.js',
 		'./build/js/leaflet-markerrotate.min.js',
-		'./build/js/leaflet-canvas-layer.min.js',
 		'./build/js/leaflet-button.min.js',
 		'./build/js/modernizr.min.js',
 		'./build/js/knockout.min.js',
