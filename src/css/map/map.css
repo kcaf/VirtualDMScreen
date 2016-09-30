@@ -43,10 +43,6 @@ div#grid-map{
   background-image: radial-gradient(circle, rgba(0,0,0,0) 300px, #000 0%);
 }
 
-.leaflet-container{
-  background: #000;
-}
-
 div#grid-map{
   overflow:hidden;
 }

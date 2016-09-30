@@ -1343,8 +1343,8 @@ div.gridsettings-add button {
 }
 
 table.gridsettings input[type="checkbox"] {
-	width: 20px;
-	height: 20px;
+    width: 1.5em;
+    height: 1.5em;
 }
 
 div#token-scale {
@@ -1357,10 +1357,11 @@ table.gridsettings td.token-scale {
 }
 
 table.combat tr.selected {
-	-webkit-filter: drop-shadow(0 0 5px #505050);
+	/*-webkit-filter: drop-shadow(0 0 5px #505050);
 	-moz-filter: drop-shadow(0 0 5px #505050);
 	-o-filter: drop-shadow(0 0 5px #505050);
-	filter: drop-shadow(0 0 5px #505050);
+	filter: drop-shadow(0 0 5px #505050);*/
+    border: 2px solid black;
 }
 
 @-webkit-keyframes blink {
@@ -1389,4 +1390,12 @@ span.version {
 	color: #909090;
 	float: right;
 	cursor: default;
+}
+
+tr.spacer {
+	height: 0.5em;
+}
+
+table.gridsettings tr {
+	background: #ececec;
 }

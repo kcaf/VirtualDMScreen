@@ -238,22 +238,27 @@ var CombatViewModel = function() {
 	_this.GridCenter = ko.observable([0,0]).extend({ trackChange: true });
 	_this.GridZoom = ko.observable(1).extend({ trackChange: true });
 	_this.ShowDarkness = ko.observable(false).extend({ trackChange: true });
+	_this.BackgroundColor = ko.observable("#ddd").extend({ trackChange: true });
+	_this.GridColor = ko.observable("#000").extend({ trackChange: true });
+	_this.FogColor = ko.observable("#000").extend({ trackChange: true });
 	_this.PageSize = ko.observable(8);
 	_this.PageIndex = ko.observable(0);
 
 	_this.CompressModel = function() {
 		var combatant,
 			combat = {
-			ShowGridLines: _this.ShowGridLines(),
-			AltGridColor: _this.AltGridColor(),
-			ActiveMap: _this.ActiveMap(),
-			ShowOutlines: _this.ShowOutlines(),
-			TokenScale: _this.TokenScale(),
-			GridCenter: _this.GridCenter(),
-			GridZoom: _this.GridZoom(),
-			ShowDarkness: _this.ShowDarkness(),
-			CombatantList: []
-		};
+				FogColor: _this.FogColor(),
+				GridColor: _this.GridColor(),
+				BackgroundColor: _this.BackgroundColor(),
+				ShowGridLines: _this.ShowGridLines(),
+				ActiveMap: _this.ActiveMap(),
+				ShowOutlines: _this.ShowOutlines(),
+				TokenScale: _this.TokenScale(),
+				GridCenter: _this.GridCenter(),
+				GridZoom: _this.GridZoom(),
+				ShowDarkness: _this.ShowDarkness(),
+				CombatantList: []
+			};
 		$.each(_this.CombatantList(), function(i, v) {
 			combatant = {
 				Id: v.Id(),
@@ -382,6 +387,11 @@ var CombatViewModel = function() {
 				iconAngle: v.Angle()
 			});
 
+			marker.on("contextmenu", function(event) {
+				v.Angle((v.Angle() + 45) % 360);
+				marker.setIconAngle(v.Angle());
+			});
+
 			if(!WORKSPACE.VIEW) {
 				marker.bindPopup(v.Name(), {
 					closeButton: false,
@@ -405,16 +415,18 @@ var CombatViewModel = function() {
 				});
 
 				marker.on("dblclick", function(event) {
-					var e = event.originalEvent;
-					e.stopPropagation();
-					WORKSPACE.Helpers.ViewNPC(v.Id(), e);
+					if(v.ModelType() == "NPC") {
+						var e = event.originalEvent;
+						e.stopPropagation();
+						WORKSPACE.Helpers.ViewNPC(v.Id(), e);
+					}
 				});
 
 				marker.on("mousedown", function(event) {
 					var e = event.originalEvent,
 						from = WORKSPACE.DistanceFrom;
 					e.stopPropagation();
-					if (e.which > 1) {
+					if (e.button == 2) {
 						from.left = $(e.srcElement).offset().left + $(e.srcElement).width()/2;
 						from.top = $(e.srcElement).offset().top + $(e.srcElement).height()/2;
 						WORKSPACE.ShowDistance = true;
@@ -426,11 +438,6 @@ var CombatViewModel = function() {
 				});
 
 			}
-
-			marker.on("contextmenu", function(event) {
-				v.Angle((v.Angle() + 45) % 360);
-				marker.setIconAngle(v.Angle());
-			});
 
 			WORKSPACE.GridLayers.push(marker);
 			marker.addTo(WORKSPACE.GridMap);
@@ -575,6 +582,33 @@ var CombatViewModel = function() {
 	_this.SetActiveTab = function(index) {
 		_this.ActiveTab(index);
 	};
+
+	_this.BackgroundColor.subscribe(function(newValue) {
+		$("#grid-map").css("background", newValue);
+	});
+
+	_this.ShowGridLines.subscribe(function(newValue) {
+		if(newValue) {
+			$("#grid-lines").css("display", "initial");
+			$("#grid-lines").css("background-image", 
+				"linear-gradient(to right, " + _this.GridColor() + " 1px, transparent 1px), linear-gradient(to bottom, " + _this.GridColor() + " 1px, transparent 1px)");
+		} else {
+			$("#grid-lines").css("display", "none");
+		}
+	});
+
+	_this.GridColor.subscribe(function(newValue) {
+		if(_this.ShowGridLines()) {
+			$("#grid-lines").css("background-image", 
+				"linear-gradient(to right, " + newValue + " 1px, transparent 1px), linear-gradient(to bottom, " + newValue + " 1px, transparent 1px)");
+		}
+	});
+
+	_this.FogColor.subscribe(function(newValue) {
+		if(WORKSPACE.VIEW) {
+			WORKSPACE.Helpers.DrawLights();
+		}
+	});
 	
 	_this.Load = function(data) {
 		if (!WORKSPACE.VIEW) {
@@ -588,6 +622,9 @@ var CombatViewModel = function() {
 
 		}
 		
+		_this.FogColor(data.FogColor || "#000");
+		_this.GridColor(data.GridColor || "#000");
+		_this.BackgroundColor(data.BackgroundColor || "#ddd");
 		_this.ShowOutlines(data.ShowOutlines || false);
 		_this.ShowGridLines(data.ShowGridLines || false);
 		_this.AltGridColor(data.AltGridColor || false);

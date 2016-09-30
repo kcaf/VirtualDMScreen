@@ -84,36 +84,34 @@
 	<div id="GridSettingsTab">
 		<div class="filters grid">
 			<table class="gridsettings ko-grid" cellspacing="0">
-			    <thead>
-			        <tr>
-						<th>Outline</th>
-						<th>Grid</th>
-						<th>Alt.Color</th>
-						<th>Darkness</th>
-						<th>Stream</th>
-			        </tr>
-				</thead>
 				<tbody>
 					<tr>
+						<th>Map</th>
+						<th>Token Outlines</th>
+						<th>Grid</th>
+						<th>Fog of War</th>
+						<th>Stream</th>
+			        </tr>
+					<tr>
+						<td>
+							<input id="grid-bgcolor" type="text" />
+						</td>
 						<td>
 							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-color" data-bind="checked: AltGridColor" />
+							<input id="grid-linecolor" type="text" />
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
+							<input id="grid-fogcolor" type="text" />
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-transmit" data-bind="checked: TransmitMap" />
 			            </td>
 					</tr>
-				</tbody>
-				<tfoot>
-					<tr style="height: 10px;"></tr>
+					<tr class="spacer"></tr>
 					<tr>
 						<th>Scale</th>
 						<td colspan="3">
@@ -121,7 +119,7 @@
 						</td>
 						<td class="token-scale" data-bind="text: TokenScale() + 'x'"></td>
 					</tr>
-				</tfoot>
+				</tbody>
 			</table>
 			<div class="gridsettings-buttons">
 				<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Token Positions</button>

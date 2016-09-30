@@ -100,21 +100,25 @@ gulp.task('index', function () {
 		'./build/css/*.css',
 	]);
 	return gulp.src('./src/index.html')
-  		.pipe(inject(sources, { ignorePath: 'build', addRootSlash: false }))
-  		.pipe(inject(gulp.src('./src/version.html'), {
+  		.pipe(inject(sources, { ignorePath: 'build', removeTags: true, addRootSlash: false }))
+  		.pipe(inject(gulp.src('./src/version'), {
 			starttag: '<!-- inject:version -->',
+			removeTags: true,
 			transform: function (filePath, file) { return file.contents.toString('utf8') }
 		}))
   		.pipe(inject(gulp.src('./src/partials/templates/*.html'), {
 			starttag: '<!-- inject:partials:templates -->',
+			removeTags: true,
 			transform: function (filePath, file) { return file.contents.toString('utf8') }
 		}))
 		.pipe(inject(gulp.src('./src/partials/views/*.html'), {
 			starttag: '<!-- inject:partials:views -->',
+			removeTags: true,
 			transform: function (filePath, file) { return file.contents.toString('utf8') }
 		}))
 		.pipe(inject(gulp.src('./src/partials/popups/*.html'), {
 			starttag: '<!-- inject:partials:popups -->',
+			removeTags: true,
 			transform: function (filePath, file) { return file.contents.toString('utf8') }
 		}))
 	 	.pipe(gulp.dest('./build'));

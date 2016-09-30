@@ -456,7 +456,7 @@ var WORKSPACE = {
 			var e = event.originalEvent,
 				from = WORKSPACE.DistanceFrom;
 			e.stopPropagation();
-			if (e.which > 1) {
+			if (e.button == 2) {
 				from.left = e.pageX;
 				from.top = e.pageY;
 				WORKSPACE.ShowDistance = true;
@@ -476,6 +476,30 @@ var WORKSPACE = {
 			slide: function( event, ui ) {
 				WORKSPACE.ViewModels.CombatViewModel.TokenScale(ui.value);
 			}
+		});
+
+		$("#grid-bgcolor").spectrum({
+		    color: WORKSPACE.ViewModels.CombatViewModel.BackgroundColor(),
+		    showAlpha: true,
+		    change: function(color) {
+		        WORKSPACE.ViewModels.CombatViewModel.BackgroundColor(color.toRgbString());
+		    }
+		});
+
+		$("#grid-linecolor").spectrum({
+		    color: WORKSPACE.ViewModels.CombatViewModel.GridColor(),
+		    showAlpha: true,
+		    change: function(color) {
+		        WORKSPACE.ViewModels.CombatViewModel.GridColor(color.toRgbString());
+		    }
+		});
+
+		$("#grid-fogcolor").spectrum({
+		    color: WORKSPACE.ViewModels.CombatViewModel.FogColor(),
+		    showAlpha: true,
+		    change: function(color) {
+		        WORKSPACE.ViewModels.CombatViewModel.FogColor(color.toRgbString());
+		    }
 		});
 
 		/*
@@ -632,7 +656,7 @@ WORKSPACE.Helpers = {
 	},
 
 	DisableDistance: function( event ) {
-		if (event.which > 1) {
+		if (event.button == 2) {
 			var canvas = $("#grid-canvas")[0],
 				ctx = canvas.getContext("2d");
 			WORKSPACE.ShowDistance = false;
@@ -726,26 +750,38 @@ WORKSPACE.Helpers = {
 		return calcDistance;
 	},
 
-	SwapMap: function(url) {
-		WORKSPACE.CurrentGridImage = url;
-		var img = new Image();
+	SwapMap: function(url,blank) {
+		if(WORKSPACE.CurrentGridImage != url || blank) {
+			WORKSPACE.CurrentGridImage = url;
+			var img = new Image();
 
-		img.onload = function(){
-			var height = img.height,
-				width = img.width,
-				ratio = width/height;
+			if(blank) {
+				var bounds = [[0,0], [blank.height,blank.width]];
 
-			var bounds = [[0,0], [100,100*ratio]];
+				if(WORKSPACE.GridImageOverlay)
+					WORKSPACE.GridMap.removeLayer(WORKSPACE.GridImageOverlay);
 
-			if(WORKSPACE.GridImageOverlay)
-				WORKSPACE.GridMap.removeLayer(WORKSPACE.GridImageOverlay);
+				WORKSPACE.GridImageOverlay = new L.imageOverlay(null, bounds);
+				WORKSPACE.GridImageOverlay.addTo(WORKSPACE.GridMap);
+				WORKSPACE.GridMap.fitBounds(bounds);
+			} else {
+				img.onload = function(){
+					var height = img.height,
+						width = img.width,
+						ratio = width/height;
 
-			WORKSPACE.GridImageOverlay = new L.imageOverlay(img.src, bounds);
-			WORKSPACE.GridImageOverlay.addTo(WORKSPACE.GridMap);
-			WORKSPACE.GridMap.fitBounds(bounds);
-		};
-		img.src = url;
+					var bounds = [[0,0], [100,100*ratio]];
 
+					if(WORKSPACE.GridImageOverlay)
+						WORKSPACE.GridMap.removeLayer(WORKSPACE.GridImageOverlay);
+
+					WORKSPACE.GridImageOverlay = new L.imageOverlay(img.src, bounds);
+					WORKSPACE.GridImageOverlay.addTo(WORKSPACE.GridMap);
+					WORKSPACE.GridMap.fitBounds(bounds);
+				};
+				img.src = url;
+			}
+		}
 		WORKSPACE.GridMap.invalidateSize();
 	},
 

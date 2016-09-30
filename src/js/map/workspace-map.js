@@ -37,7 +37,8 @@ WORKSPACE.Helpers = {
 			intensity = 1,
 			radius = 600 * WORKSPACE.ViewModels.CombatViewModel.TokenScale(),
 			diameter = radius*2,
-			amb = 'rgba(0,0,0,' + (1-ambientLight) + ')',
+			//amb = 'rgba(0,0,0,' + (1-ambientLight) + ')',
+			amb = WORKSPACE.ViewModels.CombatViewModel.FogColor(),
 			mapSize = WORKSPACE.GridMap.getSize();
 
 		ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
