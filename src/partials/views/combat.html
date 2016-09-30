@@ -78,6 +78,7 @@
 			</div>
 			<div id="grid-lines" data-bind="css: {'show': ShowGridLines, 'alt-color': AltGridColor}"></div>
 			<canvas id="grid-canvas"></canvas>
+			<canvas id="grid-fog"></canvas>
 			<canvas id="grid-light" style="display: none"></canvas>
 		</div>
 	</div>
@@ -89,6 +90,7 @@
 						<th>Map</th>
 						<th>Token Outlines</th>
 						<th>Grid</th>
+						<th>Darkness</th>
 						<th>Fog of War</th>
 						<th>Stream</th>
 			        </tr>
@@ -105,6 +107,10 @@
 			            </td>
 			            <td>
 							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
+							<input id="grid-darknesscolor" type="text" />
+			            </td>
+			            <td>
+							<input type="checkbox" name="grid-fog" data-bind="checked: ShowFog" />
 							<input id="grid-fogcolor" type="text" />
 			            </td>
 			            <td>
@@ -113,17 +119,28 @@
 					</tr>
 					<tr class="spacer"></tr>
 					<tr>
-						<th>Scale</th>
-						<td colspan="3">
+						<th colspan="3" style="text-align:center">Token Scale</th>
+						<th colspan="3" style="text-align:center">Eraser Size</th>
+					</tr>
+					<tr>
+						<td colspan="2">
 							<div id="token-scale"></div>
 						</td>
 						<td class="token-scale" data-bind="text: TokenScale() + 'x'"></td>
+						<td colspan="2">
+							<div id="erase-size"></div>
+						</td>
+						<td class="erase-size" data-bind="text: EraseSize"></td>
+					</tr>
+					<tr class="spacer"></tr>
+					<tr>
+						<td colspan="6">
+							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
+							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ClearFog">Reset Fog</button>
+						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div class="gridsettings-buttons">
-				<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Token Positions</button>
-			</div>
 			<div class="gridsettings-add">
 				<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd">
 				<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map URL</button>

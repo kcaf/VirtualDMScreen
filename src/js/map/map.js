@@ -32,6 +32,14 @@ MapViewer = function(){
 							ctx = canvas.getContext('2d');
 						ctx.clearRect(0, 0, canvas.width, canvas.height);
 					}
+
+					if(!combatObj.ShowFog) {
+						var canvas = $("#grid-fog")[0],
+							ctx = canvas.getContext('2d');
+						ctx.clearRect(0, 0, canvas.width, canvas.height);
+					} else {
+						WORKSPACE.Helpers.EraseCanvas();
+					}
 				}
 			} catch(e) {
 				console.log(e);

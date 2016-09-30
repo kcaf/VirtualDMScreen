@@ -1,7 +1,7 @@
 var WORKSPACE = {
 	VIEW: 0,
 	DEBUG: false,
-	Clicked: false,
+	EraseClicked: false,
 	PanelList: [],
 	Alerted: false,
 	ColumnCount: 3,
@@ -17,6 +17,8 @@ var WORKSPACE = {
 	IsLoaded: false,
 	ShowDistance: false,
 	CurrentGame: null,
+	ErasePoints: {},
+	GridState: 1,
 	GameList: [],
 	MapSlides: [],
 	TokenSize: {
@@ -414,12 +416,34 @@ var WORKSPACE = {
 			attributionControl: false
 		});
 
+		WORKSPACE.AddErasePoint = function(e){
+			var canvas = $("#grid-fog"),
+				zoom = WORKSPACE.GridMap.getZoom();
+			WORKSPACE.ErasePoints[zoom] = WORKSPACE.ErasePoints[zoom] || { points: [] };
+			WORKSPACE.ErasePoints[zoom].points.push( {
+				x: e.pageX - canvas.offset().left,
+				y: e.pageY - canvas.offset().top,
+				dragging: true,
+				size: WORKSPACE.ViewModels.CombatViewModel.EraseSize()
+			} );
+			WORKSPACE.Helpers.EraseCanvas();
+			WORKSPACE.CombatThrottle();
+		};
+
+		WORKSPACE.AddErasePointThrottle = WORKSPACE.Helpers.Throttle( (function(event){
+		    WORKSPACE.AddErasePoint(event);
+		}), 100 );
+
 		WORKSPACE.GridMap.on( "contextmenu", function(event) {
 			// Do nothing
 		});
 
 		WORKSPACE.GridMap.on( "mousemove", function(event) {
-			WORKSPACE.Helpers.DrawDistance(event.originalEvent);
+			var e = event.originalEvent;
+			WORKSPACE.Helpers.DrawDistance(e);
+			if(!WORKSPACE.GridState && WORKSPACE.EraseClicked && WORKSPACE.ViewModels.CombatViewModel.ShowFog()){
+				WORKSPACE.AddErasePointThrottle(e);
+			}
 			WORKSPACE.GridMap.invalidateSize();
 		});
 
@@ -433,19 +457,61 @@ var WORKSPACE = {
 
 		$(document).on("mouseup", function(event) {
 			WORKSPACE.Helpers.DisableDistance(event);
+			WORKSPACE.EraseClicked = false;
 		});
+
+		WORKSPACE.DrawFog = function() {
+			if(!WORKSPACE.ViewModels.CombatViewModel.ShowFog()) return;
+			var canvas = $("#grid-fog")[0],
+				ctx = canvas.getContext('2d');
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.fillStyle = WORKSPACE.ViewModels.CombatViewModel.FogColor().replace(')', ', 0.65)').replace('rgb', 'rgba');
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+		};
+
+		WORKSPACE.AdjustFog = function() {
+			var canvas = $("#grid-fog"),
+				ctx = canvas[0].getContext('2d'),
+				imglayer = $(".leaflet-image-layer");
+
+			canvas.css("transform", imglayer[0].style.transform);
+			canvas.attr("width", imglayer.width());
+			canvas.attr("height", imglayer.height());
+
+			WORKSPACE.Helpers.EraseCanvas();
+		};
 
 		WORKSPACE.GridMap.on("move", function(event) {
 			var gridlines = $("#grid-lines"),
-				imglayer = $(".leaflet-image-layer");
+				imglayer = $(".leaflet-image-layer"),
+				canvas = $("#grid-fog"),
+				ctx = canvas[0].getContext('2d');
 			if(!gridlines || !imglayer) return;
 			gridlines.css("transform", imglayer[0].style.transform);
 			gridlines.css("width", imglayer.width());
 			gridlines.css("height", imglayer.height());
+
+			canvas.css("transform", imglayer[0].style.transform);
+			canvas.attr("width", imglayer.width());
+			canvas.attr("height", imglayer.height());
+
+			WORKSPACE.Helpers.EraseCanvas();
+		});
+
+		WORKSPACE.GridMap.on("zoomstart", function(event) {
+			WORKSPACE.DrawFog();
 		});
 
 		WORKSPACE.GridMap.on("zoomend", function(event) {
 			WORKSPACE.ViewModels.CombatViewModel.GridZoom(WORKSPACE.GridMap.getZoom());
+			WORKSPACE.AdjustFog();
+			if(WORKSPACE.SetPlayerZoom.zoom == WORKSPACE.GridMap.getZoom()){
+				WORKSPACE.SetPlayerZoom.disable();
+			} else {
+				WORKSPACE.SetPlayerZoom.enable();
+			}
 		});
 
 		WORKSPACE.GridMap.on("moveend", function(event) {
@@ -457,13 +523,31 @@ var WORKSPACE = {
 				from = WORKSPACE.DistanceFrom;
 			e.stopPropagation();
 			if (e.button == 2) {
-				from.left = e.pageX;
-				from.top = e.pageY;
-				WORKSPACE.ShowDistance = true;
+				if(WORKSPACE.GridState) {
+					from.left = e.pageX;
+					from.top = e.pageY;
+					WORKSPACE.ShowDistance = true;
+				} else if(!WORKSPACE.GridState && WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
+					WORKSPACE.EraseClicked = true;
+					var e = event.originalEvent,
+						canvas = $("#grid-fog"),
+						zoom = WORKSPACE.GridMap.getZoom();
+
+					WORKSPACE.ErasePoints[zoom] = WORKSPACE.ErasePoints[zoom] || { points: [] };
+					WORKSPACE.ErasePoints[zoom].points.push( {
+						x: e.pageX - canvas.offset().left,
+						y: e.pageY - canvas.offset().top,
+						dragging: false,
+						size: WORKSPACE.ViewModels.CombatViewModel.EraseSize()
+					} );
+					WORKSPACE.Helpers.EraseCanvas();
+					WORKSPACE.CombatThrottle();
+				}
 			}
 		});
 
 		$("#grid-lines").appendTo($(".leaflet-map-pane"));
+		$("#grid-fog").appendTo($(".leaflet-map-pane"));
 
 		WORKSPACE.ViewModels.CombatViewModel.LoadTokens();
 
@@ -478,29 +562,115 @@ var WORKSPACE = {
 			}
 		});
 
+		$( "#erase-size" ).slider({
+			range: "min",
+			value: 100,
+			min: 10,
+			step: 10,
+			max: 200,
+			slide: function( event, ui ) {
+				WORKSPACE.ViewModels.CombatViewModel.EraseSize(ui.value);
+			}
+		});
+
 		$("#grid-bgcolor").spectrum({
-		    color: WORKSPACE.ViewModels.CombatViewModel.BackgroundColor(),
-		    showAlpha: true,
-		    change: function(color) {
-		        WORKSPACE.ViewModels.CombatViewModel.BackgroundColor(color.toRgbString());
-		    }
+			color: WORKSPACE.ViewModels.CombatViewModel.BackgroundColor(),
+			showAlpha: true,
+			change: function(color) {
+				WORKSPACE.ViewModels.CombatViewModel.BackgroundColor(color.toRgbString());
+			}
 		});
 
 		$("#grid-linecolor").spectrum({
-		    color: WORKSPACE.ViewModels.CombatViewModel.GridColor(),
-		    showAlpha: true,
-		    change: function(color) {
-		        WORKSPACE.ViewModels.CombatViewModel.GridColor(color.toRgbString());
-		    }
+			color: WORKSPACE.ViewModels.CombatViewModel.GridColor(),
+			showAlpha: true,
+			change: function(color) {
+				WORKSPACE.ViewModels.CombatViewModel.GridColor(color.toRgbString());
+			}
 		});
 
 		$("#grid-fogcolor").spectrum({
-		    color: WORKSPACE.ViewModels.CombatViewModel.FogColor(),
-		    showAlpha: true,
-		    change: function(color) {
-		        WORKSPACE.ViewModels.CombatViewModel.FogColor(color.toRgbString());
-		    }
+			color: WORKSPACE.ViewModels.CombatViewModel.FogColor(),
+			change: function(color) {
+				WORKSPACE.ViewModels.CombatViewModel.FogColor(color.toRgbString());
+			}
 		});
+
+		$("#grid-darknesscolor").spectrum({
+			color: WORKSPACE.ViewModels.CombatViewModel.DarknessColor(),
+			change: function(color) {
+				WORKSPACE.ViewModels.CombatViewModel.DarknessColor(color.toRgbString());
+			}
+		});
+
+		var eraseToggle = L.easyButton({
+		    states: [
+		    	{
+				   	stateName: "grid-erase",
+				    icon: "fa fa-eraser",
+				    title: "Erase Mode",
+				    onClick: function(control) {
+				    	//$(".eraseControl").show();
+				        WORKSPACE.GridState = 0;
+				        control.state("grid-move");
+				    }
+		  		},
+		    	{
+		    		stateName: "grid-move",
+				    icon: "fa fa-arrows",
+				    title: "Move Mode",
+				    onClick: function(control) {
+				    	//$(".eraseControl").hide();
+				        WORKSPACE.GridState = 1;
+				        control.state("grid-erase");
+				    }
+				}
+		  	]
+		});
+
+		eraseToggle.addTo(WORKSPACE.GridMap);
+
+		WORKSPACE.DrawFog();
+
+		WORKSPACE.SetPlayerZoom = L.easyButton( {
+			states: 
+			[
+				{
+					stateName: "player-zoom",
+					icon: "fa fa-crosshairs",
+					title: "Set Player Zoom",
+					onClick: function(control){
+						WORKSPACE.ViewModels.CombatViewModel.SetPlayerZoom();
+						this.zoom = WORKSPACE.GridMap.getZoom();
+						this.disable();
+					}
+				}
+			]
+		});
+
+		WORKSPACE.SetPlayerZoom.addTo(WORKSPACE.GridMap);
+
+		WORKSPACE.SetPlayerZoom.zoom = WORKSPACE.GridMap.getZoom();
+
+		/*var eraseLower = L.easyButton( "fa fa-arrow-left eraseControl", function(){
+			WORKSPACE.EraseSize /= 2;
+			eraseBigger.enable();
+			if(WORKSPACE.EraseSize <= 10) {
+				WORKSPACE.EraseSize = 10;
+				this.disable();
+			}
+		}).addTo(WORKSPACE.GridMap);
+
+		var eraseBigger = L.easyButton( "fa fa-arrow-right eraseControl right", function(){
+			WORKSPACE.EraseSize *= 2;
+			eraseLower.enable();
+			if(WORKSPACE.EraseSize >= 160) {
+				WORKSPACE.EraseSize = 160;
+				this.disable();
+			}
+		}).addTo(WORKSPACE.GridMap);
+
+		$(".eraseControl").hide();*/
 
 		/*
 		var bounds = [[0,0], [1000,1000]];
@@ -642,6 +812,45 @@ var WORKSPACE = {
 };
 
 WORKSPACE.Helpers = {
+
+	EraseCanvas: function() {
+		if(WORKSPACE.ViewModels.CombatViewModel && 
+			WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
+			var	canvas = $("#grid-fog")[0],
+				ctx = canvas.getContext("2d"),
+				radius = 20;
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.fillStyle = WORKSPACE.ViewModels.CombatViewModel.FogColor().replace(')', ', 0.65)').replace('rgb', 'rgba');
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			var currentZoom = WORKSPACE.GridMap.getZoom(),
+				zoom = WORKSPACE.ErasePoints[currentZoom];
+			
+			for(i=0; zoom && i<zoom.points.length; i++) {
+				var x = zoom.points[i].x,
+					y = zoom.points[i].y;
+
+				ctx.beginPath();
+	            if ( i>0 && zoom.points[i].dragging ) {
+	                ctx.moveTo(zoom.points[i-1].x, zoom.points[i-1].y);
+	            } else {
+	                ctx.moveTo(x - 1, y);
+	            }
+	            ctx.lineTo(x, y);
+	            ctx.closePath();
+
+	            ctx.globalCompositeOperation = 'destination-out';
+	            ctx.fillStyle = 'rgba(0,0,0,0);';
+	            ctx.strokeStyle = 'rgba(0,0,0,0);';
+
+	            ctx.lineJoin = "round";
+	            ctx.lineWidth = zoom.points[i].size;
+	            ctx.stroke();
+		    }
+	    }
+	},
 
 	SaveCombatVM: function() {
 		if(WORKSPACE.ViewModels.CombatViewModel.TransmitMap()) {
@@ -839,9 +1048,9 @@ WORKSPACE.Helpers = {
 
 	Throttle: function (callback, limit) {
 		var wait = false;
-		return function () {
+		return function (args) {
 			if (!wait) {
-				callback.call();
+				callback.apply(null, arguments);
 				wait = true;
 				setTimeout(function () {
 					wait = false;
@@ -876,7 +1085,7 @@ $(function() {
 	//WORKSPACE.Clear();
 
 	var SaveThrottle = WORKSPACE.Helpers.Throttle( WORKSPACE.Save, 400 );
-	var CombatThrottle = WORKSPACE.Helpers.Throttle( WORKSPACE.Helpers.SaveCombatVM, 100 );
+	WORKSPACE.CombatThrottle = WORKSPACE.Helpers.Throttle( WORKSPACE.Helpers.SaveCombatVM, 100 );
 
 	String.prototype.hashCode = function(){
 		var hash = 0;
@@ -933,7 +1142,7 @@ $(function() {
 			};
 			target.subscribe(function (newValue) {
 				if (newValue != target.originalValue) { 
-					CombatThrottle();
+					WORKSPACE.CombatThrottle();
 					SaveThrottle();
 					target.setOriginalValue(newValue);
 				}

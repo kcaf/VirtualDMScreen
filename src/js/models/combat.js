@@ -237,17 +237,23 @@ var CombatViewModel = function() {
 	_this.TransmitMap = ko.observable(false).extend({ trackChange: true });
 	_this.GridCenter = ko.observable([0,0]).extend({ trackChange: true });
 	_this.GridZoom = ko.observable(1).extend({ trackChange: true });
+	_this.PlayerZoom = ko.observable(1).extend({ trackChange: true });
 	_this.ShowDarkness = ko.observable(false).extend({ trackChange: true });
+	_this.ShowFog = ko.observable(false).extend({ trackChange: true });
 	_this.BackgroundColor = ko.observable("#ddd").extend({ trackChange: true });
 	_this.GridColor = ko.observable("#000").extend({ trackChange: true });
-	_this.FogColor = ko.observable("#000").extend({ trackChange: true });
+	_this.DarknessColor = ko.observable("rgba(0,0,0)").extend({ trackChange: true });
+	_this.FogColor = ko.observable("rgb(0,0,0)").extend({ trackChange: true });
+	_this.EraseSize = ko.observable(100).extend({ trackChange: true });
 	_this.PageSize = ko.observable(8);
 	_this.PageIndex = ko.observable(0);
 
 	_this.CompressModel = function() {
 		var combatant,
 			combat = {
+				ErasePoints: WORKSPACE.ErasePoints,
 				FogColor: _this.FogColor(),
+				DarknessColor: _this.DarknessColor(),
 				GridColor: _this.GridColor(),
 				BackgroundColor: _this.BackgroundColor(),
 				ShowGridLines: _this.ShowGridLines(),
@@ -255,8 +261,9 @@ var CombatViewModel = function() {
 				ShowOutlines: _this.ShowOutlines(),
 				TokenScale: _this.TokenScale(),
 				GridCenter: _this.GridCenter(),
-				GridZoom: _this.GridZoom(),
+				GridZoom: _this.PlayerZoom(),
 				ShowDarkness: _this.ShowDarkness(),
+				ShowFog: _this.ShowFog(),
 				CombatantList: []
 			};
 		$.each(_this.CombatantList(), function(i, v) {
@@ -274,6 +281,15 @@ var CombatViewModel = function() {
 			combat.CombatantList.push(combatant);
 		});
 		return JSON.stringify(combat);
+	};
+
+	_this.ClearFog = function() {
+		WORKSPACE.ErasePoints = {};
+		WORKSPACE.CombatThrottle();
+	};
+
+	_this.SetPlayerZoom = function() {
+		_this.PlayerZoom(_this.GridZoom());
 	};
 
 	_this.SelectRow = function(data) {
@@ -464,6 +480,7 @@ var CombatViewModel = function() {
 	});
 
 	_this.LoadMap = function(data, event) {
+		_this.ClearFog();
 		_this.ActiveMap($(event.currentTarget).data("src"));
 	};
 
@@ -604,10 +621,22 @@ var CombatViewModel = function() {
 		}
 	});
 
-	_this.FogColor.subscribe(function(newValue) {
+	_this.DarknessColor.subscribe(function(newValue) {
 		if(WORKSPACE.VIEW) {
 			WORKSPACE.Helpers.DrawLights();
 		}
+	});
+
+	_this.FogColor.subscribe(function(newValue) {
+		WORKSPACE.Helpers.EraseCanvas();
+	});
+
+	_this.ShowFog.subscribe(function(newValue) {
+		var canvas = $("#grid-fog")[0],
+			ctx = canvas.getContext('2d');
+
+    	ctx.clearRect(0, 0, canvas.width, canvas.height);
+		WORKSPACE.Helpers.EraseCanvas();
 	});
 	
 	_this.Load = function(data) {
@@ -622,13 +651,18 @@ var CombatViewModel = function() {
 
 		}
 		
-		_this.FogColor(data.FogColor || "#000");
+		_this.FogColor(data.FogColor || "rgb(0,0,0)");
+		_this.DarknessColor(data.DarknessColor || "rgb(0,0,0)");
 		_this.GridColor(data.GridColor || "#000");
 		_this.BackgroundColor(data.BackgroundColor || "#ddd");
 		_this.ShowOutlines(data.ShowOutlines || false);
 		_this.ShowGridLines(data.ShowGridLines || false);
 		_this.AltGridColor(data.AltGridColor || false);
 		_this.ShowDarkness(data.ShowDarkness || false);
+		_this.ShowFog(data.ShowFog || false);
+		if(data.ShowFog && data.ErasePoints) {
+			WORKSPACE.ErasePoints = data.ErasePoints;
+		}
 		_this.ActiveMap(data.ActiveMap || "");
 		$.each(data.CustomIcons, function(i, v) {
 			if(!v.name || v.name === "")
@@ -654,6 +688,7 @@ var CombatViewModel = function() {
 
 CombatViewModel.prototype.toJSON = function() {
     var copy = ko.toJS(this);
+    delete copy.TriggerUpdate;
     delete copy.MapSlides;
     delete copy.MapSlidesPage;
     delete copy.PageMax;

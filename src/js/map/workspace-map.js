@@ -3,6 +3,7 @@ var WORKSPACE = {
 	DEBUG: false,
 	ViewModels: {},
 	GridLayers: [],
+	ErasePoints: {},
 	GridImageOverlay: null,
 	PreviousMapImage: null,
 	IsLoaded: false,
@@ -28,6 +29,46 @@ var WORKSPACE = {
 
 WORKSPACE.Helpers = {
 
+	EraseCanvas: function() {
+		if(WORKSPACE.ViewModels.CombatViewModel && 
+			WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
+			var canvas = $("#grid-fog")[0],
+				ctx = canvas.getContext("2d"),
+				amb = WORKSPACE.ViewModels.CombatViewModel.FogColor(),
+				radius = 20;
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.fillStyle = amb;
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			var currentZoom = WORKSPACE.ViewModels.CombatViewModel.GridZoom(),
+				zoom = WORKSPACE.ErasePoints[currentZoom];
+			
+			for(i=0; zoom && i<zoom.points.length; i++) {
+				var x = zoom.points[i].x,
+					y = zoom.points[i].y;
+
+				ctx.beginPath();
+	            if ( i>0 && zoom.points[i].dragging ) {
+	                ctx.moveTo(zoom.points[i-1].x, zoom.points[i-1].y);
+	            } else {
+	                ctx.moveTo(x - 1, y);
+	            }
+	            ctx.lineTo(x, y);
+	            ctx.closePath();
+
+	            ctx.globalCompositeOperation = 'destination-out';
+	            ctx.fillStyle = 'rgba(0,0,0,0);';
+	            ctx.strokeStyle = 'rgba(0,0,0,0);';
+
+	            ctx.lineJoin = "round";
+	            ctx.lineWidth = zoom.points[i].size;
+	            ctx.stroke();
+		    }
+	    }
+	},
+
 	DrawLights: function() {
 		if(!WORKSPACE.ViewModels.CombatViewModel.ShowDarkness()) return;
 
@@ -38,7 +79,9 @@ WORKSPACE.Helpers = {
 			radius = 600 * WORKSPACE.ViewModels.CombatViewModel.TokenScale(),
 			diameter = radius*2,
 			//amb = 'rgba(0,0,0,' + (1-ambientLight) + ')',
-			amb = WORKSPACE.ViewModels.CombatViewModel.FogColor(),
+			amb = WORKSPACE.ViewModels.CombatViewModel.DarknessColor().replace(')', ', 0.9)').replace('rgb', 'rgba'),
+			step = WORKSPACE.ViewModels.CombatViewModel.DarknessColor().replace(')', ', 0.6)').replace('rgb', 'rgba'),
+			main = WORKSPACE.ViewModels.CombatViewModel.DarknessColor().replace(')', ', 0)').replace('rgb', 'rgba'),
 			mapSize = WORKSPACE.GridMap.getSize();
 
 		ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
@@ -57,16 +100,15 @@ WORKSPACE.Helpers = {
 				offsetTop = offset.top + ele.height()/2 + diameter,
 				gradient = ctx.createRadialGradient(offsetLeft, offsetTop, 0, offsetLeft, offsetTop, radius);
 
-			gradient.addColorStop(1, 'rgba(0,0,0,' + (1-intensity) + ')');
-			//gradient.addColorStop(0.6, 'rgba(0,0,0,0.1)');
-			//gradient.addColorStop(0.4, 'rgba(0,0,0,0.4)');
+			gradient.addColorStop(1, main);
+			gradient.addColorStop(0.5, amb);
 			gradient.addColorStop(0, amb);
 			ctx.fillStyle = gradient;
 			ctx.fillRect(offsetLeft-radius, offsetTop-radius, offsetLeft+radius, offsetTop+radius);
 		});
 
 		ctx.fillStyle = amb;
-		ctx.globalCompositeOperation = 'xor';
+		ctx.globalCompositeOperation = "xor";
 		ctx.fillRect(0, 0, mapSize.x + diameter*2, mapSize.y + diameter*2);
 	},
 
@@ -296,12 +338,21 @@ WORKSPACE.Shim = function() {
 
 	map.on("move", function(event) {
 		var gridlines = $("#grid-lines"),
-			imglayer = $(".leaflet-image-layer");
-		if(!imglayer[0]) return;
+			imglayer = $(".leaflet-image-layer"),
+			canvas = $("#grid-fog"),
+			ctx = canvas[0].getContext('2d');
+
+		if(!gridlines || !imglayer[0]) return;
+
 		gridlines.css("transform", imglayer[0].style.transform);
 		gridlines.css("width", imglayer.width());
 		gridlines.css("height", imglayer.height());
-		WORKSPACE.Helpers.DrawLights();
+
+		canvas.css("transform", imglayer[0].style.transform);
+		canvas.attr("width", imglayer.width());
+		canvas.attr("height", imglayer.height());
+
+		WORKSPACE.Helpers.EraseCanvas();
 	});
 
 	map.on("mousedown", function(event) {
@@ -321,7 +372,10 @@ WORKSPACE.Shim = function() {
 
 	map.on("moveend", function(event) { WORKSPACE.Helpers.DrawLights(); });
 
-	map.on("zoomend", function(event) { WORKSPACE.Helpers.DrawLights(); });
+	map.on("zoomend", function(event) { 
+		WORKSPACE.AdjustFog();
+		WORKSPACE.Helpers.DrawLights(); 
+	});
 
 	map.on("zoomlevelschange", function(event) { WORKSPACE.Helpers.DrawLights(); });
 
@@ -332,4 +386,32 @@ WORKSPACE.Shim = function() {
 	map.on("dragend", function(event) { WORKSPACE.Helpers.DrawLights(); });
 
 	$("#grid-lines").appendTo($(".leaflet-map-pane"));
+	$("#grid-fog").appendTo($(".leaflet-map-pane"));
+
+	WORKSPACE.DrawFog = function() {
+		if(WORKSPACE.ViewModels.CombatViewModel && 
+			WORKSPACE.ViewModels.CombatViewModel.ShowFog()) {
+			var canvas = $("#grid-fog")[0],
+				ctx = canvas.getContext('2d');
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.fillStyle = WORKSPACE.ViewModels.CombatViewModel.FogColor().replace(')', ', 0.65)').replace('rgb', 'rgba');
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+		}
+	};
+
+	WORKSPACE.AdjustFog = function() {
+		var canvas = $("#grid-fog"),
+			ctx = canvas[0].getContext('2d'),
+			imglayer = $(".leaflet-image-layer");
+
+		canvas.css("transform", imglayer[0].style.transform);
+		canvas.attr("width", imglayer.width());
+		canvas.attr("height", imglayer.height());
+
+		WORKSPACE.Helpers.EraseCanvas();
+	};
+
+	WORKSPACE.DrawFog();
 };

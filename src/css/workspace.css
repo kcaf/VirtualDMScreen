@@ -1347,11 +1347,13 @@ table.gridsettings input[type="checkbox"] {
     height: 1.5em;
 }
 
-div#token-scale {
+div#token-scale,
+div#erase-size {
 	font-size: 1vw;
 }
 
-table.gridsettings td.token-scale {
+table.gridsettings td.token-scale,
+table.gridsettings td.erase-size {
 	font-weight: bold;
 	padding-left: 13px;
 }
@@ -1393,9 +1395,18 @@ span.version {
 }
 
 tr.spacer {
-	height: 0.5em;
+	height: 1em;
 }
 
 table.gridsettings tr {
 	background: #ececec;
+}
+
+canvas#grid-fog {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    pointer-events: none;
+    transform-origin: 0 0;
 }
