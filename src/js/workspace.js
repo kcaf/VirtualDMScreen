@@ -23,6 +23,8 @@ var WORKSPACE = {
 	GridState: 1,
 	GameList: [],
 	MapSlides: [],
+	DefaultPlayerToken: "https://i.imgur.com/VcUMoh7.png",
+	DefaultNPCToken: "https://i.imgur.com/4pfG5lQ.png",
 	TokenSize: {
 		"T": 12,
 		"S": 50,

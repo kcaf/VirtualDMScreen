@@ -370,7 +370,7 @@ var CombatViewModel = function() {
 
 			if(token === null) {
 				if(v.Token() === null) {
-					token = (v.ModelType() == "Player") ? "https://i.imgur.com/BF7DY3I.png" : "https://i.imgur.com/dgZ2jjL.png";
+					token = (v.ModelType() == "Player") ? WORKSPACE.DefaultPlayerToken : WORKSPACE.DefaultNPCToken;
 					v.Token(token);
 				} else {
 					token = v.Token();
