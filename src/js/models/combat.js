@@ -3,7 +3,7 @@ var CombatantModel = function(){
 	_this.Id = ko.observable(null).extend({ trackChange: true });
 	_this.ModelType = ko.observable().extend({ trackChange: true });
 	_this.Size = ko.observable().extend({ trackChange: true });
-	_this.Name = ko.observable().extend({ trackChange: true });
+	_this.Name = ko.observable("").extend({ trackChange: true });
 	_this.Initiative = ko.observable().extend({ trackChange: true });
 	_this.AC = ko.observable().extend({ trackChange: true });
 	_this.HP = ko.observable().extend({ trackChange: true });
@@ -37,12 +37,12 @@ var CombatantModel = function(){
 		if(result){
 			_this.Token(result);
 			$.each(combatvm.CustomIcons(), function(z, x) {
-				if(x.name && x.name == _this.Name()){
-					combatvm.CustomIcons.remove(x);
+				if(x && x.name == _this.Name()){
+					combatvm.RemoveIcon(x);
 				}
 			});
-			combatvm.CustomIcons.push({ name: _this.Name(), token: _this.Token() });
-			//combatvm.LoadTokens();
+			combatvm.AddIcon({ name: _this.Name(), token: result });
+			combatvm.LoadTokens();
 		}
 	};
 
@@ -248,9 +248,9 @@ var CombatViewModel = function() {
 	_this.PageSize = ko.observable(8);
 	_this.PageIndex = ko.observable(0);
 
-	_this.CustomIcons.subscribe(function(newValue) {
+	/*_this.CustomIcons.subscribe(function(newValue) {
 		_this.LoadTokens();
-	});
+	});*/
 
 	_this.CompressModel = function() {
 		var combatant,
@@ -285,6 +285,14 @@ var CombatViewModel = function() {
 			combat.CombatantList.push(combatant);
 		});
 		return JSON.stringify(combat);
+	};
+
+	_this.AddIcon = function(icon) {
+		_this.CustomIcons.push(icon);
+	};
+
+	_this.RemoveIcon = function(icon) {
+		_this.CustomIcons.remove(icon);
 	};
 
 	_this.ClearFog = function() {
