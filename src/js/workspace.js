@@ -607,27 +607,20 @@ var WORKSPACE = {
 		    	{
 				   	stateName: "grid-erase",
 				    icon: "fa fa-eraser",
-				    title: "Erase Mode",
+				    title: "Fog Eraser",
 				    onClick: function(control) {
-				    	//$(".eraseControl").show();
-				        WORKSPACE.GridState = 0;
-				        control.state("grid-move");
+				        WORKSPACE.GridState = !WORKSPACE.GridState;
+				        if(!WORKSPACE.GridState) 
+				        	this.disable();
+				        else
+				        	this.enable();
 				    }
-		  		},
-		    	{
-		    		stateName: "grid-move",
-				    icon: "fa fa-arrows",
-				    title: "Move Mode",
-				    onClick: function(control) {
-				    	//$(".eraseControl").hide();
-				        WORKSPACE.GridState = 1;
-				        control.state("grid-erase");
-				    }
-				}
+		  		}
 		  	]
 		});
 
 		eraseToggle.addTo(WORKSPACE.GridMap);
+		L.DomUtil.addClass(eraseToggle.button, "eraser-toggle");
 
 		WORKSPACE.DrawFog();
 
@@ -650,32 +643,6 @@ var WORKSPACE = {
 		WORKSPACE.SetPlayerZoom.addTo(WORKSPACE.GridMap);
 
 		WORKSPACE.SetPlayerZoom.zoom = WORKSPACE.GridMap.getZoom();
-
-		/*var eraseLower = L.easyButton( "fa fa-arrow-left eraseControl", function(){
-			WORKSPACE.EraseSize /= 2;
-			eraseBigger.enable();
-			if(WORKSPACE.EraseSize <= 10) {
-				WORKSPACE.EraseSize = 10;
-				this.disable();
-			}
-		}).addTo(WORKSPACE.GridMap);
-
-		var eraseBigger = L.easyButton( "fa fa-arrow-right eraseControl right", function(){
-			WORKSPACE.EraseSize *= 2;
-			eraseLower.enable();
-			if(WORKSPACE.EraseSize >= 160) {
-				WORKSPACE.EraseSize = 160;
-				this.disable();
-			}
-		}).addTo(WORKSPACE.GridMap);
-
-		$(".eraseControl").hide();*/
-
-		/*
-		var bounds = [[0,0], [1000,1000]];
-		var image = L.imageOverlay(url, bounds).addTo(WORKSPACE.GridMap);
-		WORKSPACE.GridMap.fitBounds(bounds);
-		*/
 
 		WORKSPACE.HideOverlay();
 		WORKSPACE.IsLoaded = true;

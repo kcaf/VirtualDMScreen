@@ -42,7 +42,7 @@ var CombatantModel = function(){
 				}
 			});
 			combatvm.CustomIcons.push({ name: _this.Name(), token: _this.Token() });
-			combatvm.LoadTokens();
+			//combatvm.LoadTokens();
 		}
 	};
 
@@ -247,6 +247,10 @@ var CombatViewModel = function() {
 	_this.EraseSize = ko.observable(100).extend({ trackChange: true });
 	_this.PageSize = ko.observable(8);
 	_this.PageIndex = ko.observable(0);
+
+	_this.CustomIcons.subscribe(function(newValue) {
+		_this.LoadTokens();
+	});
 
 	_this.CompressModel = function() {
 		var combatant,

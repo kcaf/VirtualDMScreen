@@ -1367,26 +1367,26 @@ table.combat tr.selected {
 }
 
 @-webkit-keyframes blink {
-	20% { opacity: 0.0; }
+	from { opacity: 0; }
 }
 
 @-moz-keyframes blink {
-	20% { opacity: 0.0; }
+	from { opacity: 0; }
 }
 
 @-o-keyframes blink {
-	20% { opacity: 0.0; }
+	from { opacity: 0; }
 }
 
 @keyframes blink {
-	20% { opacity: 0.0; }
+	from { opacity: 0; }
 }
 
 .blink {
-	-webkit-animation: blink 0.5s step-start 0s infinite;
-	-moz-animation: blink 0.5s step-start 0s infinite;
-	-o-animation: blink 0.5s step-start 0s infinite;
-	animation: blink 0.5s step-start 0s infinite;
+	-webkit-animation: blink 1s infinite alternate;
+	-moz-animation: blink 1s infinite alternate;
+	-o-animation: blink 1s infinite alternate;
+	animation: blink 1s infinite alternate;
 }
 span.version {
 	color: #909090;
@@ -1409,4 +1409,8 @@ canvas#grid-fog {
     z-index: 10;
     pointer-events: none;
     transform-origin: 0 0;
+}
+
+.leaflet-bar.disabled, .leaflet-bar button.eraser-toggle.disabled{
+	pointer-events: initial;
 }
