@@ -8,7 +8,8 @@ var WORKSPACE = {
 			{ url: 'turn:numb.viagenie.ca:3478?transport=udp', credential: 'muazkh', username: 'webrtc@live.com' },
 			{ url: 'turn:numb.viagenie.ca:3478?transport=tcp', credential: 'muazkh', username: 'webrtc@live.com' }
 	  	]},
-	  	debug: 2
+	  	debug: 2,
+	  	secure: window.location.protocol == "https:"
   	},
 	ViewModels: {},
 	GridLayers: [],
