@@ -2,7 +2,7 @@
 A simple browser interface for running D&D 5e games
 
 ##Demo
-https://kcaf.github.io/VirtualDMScreen/
+http://virtualdmscreen.us
 
 ##Usage
 - This is by no means a finished product. Please keep that in mind.
