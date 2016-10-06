@@ -2,7 +2,8 @@
 	<ul class="noselect">
 		<li><a href="#InitiativeTab" data-bind="click: SetActiveTab.bind($data, 0)">Initiative</a></li>
 		<li><a href="#GridTab" data-bind="click: SetActiveTab.bind($data, 1)">Battlemap</a></li>
-		<li><a href="#GridSettingsTab" data-bind="click: SetActiveTab.bind($data, 2)">Settings</a></li>
+		<li><a href="#GridMapsTab" data-bind="click: SetActiveTab.bind($data, 2)">Maps</a></li>
+		<li><a href="#GridSettingsTab" data-bind="click: SetActiveTab.bind($data, 3)">Settings</a></li>
 	</ul>
 	<div id="InitiativeTab">
 		<div class="grid filters">
@@ -82,69 +83,10 @@
 			<canvas id="grid-light" style="display: none"></canvas>
 		</div>
 	</div>
-	<div id="GridSettingsTab">
-		<div class="filters grid">
-			<table class="gridsettings ko-grid" cellspacing="0">
-				<tbody>
-					<tr>
-						<th>Map</th>
-						<th>Token Outlines</th>
-						<th>Grid</th>
-						<th>Darkness</th>
-						<th>Fog of War</th>
-						<th>Stream</th>
-			        </tr>
-					<tr>
-						<td>
-							<input id="grid-bgcolor" type="text" />
-						</td>
-						<td>
-							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
-							<input id="grid-linecolor" type="text" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
-							<input id="grid-darknesscolor" type="text" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-fog" data-bind="checked: ShowFog" />
-							<input id="grid-fogcolor" type="text" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-transmit" data-bind="checked: TransmitMap" />
-			            </td>
-					</tr>
-					<tr class="spacer"></tr>
-					<tr>
-						<th colspan="3" style="text-align:center">Token Scale</th>
-						<th colspan="3" style="text-align:center">Eraser Size</th>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div id="token-scale"></div>
-						</td>
-						<td class="token-scale" data-bind="text: TokenScale() + 'x'"></td>
-						<td colspan="2">
-							<div id="erase-size"></div>
-						</td>
-						<td class="erase-size" data-bind="text: EraseSize"></td>
-					</tr>
-					<tr class="spacer"></tr>
-					<tr>
-						<td colspan="6">
-							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
-							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ClearFog">Reset Fog</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="gridsettings-add">
-				<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd">
-				<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map URL</button>
-			</div>
+	<div id="GridMapsTab">
+		<div class="filters gridsettings-add">
+			<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd">
+			<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map URL</button>
 		</div>
 		<div id="grid-mapslides">
 			<div class="page-prev" data-bind="click: MapPrev">
@@ -160,6 +102,87 @@
 			<div class="page-next" data-bind="click: MapNext">
 				<i class="fa fa-chevron-right"></i>
 			</div>
+		</div>
+	</div>
+	<div id="GridSettingsTab">
+		<div class="grid">
+			<table class="gridsettings ko-grid" cellspacing="0">
+				<tbody>
+					<tr class="spacer"></tr>
+					<tr>
+						<th>Local Stream</th>
+						<td>
+							<input type="checkbox" name="grid-transmit" alt="Stream to another window on the SAME computer" data-bind="checked: TransmitMap" />
+						</td>
+					</tr>
+					<tr>
+						<th>Remote Stream</th>
+						<td>
+							<input type="checkbox" name="grid-transmit-remote" alt="Stream to another computer over the Internet" data-bind="checked: TransmitMapRemote" />
+						</td>
+					</tr>
+					<td><span class="remote-clientnum" data-bind="visible: TransmitMapRemote(), text: 'Connected: ' + ConnectedClients()"></span></td>
+					<td><span class="remote-key" data-bind="visible: TransmitMapRemote(), text: 'Key: ' + PeerKey()"></span></td>
+					<tr class="spacer"></tr>
+					<tr>
+						<th>Token Outlines</th>
+						<td>
+							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
+			            </td>
+			        </tr>
+					<tr>
+						<th>Map</th>
+						<td>
+							<input id="grid-bgcolor" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<th>Grid</th>
+			            <td>
+							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
+							<input id="grid-linecolor" type="text" />
+			            </td>
+		            </tr>
+					<tr>
+						<th>Darkness</th>
+			            <td>
+							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
+							<input id="grid-darknesscolor" type="text" />
+			            </td>
+		            </tr>
+					<tr>
+						<th>Fog of War</th>
+			            <td>
+							<input type="checkbox" name="grid-fog" data-bind="checked: ShowFog" />
+							<input id="grid-fogcolor" type="text" />
+			            </td>
+					</tr>
+					<tr class="spacer"></tr>
+					<tr>
+						<th>
+							Token Scale: <span class="token-scale" data-bind="text: TokenScale() + 'x'"></span>
+						</th>
+						<td>
+							<div id="token-scale"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Eraser Size: <span class="erase-size" data-bind="text: EraseSize"></span>
+						</th>
+						<td>
+							<div id="erase-size"></div>
+						</td>
+					</tr>
+					<tr class="spacer"></tr>
+					<tr>
+						<td colspan="2">
+							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
+							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ClearFog">Reset Fog</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>

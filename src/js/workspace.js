@@ -1,6 +1,15 @@
 var WORKSPACE = {
 	VIEW: 0,
 	DEBUG: false,
+	PeerOptions: {      // This is for testing purposes only and not intended for production use.
+		key: "rv687hwetjz41jor",
+		config: {'iceServers': [
+		    { url: 'stun:stun.l.google.com:19302' },
+			{ url: 'turn:numb.viagenie.ca:3478?transport=udp', credential: 'muazkh', username: 'webrtc@live.com' },
+			{ url: 'turn:numb.viagenie.ca:3478?transport=tcp', credential: 'muazkh', username: 'webrtc@live.com' }
+	  	]},
+	  	debug: 2
+  	},
 	EraseClicked: false,
 	PanelList: [],
 	Alerted: false,
@@ -48,6 +57,7 @@ var WORKSPACE = {
 	DialogSize: {
 		PlayersViewModel: { Width: "20vw", Height: "auto" },
 		CombatViewModel: { Width: "32vw", Height: "auto" },
+		LootViewModel: { Width: "35vw", Height: "auto" },
 		RollViewModel: { Width: "215px", Height: "auto" },
 		GameViewModel: { Width: "15vw", Height: "auto" },
 		Default: { Width: "22vw", Height: "auto" }
@@ -603,20 +613,20 @@ var WORKSPACE = {
 		});
 
 		var eraseToggle = L.easyButton({
-		    states: [
-		    	{
-				   	stateName: "grid-erase",
-				    icon: "fa fa-eraser",
-				    title: "Fog Eraser",
-				    onClick: function(control) {
-				        WORKSPACE.GridState = !WORKSPACE.GridState;
-				        if(!WORKSPACE.GridState) 
-				        	this.disable();
-				        else
-				        	this.enable();
-				    }
-		  		}
-		  	]
+			states: [
+				{
+					stateName: "grid-erase",
+					icon: "fa fa-eraser",
+					title: "Fog Eraser",
+					onClick: function(control) {
+						WORKSPACE.GridState = !WORKSPACE.GridState;
+						if(!WORKSPACE.GridState) 
+							this.disable();
+						else
+							this.enable();
+					}
+				}
+			]
 		});
 
 		eraseToggle.addTo(WORKSPACE.GridMap);
@@ -799,32 +809,39 @@ WORKSPACE.Helpers = {
 					y = zoom.points[i].y;
 
 				ctx.beginPath();
-	            if ( i>0 && zoom.points[i].dragging ) {
-	                ctx.moveTo(zoom.points[i-1].x, zoom.points[i-1].y);
-	            } else {
-	                ctx.moveTo(x - 1, y);
-	            }
-	            ctx.lineTo(x, y);
-	            ctx.closePath();
+				if ( i>0 && zoom.points[i].dragging ) {
+					ctx.moveTo(zoom.points[i-1].x, zoom.points[i-1].y);
+				} else {
+					ctx.moveTo(x - 1, y);
+				}
+				ctx.lineTo(x, y);
+				ctx.closePath();
 
-	            ctx.globalCompositeOperation = 'destination-out';
-	            ctx.fillStyle = 'rgba(0,0,0,0);';
-	            ctx.strokeStyle = 'rgba(0,0,0,0);';
+				ctx.globalCompositeOperation = 'destination-out';
+				ctx.fillStyle = 'rgba(0,0,0,0);';
+				ctx.strokeStyle = 'rgba(0,0,0,0);';
 
-	            ctx.lineJoin = "round";
-	            ctx.lineWidth = zoom.points[i].size;
-	            ctx.stroke();
-		    }
-	    }
+				ctx.lineJoin = "round";
+				ctx.lineWidth = zoom.points[i].size;
+				ctx.stroke();
+			}
+		}
 	},
 
 	SaveCombatVM: function() {
-		if(WORKSPACE.ViewModels.CombatViewModel.TransmitMap()) {
+		var local = WORKSPACE.ViewModels.CombatViewModel.TransmitMap(),
+			remote = WORKSPACE.ViewModels.CombatViewModel.TransmitMapRemote();
+		if(local || remote) {
 			var json = WORKSPACE.ViewModels.CombatViewModel.CompressModel(),
 				hash = json.hashCode();
 			if(WORKSPACE.LastGridHash != hash) {
-				localStorage.setItem("MAPVIEW-Hash", hash);
-				localStorage.setItem("MAPVIEW-ViewModel", json);
+				if(local) {
+					localStorage.setItem("MAPVIEW-Hash", hash);
+					localStorage.setItem("MAPVIEW-ViewModel", json);
+				}
+				if(remote) {
+					WORKSPACE.ViewModels.CombatViewModel.SendRemoteData(json);
+				}
 				WORKSPACE.LastGridHash = hash;
 			}
 		}
@@ -1116,6 +1133,58 @@ $(function() {
 		}
 		return target;
 	};
+
+	ko.bindingHandlers.slider = {
+		init: function (element, valueAccessor, allBindingsAccessor) {
+			var options = allBindingsAccessor().sliderOptions || {};
+			var type = options.type;
+			$(element).slider(options);
+			ko.utils.registerEventHandler(element, "slidechange", function (event, ui) {
+				var observable = valueAccessor();
+				if(type == "loot-chance") {
+					observable.Chance(ui.value);
+				} else if(type == "loot-range") {
+					observable.Min(ui.values[0]);
+					observable.Max(ui.values[1]);
+				} else {
+					if(ui.values)
+						observable(ui.values);
+					else
+						observable(ui.value);
+				}
+			});
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+				$(element).slider("destroy");
+			});
+			ko.utils.registerEventHandler(element, "slide", function (event, ui) {
+				var observable = valueAccessor();
+				if(type == "loot-chance") {
+					observable.Chance(ui.value);
+				} else if(type == "loot-range") {
+					observable.Min(ui.values[0]);
+					observable.Max(ui.values[1]);
+				} else {
+					if(ui.values)
+						observable(ui.values);
+					else
+						observable(ui.value);
+				}
+			});
+		},
+		update: function (element, valueAccessor) {
+			var value = ko.utils.unwrapObservable(valueAccessor()),
+				el = $(element);
+			if(el.hasClass("loot-chance")) {
+				el.slider("value", value.Chance());
+			} else if(el.hasClass("loot-range")) {
+				el.slider("values", [value.Min(),value.Max()]);
+			} else {
+				if (isNaN(value)) value = 0;
+				el.slider("value", value);
+			}
+		}
+	};
+
 	ko.options.deferUpdates = true;
 
 	// load it up

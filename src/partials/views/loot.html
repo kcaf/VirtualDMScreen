@@ -10,31 +10,22 @@
 				<table class="loot-generate ko-grid">
 					<thead>
 						<tr>
-							<th>Amount</th>
-							<th>CR</th>
+							<th>Allowed Items</th>
 							<th>Type</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>
-								<select data-bind="options: AmountList, value: Amount"></select>
-							</td>
-							<td>
-								<select data-bind="options: CRList, value: CR"></select>
-							</td>
-							<td>
-								<select name="type" data-bind="options: Type, value: SelectedType"> </select>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3">
 								<select name="rarity" class="loot-rarity" data-bind="options: Rarity, selectedOptions: SelectedRarity" multiple="true"></select>
+							</td>
+							<td>
+								<select name="type" data-bind="options: Type, value: SelectedType"></select>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<button class="ui-button ui-corner-all ui-widget" type="submit" data-bind="">Roll</button>
+				<button class="ui-button ui-corner-all ui-widget" type="submit" data-bind="">Generate</button>
 			</div>
 			<div class="grid" data-bind="simpleGrid: GenerateGrid, visible: GenerateList().length > 0"></div>
 		</form>
@@ -53,8 +44,29 @@
 		<div class="grid" data-bind="simpleGrid: SearchGrid, visible: SearchList().length > 0"></div>
 	</div>
 	<div id="GenSettings">
-		<div class="filters">
-			Loot Generation Settings
+		<div class="grid filters">
+			<table class="loot-settings ko-grid">
+				<thead>
+					<tr>
+						<th></th>
+						<th colspan="2">Drop Chance</th>
+						<th colspan="2">Amount</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: RaritySettings">
+					<tr>
+						<th class="rarity-name" data-bind="text: Name"></th>
+						<td class="rarity-chance"><div class="loot-chance" data-bind="slider: $data, 
+							sliderOptions: {min: 0, max: 100, value: Chance(), range: 'min', step: 1, type: 'loot-chance'}"></div>
+						<td class="rarity-chance-text" data-bind="text: ChanceText"></td>
+						<td class="rarity-range"><div class="loot-range" data-bind="slider: $data, 
+							sliderOptions: {min: RangeMin(), max: RangeMax(), 
+							values: [Min(), Max()], 
+							range: true, step: Step(), type: 'loot-range'}"></div>
+						<td class="rarity-range-text" data-bind="text: MinMaxText"></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>

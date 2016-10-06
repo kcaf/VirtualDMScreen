@@ -235,6 +235,13 @@ var CombatViewModel = function() {
 	_this.CustomIcons = ko.observableArray().extend({ trackChange: true });
 	_this.TokenScale = ko.observable(1).extend({ trackChange: true });
 	_this.TransmitMap = ko.observable(false).extend({ trackChange: true });
+	_this.TransmitMapRemote = ko.observable(false);
+	_this.Peer = null;
+	_this.PeerKey = ko.observable();
+	_this.PeerConnections = ko.observableArray();
+	_this.ConnectedClients = ko.observable(0);
+	_this.ConnTimeout = null;
+	_this.LastTimestamp = 0;
 	_this.GridCenter = ko.observable([0,0]).extend({ trackChange: true });
 	_this.GridZoom = ko.observable(1).extend({ trackChange: true });
 	_this.PlayerZoom = ko.observable(1).extend({ trackChange: true });
@@ -245,7 +252,7 @@ var CombatViewModel = function() {
 	_this.DarknessColor = ko.observable("rgba(0,0,0)").extend({ trackChange: true });
 	_this.FogColor = ko.observable("rgb(0,0,0)").extend({ trackChange: true });
 	_this.EraseSize = ko.observable(100).extend({ trackChange: true });
-	_this.PageSize = ko.observable(8);
+	_this.PageSize = ko.observable(12);
 	_this.PageIndex = ko.observable(0);
 
 	/*_this.CustomIcons.subscribe(function(newValue) {
@@ -358,6 +365,61 @@ var CombatViewModel = function() {
 			_this.PageIndex(_this.PageIndex()+1);
 	};
 
+	_this.TransmitMapRemote.subscribe(function(newValue) {
+		if(newValue){
+			_this.Peer = new Peer(null, WORKSPACE.PeerOptions);
+			_this.PeerKey("Loading...");
+			_this.Peer.on('open', function(id) {
+				_this.PeerKey(id);
+				_this.SendRemoteData(_this.CompressModel());
+
+				_this.Peer.on('connection', function(conn) {
+					_this.ConnectionReceived(conn);
+				});
+			});
+		} else {
+			_this.Peer.destroy();
+			_this.PeerConnections([]);
+			clearInterval(_this.ConnInterval);
+		}
+	});
+
+	_this.ConnectionReceived = function(conn) {
+		conn.on("open", function() {
+			_this.PeerConnections.push(conn);
+			_this.SendRemoteData(_this.CompressModel());
+
+			conn.on("close", function() {
+				_this.ConnectionClosed(conn);
+			});
+		});
+		
+		conn.on("error", function(error) {
+			console.log(error);
+		});
+	};
+
+	_this.ConnectionClosed = function(conn) {
+		_this.PeerConnections.remove(conn);
+	};
+
+	_this.SendRemoteData = function(json) {
+		clearTimeout(_this.ConnTimeout);
+
+		var count = 0;
+		$.each(_this.PeerConnections(), function(i, v) {
+			if(v.open){
+				count++;
+				v.send(json);
+			}
+		});
+		_this.ConnectedClients(count);
+
+		_this.ConnTimeout = setTimeout(function(){
+			_this.SendRemoteData(_this.CompressModel());
+		}, 1000);
+	};
+
 	_this.LoadTokens = function(reset) {
 		$.each(WORKSPACE.GridLayers, function(i, v) {
 			WORKSPACE.GridMap.removeLayer(v);
@@ -411,14 +473,24 @@ var CombatViewModel = function() {
 			var marker = new L.marker(v.LatLng(), {
 				draggable: !WORKSPACE.VIEW,
 				icon: icon,
-				title: !WORKSPACE.VIEW ? v.Name() : '',
-				alt: !WORKSPACE.VIEW ? v.Name() : '',
+				title: !WORKSPACE.VIEW || v.ModelType() == "Player" ? v.Name() : '',
+				alt: !WORKSPACE.VIEW || v.ModelType() == "Player" ? v.Name() : '',
 				iconAngle: v.Angle()
 			});
 
-			marker.on("contextmenu", function(event) {
-				v.Angle((v.Angle() + 45) % 360);
-				marker.setIconAngle(v.Angle());
+			marker.on("mousedown", function(event) {
+				var e = event.originalEvent,
+					from = WORKSPACE.DistanceFrom;
+				e.stopPropagation();
+				if (e.button == 2) {
+					from.left = $(e.srcElement).offset().left + $(e.srcElement).width()/2;
+					from.top = $(e.srcElement).offset().top + $(e.srcElement).height()/2;
+					WORKSPACE.ShowDistance = true;
+				}
+			});
+
+			marker.on("mouseup", function(event) {
+				WORKSPACE.Helpers.DisableDistance(event.originalEvent);
 			});
 
 			if(!WORKSPACE.VIEW) {
@@ -451,21 +523,14 @@ var CombatViewModel = function() {
 					}
 				});
 
-				marker.on("mousedown", function(event) {
-					var e = event.originalEvent,
-						from = WORKSPACE.DistanceFrom;
-					e.stopPropagation();
-					if (e.button == 2) {
-						from.left = $(e.srcElement).offset().left + $(e.srcElement).width()/2;
-						from.top = $(e.srcElement).offset().top + $(e.srcElement).height()/2;
-						WORKSPACE.ShowDistance = true;
-					}
+				marker.on("contextmenu", function(event) {
+					v.Angle((v.Angle() + 45) % 360);
+					marker.setIconAngle(v.Angle());
 				});
-
-				marker.on("mouseup", function(event) {
-					WORKSPACE.Helpers.DisableDistance(event.originalEvent);
+			} else {
+				marker.on("contextmenu", function(event) {
+					// Do nothing
 				});
-
 			}
 
 			WORKSPACE.GridLayers.push(marker);
@@ -703,6 +768,12 @@ var CombatViewModel = function() {
 
 CombatViewModel.prototype.toJSON = function() {
     var copy = ko.toJS(this);
+    delete copy.LastTimestamp;
+    delete copy.TransmitMap;
+    delete copy.TransmitMapRemote;
+    delete copy.Peer;
+    delete copy.PeerConnections;
+    delete copy.ConnTimeout;
     delete copy.TriggerUpdate;
     delete copy.MapSlides;
     delete copy.MapSlidesPage;

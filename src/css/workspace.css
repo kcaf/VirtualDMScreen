@@ -1327,7 +1327,7 @@ div#grid-mapslides .page-next {
 
 div#grid-mapslides .map-page {
 	padding: 0 40px;
-	height: 204px;
+	height: 306px;
 }
 
 div.gridsettings-add input {
@@ -1398,6 +1398,10 @@ tr.spacer {
 	height: 1em;
 }
 
+.center {
+	text-align: center;
+}
+
 table.gridsettings tr {
 	background: #ececec;
 }
@@ -1413,4 +1417,58 @@ canvas#grid-fog {
 
 .leaflet-bar.disabled, .leaflet-bar button.eraser-toggle.disabled{
 	pointer-events: initial;
+}
+
+.rarity-name{
+	width: 6em;
+}
+
+.rarity-chance-text {
+    width: 4em;
+    padding-left: 1em !important;
+}
+
+.rarity-range-text {
+	width: 7em;
+    padding-left: 1em !important;
+}
+
+.rarity-chance {
+    width: 5em;
+	padding: 0.6em !important;
+}
+
+.rarity-range {
+	padding: 0.6em !important;
+}
+
+table.loot-settings.ko-grid td {
+    background: #ececec;
+    border-width: 0;
+}
+
+table.loot-settings td:nth-child(3) {
+    border-right-width: 1px;
+}
+
+table.loot-settings thead th {
+    text-align: center;
+}
+
+tr.grid-streaming label{
+    font-size: 1.5em;
+}
+
+table.gridsettings {
+    max-width: 30em;
+}
+
+table.gridsettings th{
+	width: 10em;
+}
+
+table.gridsettings span.remote-key,
+table.gridsettings span.remote-clientnum {
+	font-size: 1em;
+	font-weight: bold;
 }

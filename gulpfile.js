@@ -80,7 +80,7 @@ gulp.task('map-js', function () {
 });
 
 gulp.task('map-html', function () {
-	return gulp.src('./src/map.html')
+	return gulp.src(['./src/local.html', './src/remote.html'])
 		.pipe(gulp.dest('./build'));
 });
 

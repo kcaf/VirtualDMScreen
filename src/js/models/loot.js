@@ -21,6 +21,32 @@ var ItemModel = function(){
 	};
 };
 
+var RaritySettingModel = function(name, chance, min, max, rangemin, rangemax, step) {
+	var _this = this;
+	_this.Name = ko.observable(name);
+	_this.Chance = ko.observable(chance);
+	_this.Min = ko.observable(min);
+	_this.Max = ko.observable(max);
+	_this.RangeMin = ko.observable(rangemin);
+	_this.RangeMax = ko.observable(rangemax);
+	_this.Step = ko.observable(step);
+
+	_this.ChanceText = ko.pureComputed(function() {
+		return _this.Chance() + "%";
+	});
+
+	_this.MinMaxText  = ko.pureComputed(function() {
+		return _this.Min() + " - " + _this.Max();
+	});
+};
+
+RaritySettingModel.prototype.toJSON = function() {
+    var copy = ko.toJS(this);
+    delete copy.ChanceText;
+    delete copy.MinMaxText;
+    return copy;
+};
+
 var LootViewModel = function() {
 	var _this = this;
 	_this.Selector = null;
@@ -31,24 +57,22 @@ var LootViewModel = function() {
 	_this.Position = ko.observable({Left: 0, Top: 0}).extend({ trackChange: true });
 	_this.IsMinimized = ko.observable(true).extend({ trackChange: true });
 	_this.Search = ko.observable("").extend({ rateLimit: 500, trackChange: true });
-	_this.CR = ko.observable(1);
-	_this.CRList = ko.observableArray(WORKSPACE.CRArray);
 	_this.Type = ko.observableArray(["Individual", "Hoard"]);
 	_this.SelectedType = ko.observable();
-	_this.RarityChance = ko.observable({
-		"Coin": 80,
-		"Common": 30,
-		"Uncommon": 15,
-		"Rare": 5,
-		"Very Rare": 2,
-		"Legendary": 1
-	});
+	_this.RaritySettings = ko.observableArray([
+		new RaritySettingModel("Coin", 100, 200, 600, 0, 50000, 100),
+		new RaritySettingModel("Common", 60, 1, 6, 0, 10, 1),
+		new RaritySettingModel("Uncommon", 30, 1, 6, 0, 10, 1),
+		new RaritySettingModel("Rare", 10, 1, 4, 0, 10, 1),
+		new RaritySettingModel("Very Rare", 3, 1, 4, 0, 10, 1),
+		new RaritySettingModel("Legendary", 1, 1, 1, 0, 10, 1),
+		new RaritySettingModel("Artifact", 0, 0, 0, 0, 10, 1),
+		new RaritySettingModel("Unique", 0, 0, 0, 0, 10, 1)
+	]);
 	_this.Rarity = ko.observableArray(["Coin","Common","Uncommon","Rare","Very Rare","Legendary","Artifact","Unique"]);
 	_this.SelectedRarity = ko.observableArray();
 	_this.SearchRarity = ko.observableArray(["ANY","Common","Uncommon","Rare","Very Rare","Legendary","Artifact","Unique"]);
 	_this.SelectedSearchRarity = ko.observableArray().extend({ trackChange: true });
-	_this.Amount = ko.observable(1);
-	_this.AmountList = ko.observableArray([1,2,3,4,5,6,7,8,9,10]);
 	
 	_this.SearchGrid = new ko.simpleGrid.viewModel({
         data: _this.SearchList,
@@ -82,7 +106,6 @@ var LootViewModel = function() {
 	_this.Load = function(data) {
 		_this.ActiveTab(data.ActiveTab || 0);
 		_this.Search(data.Search || "");
-		_this.Amount(data.Amount || "1d6");
 		_this.GenerateList(data.GenerateList || []);
 		_this.SelectedType(data.SelectedType || "Individual");
 		_this.SelectedRarity(data.SelectedRarity || "Coin");
@@ -92,6 +115,24 @@ var LootViewModel = function() {
 			Top: data.Position.Top || 0
 		});
 		_this.IsMinimized(data.IsMinimized);
+
+		if(data.RaritySettings) {
+			var tmp = [];
+			$.each(data.RaritySettings, function(i, v) {
+				tmp.push(
+					new RaritySettingModel(
+						v.Name,
+						v.Chance,
+						v.Min,
+						v.Max,
+						v.RangeMin,
+						v.RangeMax,
+						v.Step
+					)
+				);
+			});
+			_this.RaritySettings(tmp);
+		}
 	};
 	
 	_this.Search.subscribe(function(newValue) {
@@ -210,13 +251,11 @@ var LootViewModel = function() {
 
 LootViewModel.prototype.toJSON = function() {
     var copy = ko.toJS(this);
-    delete copy.AmountList;
+    delete copy.Rarity;
     delete copy.SearchRarity;
-    delete copy.RarityChance;
-    delete copy.CRList;
-    delete copy.GenerateList;
     delete copy.SearchList;
     delete copy.SearchGrid;
+    delete copy.GenerateList;
     delete copy.GenerateGrid;
     return copy;
 };

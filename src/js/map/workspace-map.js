@@ -1,6 +1,15 @@
 var WORKSPACE = {
 	VIEW: 1,
 	DEBUG: false,
+	PeerOptions: {      // This is for testing purposes only and not intended for production use.
+		key: "rv687hwetjz41jor",
+		config: {'iceServers': [
+		    { url: 'stun:stun.l.google.com:19302' },
+			{ url: 'turn:numb.viagenie.ca:3478?transport=udp', credential: 'muazkh', username: 'webrtc@live.com' },
+			{ url: 'turn:numb.viagenie.ca:3478?transport=tcp', credential: 'muazkh', username: 'webrtc@live.com' }
+	  	]},
+	  	debug: 2
+  	},
 	ViewModels: {},
 	GridLayers: [],
 	ErasePoints: {},
@@ -359,7 +368,7 @@ WORKSPACE.Shim = function() {
 		var e = event.originalEvent,
 			from = WORKSPACE.DistanceFrom;
 		e.stopPropagation();
-		if (e.which > 1) {
+		if (e.button == 2) {
 			from.left = e.pageX;
 			from.top = e.pageY;
 			WORKSPACE.ShowDistance = true;
@@ -384,6 +393,26 @@ WORKSPACE.Shim = function() {
 	map.on("layeradd", function(event) { WORKSPACE.Helpers.DrawLights(); });
 
 	map.on("dragend", function(event) { WORKSPACE.Helpers.DrawLights(); });
+
+	WORKSPACE.ResizeGrid = function(invalidateSize){
+		var	parent = $("#CombatViewModel"),
+			canvas = $("#grid-canvas"),
+			height = parent.height(),
+			width = parent.width();
+
+		canvas.attr("height", height);
+		canvas.attr("width", width);
+
+		if(WORKSPACE.GridMap && invalidateSize){
+			WORKSPACE.GridMap.invalidateSize();
+		}
+	};
+
+	WORKSPACE.ResizeGrid();
+
+	$( window ).resize(function() {
+	    WORKSPACE.ResizeGrid(true);
+	});
 
 	$("#grid-lines").appendTo($(".leaflet-map-pane"));
 	$("#grid-fog").appendTo($(".leaflet-map-pane"));

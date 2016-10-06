@@ -5,14 +5,15 @@
 <link rel="stylesheet" href="css/combined.css">
 <body>
 <span class="version noselect">
-v0.1.5-alpha
+v0.2.0-alpha
 </span>
 <div id="workspace">
 <div class="combatviewmodel-inc"> 
 	<ul class="noselect">
 		<li><a href="#InitiativeTab" data-bind="click: SetActiveTab.bind($data, 0)">Initiative</a></li>
 		<li><a href="#GridTab" data-bind="click: SetActiveTab.bind($data, 1)">Battlemap</a></li>
-		<li><a href="#GridSettingsTab" data-bind="click: SetActiveTab.bind($data, 2)">Settings</a></li>
+		<li><a href="#GridMapsTab" data-bind="click: SetActiveTab.bind($data, 2)">Maps</a></li>
+		<li><a href="#GridSettingsTab" data-bind="click: SetActiveTab.bind($data, 3)">Settings</a></li>
 	</ul>
 	<div id="InitiativeTab">
 		<div class="grid filters">
@@ -92,69 +93,10 @@ v0.1.5-alpha
 			<canvas id="grid-light" style="display: none"></canvas>
 		</div>
 	</div>
-	<div id="GridSettingsTab">
-		<div class="filters grid">
-			<table class="gridsettings ko-grid" cellspacing="0">
-				<tbody>
-					<tr>
-						<th>Map</th>
-						<th>Token Outlines</th>
-						<th>Grid</th>
-						<th>Darkness</th>
-						<th>Fog of War</th>
-						<th>Stream</th>
-			        </tr>
-					<tr>
-						<td>
-							<input id="grid-bgcolor" type="text" />
-						</td>
-						<td>
-							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
-							<input id="grid-linecolor" type="text" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
-							<input id="grid-darknesscolor" type="text" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-fog" data-bind="checked: ShowFog" />
-							<input id="grid-fogcolor" type="text" />
-			            </td>
-			            <td>
-							<input type="checkbox" name="grid-transmit" data-bind="checked: TransmitMap" />
-			            </td>
-					</tr>
-					<tr class="spacer"></tr>
-					<tr>
-						<th colspan="3" style="text-align:center">Token Scale</th>
-						<th colspan="3" style="text-align:center">Eraser Size</th>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div id="token-scale"></div>
-						</td>
-						<td class="token-scale" data-bind="text: TokenScale() + 'x'"></td>
-						<td colspan="2">
-							<div id="erase-size"></div>
-						</td>
-						<td class="erase-size" data-bind="text: EraseSize"></td>
-					</tr>
-					<tr class="spacer"></tr>
-					<tr>
-						<td colspan="6">
-							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
-							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ClearFog">Reset Fog</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="gridsettings-add">
-				<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd">
-				<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map URL</button>
-			</div>
+	<div id="GridMapsTab">
+		<div class="filters gridsettings-add">
+			<input type="text" name="grid-mapslide-add" data-bind="textInput: MapToAdd">
+			<button class="ui-button ui-corner-all ui-widget" data-bind="click: AddMap">Add Map URL</button>
 		</div>
 		<div id="grid-mapslides">
 			<div class="page-prev" data-bind="click: MapPrev">
@@ -170,6 +112,87 @@ v0.1.5-alpha
 			<div class="page-next" data-bind="click: MapNext">
 				<i class="fa fa-chevron-right"></i>
 			</div>
+		</div>
+	</div>
+	<div id="GridSettingsTab">
+		<div class="grid">
+			<table class="gridsettings ko-grid" cellspacing="0">
+				<tbody>
+					<tr class="spacer"></tr>
+					<tr>
+						<th>Local Stream</th>
+						<td>
+							<input type="checkbox" name="grid-transmit" alt="Stream to another window on the SAME computer" data-bind="checked: TransmitMap" />
+						</td>
+					</tr>
+					<tr>
+						<th>Remote Stream</th>
+						<td>
+							<input type="checkbox" name="grid-transmit-remote" alt="Stream to another computer over the Internet" data-bind="checked: TransmitMapRemote" />
+						</td>
+					</tr>
+					<td><span class="remote-clientnum" data-bind="visible: TransmitMapRemote(), text: 'Connected: ' + ConnectedClients()"></span></td>
+					<td><span class="remote-key" data-bind="visible: TransmitMapRemote(), text: 'Key: ' + PeerKey()"></span></td>
+					<tr class="spacer"></tr>
+					<tr>
+						<th>Token Outlines</th>
+						<td>
+							<input type="checkbox" name="grid-outline" data-bind="checked: ShowOutlines" />
+			            </td>
+			        </tr>
+					<tr>
+						<th>Map</th>
+						<td>
+							<input id="grid-bgcolor" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<th>Grid</th>
+			            <td>
+							<input type="checkbox" name="grid-lines" data-bind="checked: ShowGridLines" />
+							<input id="grid-linecolor" type="text" />
+			            </td>
+		            </tr>
+					<tr>
+						<th>Darkness</th>
+			            <td>
+							<input type="checkbox" name="grid-darkness" data-bind="checked: ShowDarkness" />
+							<input id="grid-darknesscolor" type="text" />
+			            </td>
+		            </tr>
+					<tr>
+						<th>Fog of War</th>
+			            <td>
+							<input type="checkbox" name="grid-fog" data-bind="checked: ShowFog" />
+							<input id="grid-fogcolor" type="text" />
+			            </td>
+					</tr>
+					<tr class="spacer"></tr>
+					<tr>
+						<th>
+							Token Scale: <span class="token-scale" data-bind="text: TokenScale() + 'x'"></span>
+						</th>
+						<td>
+							<div id="token-scale"></div>
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Eraser Size: <span class="erase-size" data-bind="text: EraseSize"></span>
+						</th>
+						<td>
+							<div id="erase-size"></div>
+						</td>
+					</tr>
+					<tr class="spacer"></tr>
+					<tr>
+						<td colspan="2">
+							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ResetTokens">Reset Tokens</button>
+							<button class="ui-button ui-corner-all ui-widget" data-bind="click: ClearFog">Reset Fog</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
@@ -192,31 +215,22 @@ v0.1.5-alpha
 				<table class="loot-generate ko-grid">
 					<thead>
 						<tr>
-							<th>Amount</th>
-							<th>CR</th>
+							<th>Allowed Items</th>
 							<th>Type</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>
-								<select data-bind="options: AmountList, value: Amount"></select>
-							</td>
-							<td>
-								<select data-bind="options: CRList, value: CR"></select>
-							</td>
-							<td>
-								<select name="type" data-bind="options: Type, value: SelectedType"> </select>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3">
 								<select name="rarity" class="loot-rarity" data-bind="options: Rarity, selectedOptions: SelectedRarity" multiple="true"></select>
+							</td>
+							<td>
+								<select name="type" data-bind="options: Type, value: SelectedType"></select>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<button class="ui-button ui-corner-all ui-widget" type="submit" data-bind="">Roll</button>
+				<button class="ui-button ui-corner-all ui-widget" type="submit" data-bind="">Generate</button>
 			</div>
 			<div class="grid" data-bind="simpleGrid: GenerateGrid, visible: GenerateList().length > 0"></div>
 		</form>
@@ -235,8 +249,29 @@ v0.1.5-alpha
 		<div class="grid" data-bind="simpleGrid: SearchGrid, visible: SearchList().length > 0"></div>
 	</div>
 	<div id="GenSettings">
-		<div class="filters">
-			Loot Generation Settings
+		<div class="grid filters">
+			<table class="loot-settings ko-grid">
+				<thead>
+					<tr>
+						<th></th>
+						<th colspan="2">Drop Chance</th>
+						<th colspan="2">Amount</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: RaritySettings">
+					<tr>
+						<th class="rarity-name" data-bind="text: Name"></th>
+						<td class="rarity-chance"><div class="loot-chance" data-bind="slider: $data, 
+							sliderOptions: {min: 0, max: 100, value: Chance(), range: 'min', step: 1, type: 'loot-chance'}"></div>
+						<td class="rarity-chance-text" data-bind="text: ChanceText"></td>
+						<td class="rarity-range"><div class="loot-range" data-bind="slider: $data, 
+							sliderOptions: {min: RangeMin(), max: RangeMax(), 
+							values: [Min(), Max()], 
+							range: true, step: Step(), type: 'loot-range'}"></div>
+						<td class="rarity-range-text" data-bind="text: MinMaxText"></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
@@ -682,10 +717,8 @@ v0.1.5-alpha
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/jquery-ui-touchpunch.min.js"></script>
 <script src="js/jquery-mwheel.min.js"></script>
-<script src="js/jquery-scrollto.min.js"></script>
 <script src="js/leaflet.min.js"></script>
 <script src="js/leaflet-button.min.js"></script>
-<script src="js/modernizr.min.js"></script>
 <script src="js/knockout.min.js"></script>
 <script src="js/knockout-simplegrid.min.js"></script>
 <script src="js/data.min.js"></script>
@@ -693,6 +726,7 @@ v0.1.5-alpha
 <script src="js/jquery-dialog-extend.min.js"></script>
 <script src="js/leaflet-marker-rotate.min.js"></script>
 <script src="js/models.min.js"></script>
+<script src="js/peer.min.js"></script>
 <script src="js/spectrum.min.js"></script>
 <script src="js/workspace.min.js"></script>
 </body>
