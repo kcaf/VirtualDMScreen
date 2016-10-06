@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="css/combined.css">
 <body>
 <span class="version noselect">
-v0.2.0-alpha
+v0.2.1-alpha
 </span>
 <div id="workspace">
 <div class="combatviewmodel-inc"> 
@@ -131,8 +131,10 @@ v0.2.0-alpha
 							<input type="checkbox" name="grid-transmit-remote" alt="Stream to another computer over the Internet" data-bind="checked: TransmitMapRemote" />
 						</td>
 					</tr>
-					<td><span class="remote-clientnum" data-bind="visible: TransmitMapRemote(), text: 'Connected: ' + ConnectedClients()"></span></td>
-					<td><span class="remote-key" data-bind="visible: TransmitMapRemote(), text: 'Key: ' + PeerKey()"></span></td>
+					<tr data-bind="visible: TransmitMapRemote()">
+						<td><span class="remote-clientnum" data-bind="text: 'Connected: ' + ConnectedClients()"></span></td>
+						<td><span class="remote-key" data-bind="visible: TransmitMapRemote(), text: 'Key: ' + PeerKey()"></span></td>
+					</tr>
 					<tr class="spacer"></tr>
 					<tr>
 						<th>Token Outlines</th>
@@ -620,6 +622,29 @@ v0.2.0-alpha
 	</article>
 </div>
 <div id="overlay"></div>
+<script type="text/html" id="ko_lootgengrid_template">
+	<table class="loot ko-grid" cellspacing="0">
+		<thead>
+			<tr>
+	           	<th data-bind="text: columns[1].headerText"></th>
+	           	<th data-bind="text: columns[2].headerText"></th>
+        	</tr>
+		</thead>
+		<tbody data-bind="foreach: itemsOnCurrentPage">
+			<tr>
+				<td>
+					<!-- ko if: $data.Id == null -->
+					<span data-bind="text: $data.Name"></span>
+					<!-- /ko -->
+					<!-- ko ifnot: $data.Id == null -->
+					<span class="item-link" data-bind="text: $data.Name, click: WORKSPACE.Helpers.ViewItem.bind($data, $data.Id)"></span>
+					<!-- /ko -->
+				</td>
+				<td data-bind="text: $data.Value"></td>
+			</tr>
+		</tbody>
+	</table>
+</script>
 <script type="text/html" id="ko_lootgrid_template">
 	<table class="loot ko-grid" cellspacing="0">
 		<thead>

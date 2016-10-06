@@ -71,6 +71,9 @@
                 case "lootsearch":
                     ko.renderTemplate("ko_lootgrid_template", viewModel, {  }, gridContainer, "replaceNode");
                     break;
+                case "lootgen":
+                    ko.renderTemplate("ko_lootgengrid_template", viewModel, {  }, gridContainer, "replaceNode");
+                    break;
             	default:
 					ko.renderTemplate(gridTemplateName, viewModel, {  }, gridContainer, "replaceNode");
 			}

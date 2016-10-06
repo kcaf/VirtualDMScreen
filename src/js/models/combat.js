@@ -254,14 +254,21 @@ var CombatViewModel = function() {
 	_this.EraseSize = ko.observable(100).extend({ trackChange: true });
 	_this.PageSize = ko.observable(12);
 	_this.PageIndex = ko.observable(0);
+	_this.PanTo = ko.observable().extend({ trackChange: true });
 
 	/*_this.CustomIcons.subscribe(function(newValue) {
 		_this.LoadTokens();
 	});*/
 
 	_this.CompressModel = function() {
+		var pan = null;
+		if(_this.PanTo()){
+			pan = _this.PanTo();
+			_this.PanTo(null);
+		}
 		var combatant,
 			combat = {
+				PanTo: pan,
 				ErasePoints: WORKSPACE.ErasePoints,
 				FogColor: _this.FogColor(),
 				DarknessColor: _this.DarknessColor(),
@@ -768,6 +775,7 @@ var CombatViewModel = function() {
 
 CombatViewModel.prototype.toJSON = function() {
     var copy = ko.toJS(this);
+    delete copy.PanTo;
     delete copy.LastTimestamp;
     delete copy.TransmitMap;
     delete copy.TransmitMapRemote;

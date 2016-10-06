@@ -1224,24 +1224,24 @@ div.leaflet-popup-content-wrapper, div.leaflet-popup-tip {
 }
 
 img.leaflet-marker-icon.outline {
-	-webkit-filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.4))
-		drop-shadow(-1px -1px 0 rgba(255,255,255,0.4));
-	filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.4)) 
-		drop-shadow(-1px -1px 0 rgba(255,255,255,0.4));
+	-webkit-filter: drop-shadow(0 0 1px rgba(255,255,255,1))
+		drop-shadow(0 0 1px rgba(255,255,255,1));
+	filter: drop-shadow(0 0 1px rgba(255,255,255,1)) 
+		drop-shadow(0 0 1px rgba(255,255,255,1));
 }
 
 img.leaflet-marker-icon.outline.Player {
-	-webkit-filter: drop-shadow(1px 1px 0 rgba(0,255,0,0.4))
-		drop-shadow(-1px -1px 0 rgba(0,255,0,0.4));
-	filter: drop-shadow(1px 1px 0 rgba(0,255,0,0.4)) 
-		drop-shadow(-1px -1px 0 rgba(0,255,0,0.4));
+	-webkit-filter: drop-shadow(0 0 1px rgba(0,255,0,1))
+		drop-shadow(0 0 1px rgba(0,255,0,1));
+	filter: drop-shadow(0 0 1px rgba(0,255,0,1)) 
+		drop-shadow(0 0 1px rgba(0,255,0,1));
 }
 
 img.leaflet-marker-icon.outline.NPC {
-	-webkit-filter: drop-shadow(1px 1px 0 rgba(255,0,0,0.4))
-		drop-shadow(-1px -1px 0 rgba(255,0,0,0.4));
-	filter: drop-shadow(1px 1px 0 rgba(255,0,0,0.4)) 
-		drop-shadow(-1px -1px 0 rgba(255,0,0,0.4));
+	-webkit-filter: drop-shadow(0 0 1px rgba(255,0,0,1))
+		drop-shadow(0 0 1px rgba(255,0,0,1));
+	filter: drop-shadow(0 0 1px rgba(255,0,0,1)) 
+		drop-shadow(0 0 1px rgba(255,0,0,1));
 }
 
 img.leaflet-marker-icon.invisible {
@@ -1440,6 +1440,7 @@ canvas#grid-fog {
 
 .rarity-range {
 	padding: 0.6em !important;
+    width: 20em;
 }
 
 table.loot-settings.ko-grid td {

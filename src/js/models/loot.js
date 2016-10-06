@@ -58,19 +58,19 @@ var LootViewModel = function() {
 	_this.IsMinimized = ko.observable(true).extend({ trackChange: true });
 	_this.Search = ko.observable("").extend({ rateLimit: 500, trackChange: true });
 	_this.Type = ko.observableArray(["Individual", "Hoard"]);
-	_this.SelectedType = ko.observable();
+	_this.SelectedType = ko.observable().extend({ trackChange: true });
 	_this.RaritySettings = ko.observableArray([
 		new RaritySettingModel("Coin", 100, 200, 600, 0, 50000, 100),
 		new RaritySettingModel("Common", 60, 1, 6, 0, 10, 1),
-		new RaritySettingModel("Uncommon", 30, 1, 6, 0, 10, 1),
-		new RaritySettingModel("Rare", 10, 1, 4, 0, 10, 1),
-		new RaritySettingModel("Very Rare", 3, 1, 4, 0, 10, 1),
-		new RaritySettingModel("Legendary", 1, 1, 1, 0, 10, 1),
+		new RaritySettingModel("Uncommon", 40, 1, 4, 0, 10, 1),
+		new RaritySettingModel("Rare", 20, 1, 2, 0, 10, 1),
+		new RaritySettingModel("Very Rare", 10, 1, 1, 0, 10, 1),
+		new RaritySettingModel("Legendary", 5, 1, 1, 0, 10, 1),
 		new RaritySettingModel("Artifact", 0, 0, 0, 0, 10, 1),
 		new RaritySettingModel("Unique", 0, 0, 0, 0, 10, 1)
-	]);
+	]).extend({ trackChange: true });
 	_this.Rarity = ko.observableArray(["Coin","Common","Uncommon","Rare","Very Rare","Legendary","Artifact","Unique"]);
-	_this.SelectedRarity = ko.observableArray();
+	_this.SelectedRarity = ko.observableArray().extend({ trackChange: true });
 	_this.SearchRarity = ko.observableArray(["ANY","Common","Uncommon","Rare","Very Rare","Legendary","Artifact","Unique"]);
 	_this.SelectedSearchRarity = ko.observableArray().extend({ trackChange: true });
 	
@@ -88,9 +88,11 @@ var LootViewModel = function() {
     
     _this.GenerateGrid = new ko.simpleGrid.viewModel({
         data: _this.GenerateList,
+        type: "lootgen",
         columns: [
-            { headerText: "Coin", rowText: "Coin" },
-            { headerText: "Magic", rowText: "Magic" }
+        	{ headerText: "Id", rowText: "Id" },
+            { headerText: "Name", rowText: "Name" },
+            { headerText: "Value", rowText: "Value" }
         ],
         pageSize: 6
     });
@@ -193,60 +195,49 @@ var LootViewModel = function() {
 	_this.Generate = function() {
 		_this.GenerateList.removeAll();
 		_this.GenerateGrid.currentPageIndex(0);
-		var input = _this.Amount().split('d');
-		if (input.length != 2)
-			return;
-			
-		
-			
-		/*
-		if (_this.SelectedRarity() == "" || _this.SelectedRarity() == "ALL") {
-			for(i=0; i<parseInt(input[0]); i++) { // number of dice
-				var amt = WORKSPACE.Helpers.Roll(parseInt(input[1])); // roll dice
-				for(v=0; v<amt; v++) {
-					var index = WORKSPACE.Helpers.Roll(MAGIC.Name.length-1);
-					_this.GenerateList.push({
-						Name: MAGIC.Name[index],
-						Rarity: MAGIC.Rarity[index],
-						Attune: MAGIC.Attunement[index],
-						Page: MAGIC.Page[index]
-					});
-				}
-			}
-		} else {
-			var Selectable = [];
-			var SelectedRarity = _this.SelectedRarity();
-			$.each(MAGIC.Rarity, function(i, v) {
-				if (v == SelectedRarity)
-					Selectable.push(i);
-			});
-			if (Selectable.length > 0) {
-				for(i=0; i<parseInt(input[0]); i++) { // number of dice
-					var amt = WORKSPACE.Helpers.Roll(parseInt(input[1])); // roll dice
-					for(v=0; v<amt; v++) {
-						var index = Selectable[WORKSPACE.Helpers.Roll(Selectable.length-1)];
-						_this.GenerateList.push({
-							Name: MAGIC.Name[index],
-							Rarity: MAGIC.Rarity[index],
-							Attune: MAGIC.Attunement[index],
-							Page: MAGIC.Page[index]
-						});
+
+		$.each(_this.SelectedRarity(), function(i, v) {
+			if(_this.SelectedType() == "Individual" && v != "Coin")
+				return;
+
+			var chance, amount, index, item, selectable;
+			$.each(_this.RaritySettings(), function(z, x) {
+				if(x.Name() == v){
+					chance = WORKSPACE.Helpers.Roll(0, 100);
+					if(chance < x.Chance()){
+						amount = WORKSPACE.Helpers.Roll(x.Min(), x.Max());
+						if(v == "Coin") {
+							_this.GenerateList.push({
+								Id: null,
+								Name: "Coin",
+								Value: _this.SelectedType() == "Individual" ? (amount/30).toFixed(2) : amount,
+							});
+						} else {
+							selectable = [];
+							$.each(MAGIC, function(mi, mv) {
+								if (mv.rarity.toLowerCase() == v.toLowerCase()) {
+									selectable.push(mi);
+								}
+							});
+							if(selectable.length) {
+								for(a=0; a<amount; a++) {
+									var rand = WORKSPACE.Helpers.Roll(0, selectable.length-1);
+									index = selectable[rand];
+									item = MAGIC[index];
+									console.log(rand,index,selectable.length,item);
+									_this.GenerateList.push({
+										Id: index,
+										Name: item.name,
+										Value: item.rarity
+									});
+								}
+							}
+						}
 					}
 				}
-			}
-		}
-		*/
-		
-		//WORKSPACE.Save();
+			});
+		});
 	};
-	
-	/*ko.pureComputed(function() {
-		_this.Position();
-		_this.IsMinimized();
-		_this.SearchList();
-		_this.GenerateList();
-		WORKSPACE.SaveViewModel.Run();
-	});*/
 };
 
 LootViewModel.prototype.toJSON = function() {

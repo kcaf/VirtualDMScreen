@@ -121,8 +121,10 @@
 							<input type="checkbox" name="grid-transmit-remote" alt="Stream to another computer over the Internet" data-bind="checked: TransmitMapRemote" />
 						</td>
 					</tr>
-					<td><span class="remote-clientnum" data-bind="visible: TransmitMapRemote(), text: 'Connected: ' + ConnectedClients()"></span></td>
-					<td><span class="remote-key" data-bind="visible: TransmitMapRemote(), text: 'Key: ' + PeerKey()"></span></td>
+					<tr data-bind="visible: TransmitMapRemote()">
+						<td><span class="remote-clientnum" data-bind="text: 'Connected: ' + ConnectedClients()"></span></td>
+						<td><span class="remote-key" data-bind="visible: TransmitMapRemote(), text: 'Key: ' + PeerKey()"></span></td>
+					</tr>
 					<tr class="spacer"></tr>
 					<tr>
 						<th>Token Outlines</th>

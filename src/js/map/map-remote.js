@@ -35,7 +35,10 @@ MapViewer = function(){
 				if(combatObj) {
 					_this.ViewModel.Load(combatObj);
 					WORKSPACE.GridMap.setZoom(combatObj.GridZoom || 1);
-					WORKSPACE.GridMap.panTo(combatObj.GridCenter || [0,0]);
+					
+					if(combatObj.PanTo){
+						WORKSPACE.GridMap.panTo(combatObj.PanTo || [0,0]);
+					}
 
 					if(!combatObj.ShowDarkness) {
 						var canvas = $("#grid-light")[0],

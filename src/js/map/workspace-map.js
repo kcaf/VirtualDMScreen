@@ -324,7 +324,7 @@ WORKSPACE.Shim = function() {
 		touchZoom: false,
 		doubleClickZoom: false,
 		boxZoom: false,
-		dragging: false
+		dragging: true
 
 	});
 

@@ -155,15 +155,6 @@ gulp.task('css', function () {
 });
 
 gulp.task('js', function () {
-	/*
-		return gulp.src('./src/js/*.js')
-		.pipe(jshint())
-      	.pipe(jshint.reporter(stylish)).on('error', notify.onError({ message: 'JS hint fail'}))
-		.pipe(uglify().on('error', function(e){
-        	return 'JS Uglify fail';
-         }))
-		.pipe(gulp.dest('./src/js/dist'));
-	*/
 	return gulp.src(['./build/js/*.js','!./build/js/*.min.js'])
 		.pipe(jshint())
       	.pipe(jshint.reporter(stylish)).on('error', notify.onError({ message: 'JS hint fail'}))

@@ -1,0 +1,23 @@
+<script type="text/html" id="ko_lootgengrid_template">
+	<table class="loot ko-grid" cellspacing="0">
+		<thead>
+			<tr>
+	           	<th data-bind="text: columns[1].headerText"></th>
+	           	<th data-bind="text: columns[2].headerText"></th>
+        	</tr>
+		</thead>
+		<tbody data-bind="foreach: itemsOnCurrentPage">
+			<tr>
+				<td>
+					<!-- ko if: $data.Id == null -->
+					<span data-bind="text: $data.Name"></span>
+					<!-- /ko -->
+					<!-- ko ifnot: $data.Id == null -->
+					<span class="item-link" data-bind="text: $data.Name, click: WORKSPACE.Helpers.ViewItem.bind($data, $data.Id)"></span>
+					<!-- /ko -->
+				</td>
+				<td data-bind="text: $data.Value"></td>
+			</tr>
+		</tbody>
+	</table>
+</script>

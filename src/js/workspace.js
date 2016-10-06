@@ -58,7 +58,7 @@ var WORKSPACE = {
 	DialogSize: {
 		PlayersViewModel: { Width: "20vw", Height: "auto" },
 		CombatViewModel: { Width: "32vw", Height: "auto" },
-		LootViewModel: { Width: "35vw", Height: "auto" },
+		LootViewModel: { Width: "auto", Height: "auto" },
 		RollViewModel: { Width: "215px", Height: "auto" },
 		GameViewModel: { Width: "15vw", Height: "auto" },
 		Default: { Width: "22vw", Height: "auto" }
@@ -633,7 +633,21 @@ var WORKSPACE = {
 		eraseToggle.addTo(WORKSPACE.GridMap);
 		L.DomUtil.addClass(eraseToggle.button, "eraser-toggle");
 
-		WORKSPACE.DrawFog();
+		var panToButton = L.easyButton( {
+			states: 
+			[
+				{
+					stateName: "player-panto",
+					icon: "fa fa-arrows",
+					title: "Pan Players' Screen",
+					onClick: function(control){
+						WORKSPACE.ViewModels.CombatViewModel.PanTo(WORKSPACE.GridMap.getCenter());
+					}
+				}
+			]
+		});
+
+		panToButton.addTo(WORKSPACE.GridMap);
 
 		WORKSPACE.SetPlayerZoom = L.easyButton( {
 			states: 
@@ -654,6 +668,8 @@ var WORKSPACE = {
 		WORKSPACE.SetPlayerZoom.addTo(WORKSPACE.GridMap);
 
 		WORKSPACE.SetPlayerZoom.zoom = WORKSPACE.GridMap.getZoom();
+
+		WORKSPACE.DrawFog();
 
 		WORKSPACE.HideOverlay();
 		WORKSPACE.IsLoaded = true;
@@ -983,7 +999,7 @@ WORKSPACE.Helpers = {
 	},
 
 	Roll: function(min, max) {
-		return Math.floor((Math.random() * parseInt(max)) + parseInt(min));
+		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
 
 	AddNPC: function(data, event){
